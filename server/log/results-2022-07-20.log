@@ -1,0 +1,111 @@
+2022-07-20T16:09:23.720Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:09:23.729Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:09:23.729Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:09:57.791Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:09:57.799Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:09:57.799Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:10:44.664Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:10:44.672Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:10:44.673Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:11:39.928Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:11:39.936Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:11:39.936Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:12:24.424Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:12:24.432Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:12:24.433Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:13:46.218Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:13:46.227Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:13:46.227Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:14:42.013Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:14:42.021Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:14:42.021Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:14:58.118Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:14:58.127Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:14:58.127Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:15:28.402Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:15:28.410Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:15:28.411Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:15:42.894Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:15:42.903Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:15:42.903Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:16:27.424Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:16:27.435Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:16:27.435Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:18:11.299Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:18:33.061Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:18:33.078Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:18:33.079Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:18:53.084Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:18:53.099Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:18:53.100Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:18:59.544Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:18:59.559Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:18:59.560Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:19:27.615Z - [INFO]: [0mGET /api/new [32m200[0m 4.158 ms - 11[0m
+
+2022-07-20T16:19:58.523Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:19:58.538Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:19:58.538Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:20:04.100Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:20:04.108Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:20:04.109Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:20:47.123Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:20:47.138Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:20:47.138Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:20:51.146Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:20:51.160Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:20:51.161Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:22:26.497Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:22:26.511Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:22:26.512Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:22:45.238Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:22:45.251Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:22:45.252Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:23:39.060Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:23:39.074Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:23:39.074Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:24:04.046Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:24:04.047Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:24:11.978Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:24:11.979Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:25:04.369Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:25:04.369Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:25:25.320Z - [ERROR]: Express server listening on port 8080
+2022-07-20T16:25:25.330Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:25:25.330Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:25:30.739Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:25:30.756Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:25:30.756Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:25:41.107Z - [INFO]: [0mGET /api/new [32m200[0m 3.611 ms - 11[0m
+
+2022-07-20T16:26:29.078Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:26:29.089Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:26:29.090Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:26:56.472Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:26:56.489Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:26:56.489Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:27:06.339Z - [INFO]: [0mGET /api/new [32m200[0m 4.978 ms - 11[0m
+
+2022-07-20T16:30:44.161Z - [INFO]: [0mGET / [33m404[0m 1.796 ms - 46[0m
+
+2022-07-20T16:30:44.469Z - [INFO]: [0mGET /favicon.ico [33m404[0m 0.348 ms - 46[0m
+
+2022-07-20T16:30:50.421Z - [INFO]: [0mGET /api/new [32m200[0m 0.609 ms - 11[0m
+
+2022-07-20T16:33:53.328Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:33:53.342Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:33:53.343Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:33:57.447Z - [INFO]: [0mGET /api/new [32m200[0m 4.734 ms - 11[0m
+
+2022-07-20T16:34:09.786Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:34:09.798Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:34:09.799Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:34:12.714Z - [INFO]: [0mGET /api/new [32m200[0m 3.659 ms - 11[0m
+
+2022-07-20T16:36:10.273Z - [INFO]: [0mGET /favicon.ico [33m404[0m 1.499 ms - 46[0m
+
+2022-07-20T16:37:49.501Z - [INFO]: Express server listening on port 8080
+2022-07-20T16:37:49.515Z - [INFO]: ✅ Connected to Database : reimbursement
+2022-07-20T16:37:49.516Z - [INFO]: ✅ Mongodb Connected
+2022-07-20T16:37:58.546Z - [INFO]: [0mGET /api/new [32m200[0m 4.360 ms - 11[0m
+
