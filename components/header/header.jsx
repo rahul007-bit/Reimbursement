@@ -2,8 +2,8 @@ import React from 'react';
 
 const Header = () => {
     return (
-        <div>
-            <header className='bg-red-200'>Header</header>
+        <div className='bg-424483 h:100px w-screen'>
+            <header >Header</header>
         </div>
     );
 };
