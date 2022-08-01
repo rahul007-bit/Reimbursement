@@ -4,7 +4,7 @@ import Form from "../components/form/form";
 
 const Login = () => {
   return (
-    <div>
+    <div className="w-screen h-screen">
       <Header />
       <Form />
     </div>
