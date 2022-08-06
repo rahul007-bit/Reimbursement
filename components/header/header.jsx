@@ -2,7 +2,7 @@ import React from "react";
 
 const Header = () => {
   return (
-    <div className="bg-424483 h:100px w-screen">
+    <div className="flex-grow">
       <header>Header</header>
     </div>
   );
