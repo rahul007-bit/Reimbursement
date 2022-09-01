@@ -18,3 +18,8 @@ a {
 * {
   box-sizing: border-box;
 }
+
+#nprogress .bar {
+  height: 3px !important;
+  @apply bg-purple-400 drop-shadow-md !important;
+}
