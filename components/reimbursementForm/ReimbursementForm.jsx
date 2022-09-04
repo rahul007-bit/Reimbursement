@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import StudentForm from "./CretificationForm/studentform";
+import Staffform from "./CretificationForm/staffform.jsx";
 import NptelForm from "./CretificationForm/nptelform";
 
 import Autocomplete from "@mui/material/Autocomplete";
@@ -31,98 +33,16 @@ const ReimbursementForm = ({ formData }) => {
                   <Autocomplete
                     disablePortal
                     id="combo-box-demo"
-                    options={[{ label: "Student" }, { label: "NPTEL" }]}
+                    options={[{ label: "Student" }, { label: "Staff" }]}
                     renderInput={(params) => (
                       <TextField {...params} label="Select Role" />
                     )}
                     onInputChange={getUserDetails}
                   />
-                  {/* <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
-                    <TextField
-                      fullWidth
-                      label="Student Name"
-                      id="outlined-required"
-                      required
-                    ></TextField>
-                    <TextField
-                      fullWidth
-                      label="email"
-                      id="outlined-required"
-                      required
-                    ></TextField>
-                    
-                  
 
-                  </Stack>
-                  <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
-                    <TextField
-                      sx={{width:255}}
-                      label="Course Name"
-                      id="outlined-required"
-                      required
-                    ></TextField>
-                     <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    options={[{ label: "First Half" }, { label: "Second half" }]}
-                    sx={{ width: 260 }}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Academic Year" />
-                    )}
-                
-                  />
-                    
-                    </Stack>
-                  
-                    <Typography variant="h8" gutterBottom>
-        Duration
-      </Typography>
-      <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
-                    <TextField
-                      fullWidth
-                      label="Start Date"
-                      id="outlined-required"
-                      required
-                    ></TextField>
-                    <TextField
-                      fullWidth
-                      label="End Date"
-                      id="outlined-required"
-                      required
-                    ></TextField>
-                     <TextField
-                      fullWidth
-                      label="Exam Date"
-                      id="outlined-required"
-                      required
-                    ></TextField>
-                    
-                    
-                  
-
-                  </Stack>
-                  <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    options={[{ label: "Elite" }, { label: "Gold" },{label: "Silver"}]}
-                    sx={{ width: 250 }}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Class Received(if any)" />
-                    )}
-                
-                  />
-                   
-                   <TextField
-                      sx={{width:250}}
-                      label="Reimbursement Amount"
-                      id="outlined-required"
-                      required
-                    ></TextField>
-                    
-                  </Stack> */}
-
-                  {user === "NPTEL" && <NptelForm />}
+                  {user === "Student" && <StudentForm />}
+                  {user === "Staff" && <Staffform />}
+                  {user === "Nptel" && <NptelForm />}
                 </Stack>
               </Box>
             </form>
