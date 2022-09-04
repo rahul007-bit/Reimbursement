@@ -2,7 +2,7 @@ import React from "react";
 import { Stack, Box, TextField, Typography } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 
-const NptelForm = () => {
+const NptelForm = ({ handleChange }) => {
   return (
     <>
       <Stack direction={{ sm: "column", md: "row" }} spacing={3}>

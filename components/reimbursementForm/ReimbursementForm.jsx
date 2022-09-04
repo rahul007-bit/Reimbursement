@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import StudentForm from "./CretificationForm/studentform";
 import Staffform from "./CretificationForm/staffform.jsx";
 import NptelForm from "./CretificationForm/nptelform";
@@ -7,11 +7,28 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { Box, Stack, Divider, Typography } from "@mui/material";
 
-const ReimbursementForm = ({ formData }) => {
-  const [user, setUser] = useState("");
+const formReducer = (state, event) => {
+  return {
+    ...state,
+    [event.name]: event.value,
+  };
+};
+
+const ReimbursementForm = () => {
   const getUserDetails = (event, value) => {
-    console.log(value);
-    setUser(value);
+    handleChange("user", value);
+  };
+
+  const getCertification = (event, value) => {
+    handleChange("certification", value);
+  };
+
+  const [formData, setFormData] = useReducer(formReducer, {});
+  const handleChange = (name, value) => {
+    setFormData({
+      name: name,
+      value: value,
+    });
   };
   return (
     <>
@@ -31,18 +48,47 @@ const ReimbursementForm = ({ formData }) => {
                 <Stack spacing={3}>
                   <Stack direction="row" spacing={3}></Stack>
                   <Autocomplete
+                    name="user"
                     disablePortal
                     id="combo-box-demo"
                     options={[{ label: "Student" }, { label: "Staff" }]}
                     renderInput={(params) => (
-                      <TextField {...params} label="Select Role" />
+                      <TextField name="user" {...params} label="Select Role" />
                     )}
                     onInputChange={getUserDetails}
                   />
+                  {/* render when user is student */}
+                  {formData.user === "Student" && (
+                    <StudentForm handleChange={handleChange} />
+                  )}
+                  {/* render when user is stuff */}
 
-                  {user === "Student" && <StudentForm />}
-                  {user === "Staff" && <Staffform />}
-                  {user === "Nptel" && <NptelForm />}
+                  {formData.user === "Staff" && (
+                    <Staffform handleChange={handleChange} />
+                  )}
+
+                  {formData.user && (
+                    <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
+                      <Autocomplete
+                        name="certification"
+                        disablePortal
+                        id="combo-box-demo"
+                        options={[
+                          { label: "Nptel" },
+                          { label: "RedHat" },
+                          { label: "GlobalCertification" },
+                        ]}
+                        onInputChange={getCertification}
+                        sx={{ width: "100%" }}
+                        renderInput={(params) => (
+                          <TextField {...params} label="Select Courses" />
+                        )}
+                      />
+                    </Stack>
+                  )}
+                  {formData.certification === "Nptel" && (
+                    <NptelForm handleChange={handleChange} />
+                  )}
                 </Stack>
               </Box>
             </form>

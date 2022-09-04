@@ -25,23 +25,6 @@ const Studentform = () => {
           required
         ></TextField>
       </Stack>
-
-      <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
-        <Autocomplete
-          disablePortal
-          id="combo-box-demo"
-          options={[
-            { label: "Nptel" },
-            { label: "RedHat" },
-            { label: "GlobalCertification" },
-          ]}
-          sx={{ width: "100%" }}
-          renderInput={(params) => (
-            <TextField {...params} label="Select Courses" />
-          )}
-          onInputChange={getUserDetails}
-        />
-      </Stack>
     </>
   );
 };
