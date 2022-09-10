@@ -1,14 +1,19 @@
 import React, { useReducer } from "react";
 import StudentForm from "./CretificationForm/studentform";
-import Staffform from "./CretificationForm/staffform.jsx";
+import StaffForm from "./CretificationForm/staffform.jsx";
 import NptelForm from "./CretificationForm/nptelform";
 import GlobalCertification from "./CretificationForm/globalcertification";
 import PaperPublication from "./CretificationForm/paperpublication";
 import Fdpform from "./CretificationForm/fdpform";
 
-import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
-import { Box, Stack, Divider, Typography } from "@mui/material";
+import {
+  Box,
+  Divider,
+  Stack,
+  Typography,
+  TextField,
+  Autocomplete,
+} from "@mui/material";
 
 const formReducer = (state, event) => {
   return {
@@ -26,13 +31,17 @@ const ReimbursementForm = () => {
     handleChange("certification", value);
   };
 
-  const [formData, setFormData] = useReducer(formReducer, {});
+  const [formData, setFormData] = useReducer(formReducer, {
+    user: "",
+    certificates: "",
+  });
   const handleChange = (name, value) => {
     setFormData({
       name: name,
       value: value,
     });
   };
+
   return (
     <>
       <div className="flex h-full w-full ">
@@ -67,7 +76,7 @@ const ReimbursementForm = () => {
                   {/* render when user is stuff */}
 
                   {formData.user === "Staff" && (
-                    <Staffform handleChange={handleChange} />
+                    <StaffForm handleChange={handleChange} />
                   )}
 
                   {formData.user && (
@@ -77,7 +86,7 @@ const ReimbursementForm = () => {
                         disablePortal
                         id="combo-box-demo"
                         options={[
-                          { label: "Nptel" },
+                          { label: "NPTEL" },
                           { label: "GlobalCertification" },
                           { label: "Paperpublication" },
                           { label: "FTTP/STP" },
@@ -90,7 +99,7 @@ const ReimbursementForm = () => {
                       />
                     </Stack>
                   )}
-                  {formData.certification === "Nptel" && (
+                  {formData.certification === "NPTEL" && (
                     <NptelForm handleChange={handleChange} />
                   )}
                   {formData.certification === "GlobalCertification" && (

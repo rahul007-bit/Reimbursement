@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const Form = () => {
-  const [currentValue, setCurrentValue] = useState("my name");
+  const [currentValue, setCurrentValue] = useState("");
   return (
     <div className="w-screen h-[80vh] flex justify-center items-center">
       <div className="lg:w-1/2 h-2/3 shadow-md bg-white flex flex-col justify-evenly items-center">
@@ -21,7 +21,6 @@ const Form = () => {
             type="password"
             name="password"
           />
-          <span>your value is {currentValue} </span>
         </form>
       </div>
     </div>

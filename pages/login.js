@@ -6,6 +6,7 @@ const Login = () => {
   return (
     <div className="w-screen h-screen flex justify-center flex-col">
       <Header />
+      <Form />
     </div>
   );
 };
