@@ -1,7 +1,10 @@
-import React, { useState, useReducer } from "react";
+import React, { useReducer } from "react";
 import StudentForm from "./CretificationForm/studentform";
 import Staffform from "./CretificationForm/staffform.jsx";
 import NptelForm from "./CretificationForm/nptelform";
+import GlobalCertification from "./CretificationForm/globalcertification";
+import PaperPublication from "./CretificationForm/paperpublication";
+import Fdpform from "./CretificationForm/fdpform";
 
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
@@ -75,8 +78,9 @@ const ReimbursementForm = () => {
                         id="combo-box-demo"
                         options={[
                           { label: "Nptel" },
-                          { label: "RedHat" },
                           { label: "GlobalCertification" },
+                          { label: "Paperpublication" },
+                          { label: "FTTP/STP" },
                         ]}
                         onInputChange={getCertification}
                         sx={{ width: "100%" }}
@@ -88,6 +92,15 @@ const ReimbursementForm = () => {
                   )}
                   {formData.certification === "Nptel" && (
                     <NptelForm handleChange={handleChange} />
+                  )}
+                  {formData.certification === "GlobalCertification" && (
+                    <GlobalCertification handleChange={handleChange} />
+                  )}
+                  {formData.certification === "Paperpublication" && (
+                    <PaperPublication handleChange={handleChange} />
+                  )}
+                  {formData.certification === "FTTP/STP" && (
+                    <Fdpform handleChange={handleChange} />
                   )}
                 </Stack>
               </Box>

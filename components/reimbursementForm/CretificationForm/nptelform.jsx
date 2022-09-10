@@ -5,7 +5,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 const NptelForm = ({ handleChange }) => {
   return (
     <>
-      <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
+      {/* <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
         <TextField
           fullWidth
           label="Student Name"
@@ -18,7 +18,7 @@ const NptelForm = ({ handleChange }) => {
           id="outlined-required"
           required
         ></TextField>
-      </Stack>
+      </Stack> */}
 
       <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
         <TextField
@@ -81,14 +81,14 @@ const NptelForm = ({ handleChange }) => {
           disablePortal
           id="combo-box-demo"
           options={[{ label: "Elite" }, { label: "Gold" }, { label: "Silver" }]}
-          sx={{ width: 250 }}
+          fullWidth
           renderInput={(params) => (
             <TextField {...params} label="Class Received(if any)" />
           )}
         />
 
         <TextField
-          sx={{ width: 250 }}
+          fullWidth
           label="Reimbursement Amount"
           id="outlined-required"
           required
