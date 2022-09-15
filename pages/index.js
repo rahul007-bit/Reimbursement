@@ -4,6 +4,7 @@ export default function Home() {
     <>
       <Link href={"/login"}>Login</Link>
       <Link href={"/reimbursement"}>Reimbursement</Link>
+      <Link href={"/signup"}>Signup</Link>
     </>
   );
 }
