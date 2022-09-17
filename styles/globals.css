@@ -1,4 +1,4 @@
-@tailwind base;
+/*@tailwind base;*/
 @tailwind components;
 @tailwind utilities;
 
@@ -22,4 +22,8 @@ a {
 #nprogress .bar {
   height: 3px !important;
   @apply bg-purple-400 drop-shadow-md !important;
+}
+
+#__next {
+  height: 100vh;
 }
