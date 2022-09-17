@@ -6,9 +6,11 @@ const Admin_Schema = new mongoose.Schema(
   {
     name: String,
     email: String,
+    moodleId: String,
     password: String,
     profile_pic: String,
   },
+
   {
     timestamps: {
       createdAt: "created_at",
