@@ -7,6 +7,6 @@ import controller from "../../controllers/user/index.js";
 const limit = rateLimit(config.rateLimiter);
 
 export default async (router) => {
-  router.post("/sign_up", limit, controller.signUp);
-  router.post("/sign_in", limit, controller.signIn);
+  router.post("/user/sign_up", limit, controller.signUp);
+  router.post("/user/sign_in", limit, controller.signIn);
 };
