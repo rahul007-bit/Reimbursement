@@ -3,10 +3,20 @@ import rateLimit from "express-rate-limit";
 import { celebrate } from "celebrate";
 import config from "../../config/index.js";
 import controller from "../../controllers/user/index.js";
-
+import requestValidator from "../../services/user/requestValidator.js";
 const limit = rateLimit(config.rateLimiter);
 
 export default async (router) => {
-  router.post("/user/sign_up", limit, controller.signUp);
-  router.post("/user/sign_in", limit, controller.signIn);
+  router.post(
+    "/user/sign_up",
+    limit,
+    celebrate(requestValidator.signUp),
+    controller.signUp
+  );
+  router.post(
+    "/user/sign_in",
+    limit,
+    celebrate(requestValidator.signIn),
+    controller.signIn
+  );
 };
