@@ -8,6 +8,7 @@ const User_Schema = new mongoose.Schema(
   {
     name: String,
     email: String,
+    moodleId: String,
     password: String,
     profile_pic: String,
     department: String,
