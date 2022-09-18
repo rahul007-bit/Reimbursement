@@ -4,7 +4,8 @@ import jwt from "jsonwebtoken";
 
 const Admin_Schema = new mongoose.Schema(
   {
-    name: String,
+    firstName: String,
+    lastName: String,
     email: String,
     moodleId: String,
     password: String,
@@ -30,10 +31,10 @@ Admin_Schema.methods.valid_password = function valid_password(password) {
 };
 
 // generate a jwt token and save inside session
-Admin_Schema.methods.gen_auth_token = async function gen_auth_token(loginInfo) {
+Admin_Schema.methods.gen_auth_token = async function gen_auth_token() {
   const expiresIn = "10h";
   try {
-    const payload = { loginType: loginInfo.loginType, id: this._id };
+    const payload = { id: this._id };
     var token = jwt.sign(payload, config.jwtSecret, { expiresIn }); // eslint-disable-line
   } catch (error) {
     logger.error(error);
