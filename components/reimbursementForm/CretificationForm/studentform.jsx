@@ -12,18 +12,8 @@ const Studentform = () => {
   return (
     <>
       <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
-        <TextField
-          fullWidth
-          label="Student Name"
-          id="outlined-required"
-          required
-        ></TextField>
-        <TextField
-          fullWidth
-          label="Email"
-          id="outlined-required"
-          required
-        ></TextField>
+        <TextField fullWidth label="Student Name" required />
+        <TextField fullWidth label="Email" required />
       </Stack>
     </>
   );

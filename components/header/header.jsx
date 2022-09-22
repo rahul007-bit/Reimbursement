@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 import {
   AppBar,
@@ -17,19 +17,19 @@ import Button from "@mui/material/Button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+// const pages = ["Products", "Pricing", "Blog"];
+const settings = ["Profile", "Dashboard", "Logout"];
 
-const ResponsiveAppBar = () => {
+const HeaderBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [user, setUser] = useState(false);
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("auth-token");
 
     if (!token) {
       setUser(false);
-    }
+    } else setUser(true);
   }, []);
 
   const handleOpenNavMenu = (event) => {
@@ -51,7 +51,10 @@ const ResponsiveAppBar = () => {
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
+        <Toolbar
+          disableGutters
+          sx={{ display: "flex", width: 1, justifyContent: "space-between" }}
+        >
           <Link href="/">
             <Typography
               variant="h6"
@@ -71,7 +74,7 @@ const ResponsiveAppBar = () => {
             </Typography>
           </Link>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          {/* <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -107,7 +110,7 @@ const ResponsiveAppBar = () => {
                   </MenuItem>
                 ))}
             </Menu>
-          </Box>
+          </Box> */}
           <Link href={"/"}>
             <Typography
               variant="h5"
@@ -127,59 +130,71 @@ const ResponsiveAppBar = () => {
             </Typography>
           </Link>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages &&
-              pages.map((page) => (
-                <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  {page}
-                </Button>
-              ))}
-          </Box>
-
           {user ? (
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
+            <>
+              {/* <Box
+                sx={{
+                  flexGrow: 1,
+                  display: { xs: "none", md: "flex" },
+                  justifyContent: "flex-end",
                 }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
+                {pages &&
+                  pages.map((page) => (
+                    <Button
+                      key={page}
+                      onClick={handleCloseNavMenu}
+                      sx={{ my: 2, color: "white", display: "block" }}
+                    >
+                      {page}
+                    </Button>
+                  ))}
+              </Box> */}
+              <Box>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar
+                      alt="Remy Sharp"
+                      src="/static/images/avatar/2.jpg"
+                    />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+            </>
           ) : (
             <>
-              <Link href={"/login"}>
-                <Typography sx={{ cursor: "pointer" }} marginRight={2}>
-                  Login
-                </Typography>
-              </Link>
-              <Link href={"/signup"}>
-                <Typography sx={{ cursor: "pointer" }}>Sign Up</Typography>
-              </Link>
+              <Box sx={{ display: "flex" }}>
+                <Link href={"/login"}>
+                  <Typography sx={{ cursor: "pointer" }} marginRight={2}>
+                    Login
+                  </Typography>
+                </Link>
+                <Link href={"/signup"}>
+                  <Typography sx={{ cursor: "pointer" }}>Sign Up</Typography>
+                </Link>
+              </Box>
             </>
           )}
         </Toolbar>
@@ -187,4 +202,4 @@ const ResponsiveAppBar = () => {
     </AppBar>
   );
 };
-export default ResponsiveAppBar;
+export default HeaderBar;

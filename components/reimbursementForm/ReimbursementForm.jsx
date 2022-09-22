@@ -44,8 +44,8 @@ const ReimbursementForm = () => {
 
   return (
     <>
-      <div className="flex h-full w-full ">
-        <div className="shadow h-fit m-auto sm:w-1/2 lg:w-2/5 w-full flex justify-evenly items-center rounded-md py-8">
+      <div className="flex h-full w-full mt-10">
+        <div className="shadow-xl h-fit m-auto sm:w-1/2 lg:w-2/5 w-full flex justify-evenly items-center rounded-md py-8">
           <Box
             sx={{
               width: "90%",
@@ -58,12 +58,11 @@ const ReimbursementForm = () => {
             <form className="w-full flex flex-col justify-center items-center">
               <Box className="w-full">
                 <Stack spacing={3}>
-                  <Stack direction="row" spacing={3}></Stack>
                   <Autocomplete
                     name="user"
                     disablePortal
                     id="combo-box-demo"
-                    options={[{ label: "Student" }, { label: "Staff" }]}
+                    options={[{ label: "Student" }, { label: "Teacher" }]}
                     renderInput={(params) => (
                       <TextField name="user" {...params} label="Select Role" />
                     )}
@@ -75,7 +74,7 @@ const ReimbursementForm = () => {
                   )}
                   {/* render when user is stuff */}
 
-                  {formData.user === "Staff" && (
+                  {formData.user === "Teacher" && (
                     <StaffForm handleChange={handleChange} />
                   )}
 

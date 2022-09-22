@@ -10,7 +10,6 @@ const Staffform = ({ handleChange }) => {
           name="name"
           fullWidth
           label="Staff Name"
-          id="outlined-required"
           onChange={handleChange}
           required
         ></TextField>
@@ -19,7 +18,6 @@ const Staffform = ({ handleChange }) => {
           fullWidth
           label="Email"
           onChange={handleChange}
-          id="outlined-required"
           required
         ></TextField>
       </Stack>

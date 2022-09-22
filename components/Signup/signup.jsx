@@ -1,26 +1,61 @@
-import * as React from "react";
+import React, { useState } from "react";
+import { useRouter } from "next/router";
 
 import {
-  Button,
   TextField,
   Grid,
   Box,
   Typography,
   Container,
   Paper,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import Link from "next/link";
+import axios from "axios";
 
-export default function SignUp() {
+export default function SignUp({ setSnackType, setMessage, setOpen }) {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
   const handleSubmit = (event) => {
     event.preventDefault();
+    setLoading(true);
     const data = new FormData(event.currentTarget);
-    console.log({
-      moodle_id: data.get("moodle_id"),
+    const body = {
+      moodleId: data.get("moodleId"),
       password: data.get("password"),
       firstName: data.get("firstName"),
       lastName: data.get("lastName"),
-    });
+      type: data.get("type"),
+    };
+    axios({
+      url: "http://localhost:8080/api/user/sign_up",
+      method: "POST",
+      data: body,
+    })
+      .then((response) => {
+        const result = response.data;
+        if (result.success) {
+          setOpen(true);
+          setSnackType("success");
+          setMessage(result.message);
+          setTimeout(() => {
+            router.replace("/login");
+          }, 700);
+        }
+      })
+      .catch((error) => {
+        const response = error.response.data;
+        setOpen(true);
+        setSnackType("error");
+        setMessage(response.message);
+        console.log(response);
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -71,7 +106,7 @@ export default function SignUp() {
                       required
                       fullWidth
                       label="Moodle ID"
-                      name="moodle_id"
+                      name="moodleId"
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -84,15 +119,33 @@ export default function SignUp() {
                       autoComplete="new-password"
                     />
                   </Grid>
+                  <Grid item xs={12}>
+                    <FormControl required sx={{ width: 1 }}>
+                      <InputLabel id="demo-simple-select-required-label">
+                        You are?
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-required-label"
+                        id="demo-simple-select-required"
+                        label="You are? *"
+                        name="type"
+                        // onChange={handleChange}
+                      >
+                        <MenuItem value={"student"}>Student</MenuItem>
+                        <MenuItem value={"teacher"}>Teacher</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
                 </Grid>
-                <Button
+                <LoadingButton
+                  loading={loading}
                   type="submit"
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
                 >
                   Sign Up
-                </Button>
+                </LoadingButton>
                 <Grid container justifyContent="flex-end">
                   <Grid item>
                     <Link href={"/login"}>

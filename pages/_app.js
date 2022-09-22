@@ -34,14 +34,13 @@ export const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: `Montserrat, sans-serif`,
+    fontFamily: `'Poppins', sans-serif`,
   },
 });
 
 function MyApp({ Component, pageProps }) {
   return (
     <>
-      {" "}
       <ThemeProvider theme={theme}>
         <ProgressBar />
         <Component {...pageProps} />

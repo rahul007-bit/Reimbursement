@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useContext } from "react";
 import {
   Button,
   TextField,
@@ -10,15 +10,52 @@ import {
   Paper,
 } from "@mui/material";
 import Link from "next/link";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { LoadingButton } from "@mui/lab";
 
-export default function SignIn() {
+export default function SignIn({ setSnackType, setMessage, setOpen }) {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    setLoading(true);
     console.log({
-      email: data.get("moodle_id"),
+      moodleId: data.get("moodle_id"),
       password: data.get("password"),
     });
+    axios({
+      url: "http://localhost:8080/api/user/sign_in",
+      method: "POST",
+      data: {
+        moodleId: data.get("moodle_id"),
+        password: data.get("password"),
+      },
+    })
+      .then((response) => {
+        const result = response.data;
+        if (result.success) {
+          setOpen(true);
+          setSnackType("success");
+          setMessage(result.message);
+          const token = result.auth_token;
+          localStorage.setItem("auth-token", token);
+          setTimeout(() => {
+            router.replace("/");
+          }, 500);
+        }
+
+        console.log(result);
+      })
+      .catch((err) => {
+        const response = err.response;
+        setOpen(true);
+        setSnackType("error");
+        setMessage(response.message);
+        console.log(response);
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -67,14 +104,15 @@ export default function SignIn() {
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
-          <Button
+          <LoadingButton
+            loading={loading}
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
             Sign In
-          </Button>
+          </LoadingButton>
           <Grid container justifyContent="flex-end">
             {/*<Grid item xs>*/}
             {/*  <Button>*/}
