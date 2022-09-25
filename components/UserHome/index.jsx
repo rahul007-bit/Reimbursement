@@ -21,10 +21,11 @@ export const UserHome = () => {
       >
         <Avatar
           sx={{
-            width: 1 / 5,
+            width: 1,
             height: "auto",
             aspectRatio: "1/1",
             maxWidth: "130px",
+            my: 1,
           }}
         />
         <Box sx={{ display: "grid", marginX: 2 }}>

@@ -14,32 +14,26 @@ import {
   TextField,
   Autocomplete,
 } from "@mui/material";
-
-const formReducer = (state, event) => {
-  return {
-    ...state,
-    [event.name]: event.value,
-  };
-};
+import { useState } from "react";
+import { LoadingButton } from "@mui/lab";
 
 const ReimbursementForm = () => {
-  const getUserDetails = (event, value) => {
-    handleChange("user", value);
+  const [certificationDetails, setCertificationDetails] = useState({});
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log(certificationDetails);
   };
-
-  const getCertification = (event, value) => {
-    handleChange("certification", value);
-  };
-
-  const [formData, setFormData] = useReducer(formReducer, {
-    user: "",
-    certificates: "",
-  });
   const handleChange = (name, value) => {
-    setFormData({
-      name: name,
-      value: value,
-    });
+    setCertificationDetails((prev) => ({
+      ...prev,
+      [name]:
+        typeof value === "object"
+          ? {
+              ...prev[name],
+              [Object.entries(value)[0][0]]: Object.entries(value)[0][1],
+            }
+          : value,
+    }));
   };
 
   return (
@@ -55,30 +49,39 @@ const ReimbursementForm = () => {
               Apply for Reimbursement
             </Typography>
             <Divider variant="middle" className="mb-4" />
-            <form className="w-full flex flex-col justify-center items-center">
+            <form
+              className="w-full flex flex-col justify-center items-center"
+              onSubmit={handleSubmit}
+            >
               <Box className="w-full">
                 <Stack spacing={3}>
                   <Autocomplete
                     name="user"
                     disablePortal
                     id="combo-box-demo"
+                    required
+                    onChange={(e, v) =>
+                      handleChange("additionalDetails", {
+                        [e.target.name]: v ? v.label : "",
+                      })
+                    }
                     options={[{ label: "Student" }, { label: "Teacher" }]}
                     renderInput={(params) => (
                       <TextField name="user" {...params} label="Select Role" />
                     )}
-                    onInputChange={getUserDetails}
+                    // onInputChange={getUserDetails}
                   />
                   {/* render when user is student */}
-                  {formData.user === "Student" && (
+                  {certificationDetails.user === "Student" && (
                     <StudentForm handleChange={handleChange} />
                   )}
                   {/* render when user is stuff */}
 
-                  {formData.user === "Teacher" && (
+                  {certificationDetails.user === "Teacher" && (
                     <StaffForm handleChange={handleChange} />
                   )}
 
-                  {formData.user && (
+                  {certificationDetails.user && (
                     <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
                       <Autocomplete
                         name="certification"
@@ -90,26 +93,38 @@ const ReimbursementForm = () => {
                           { label: "Paperpublication" },
                           { label: "FTTP/STP" },
                         ]}
-                        onInputChange={getCertification}
+                        onChange={(e, v) =>
+                          handleChange("certification", v ? v.label : "")
+                        }
+                        // onInputChange={getCertification}
                         sx={{ width: "100%" }}
                         renderInput={(params) => (
-                          <TextField {...params} label="Select Courses" />
+                          <TextField {...params} label="Select Certificate" />
                         )}
                       />
                     </Stack>
                   )}
-                  {formData.certification === "NPTEL" && (
+                  {certificationDetails.certification === "NPTEL" && (
                     <NptelForm handleChange={handleChange} />
                   )}
-                  {formData.certification === "GlobalCertification" && (
+                  {certificationDetails.certification ===
+                    "GlobalCertification" && (
                     <GlobalCertification handleChange={handleChange} />
                   )}
-                  {formData.certification === "Paperpublication" && (
+                  {certificationDetails.certification ===
+                    "Paperpublication" && (
                     <PaperPublication handleChange={handleChange} />
                   )}
-                  {formData.certification === "FTTP/STP" && (
+                  {certificationDetails.certification === "FTTP/STP" && (
                     <Fdpform handleChange={handleChange} />
                   )}
+                  <LoadingButton
+                    variant="contained"
+                    loading={false}
+                    type={"submit"}
+                  >
+                    Submit
+                  </LoadingButton>
                 </Stack>
               </Box>
             </form>

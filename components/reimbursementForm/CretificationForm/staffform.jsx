@@ -10,14 +10,22 @@ const Staffform = ({ handleChange }) => {
           name="name"
           fullWidth
           label="Staff Name"
-          onChange={handleChange}
+          onChange={(e) =>
+            handleChange("additionalDetails", {
+              [e.target.name]: e.target.value,
+            })
+          }
           required
         ></TextField>
         <TextField
           name="email"
           fullWidth
           label="Email"
-          onChange={handleChange}
+          onChange={(e) =>
+            handleChange("additionalDetails", {
+              [e.target.name]: e.target.value,
+            })
+          }
           required
         ></TextField>
       </Stack>

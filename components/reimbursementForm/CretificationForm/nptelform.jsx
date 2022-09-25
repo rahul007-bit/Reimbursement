@@ -5,28 +5,19 @@ import Autocomplete from "@mui/material/Autocomplete";
 const NptelForm = ({ handleChange }) => {
   return (
     <>
-      {/* <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
-        <TextField
-          fullWidth
-          label="Student Name"
-          id="outlined-required"
-          required
-        ></TextField>
-        <TextField
-          fullWidth
-          label="Email"
-          id="outlined-required"
-          required
-        ></TextField>
-      </Stack> */}
-
       <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
         <TextField
           sx={{ width: 255 }}
           label="Course Name"
           id="outlined-required"
           required
-        ></TextField>
+          name={"courseName"}
+          onChange={(e) =>
+            handleChange("additionalDetails", {
+              [e.target.name]: e.target.value,
+            })
+          }
+        />
         <Autocomplete
           disablePortal
           id="combo-box-demo"
@@ -35,44 +26,64 @@ const NptelForm = ({ handleChange }) => {
           renderInput={(params) => (
             <TextField {...params} label="Academic Year" />
           )}
+          onChange={(e, v) =>
+            handleChange("additionalDetails", {
+              academic_Year: v ? v.label : "",
+            })
+          }
         />
       </Stack>
 
       <Typography variant="h8" gutterBottom>
         Duration
       </Typography>
-      <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
+      <Stack direction={{ sm: "column", lg: "row" }} spacing={3}>
         <TextField
           fullWidth
-          label="Start Date"
+          label="Course Start Date"
           id="outlined-required"
           type="date"
-          // defaultValue="2020-05-26"
           InputLabelProps={{
             shrink: true,
           }}
+          name={"courseStartDate"}
+          onChange={(e) =>
+            handleChange("additionalDetails", {
+              [e.target.name]: e.target.value,
+            })
+          }
           required
         ></TextField>
         <TextField
           fullWidth
-          label="End Date"
+          label="Course End Date"
+          name="courseEndDate"
           id="outlined-required"
           type="date"
-          // defaultValue="2020-05-26"
           InputLabelProps={{
             shrink: true,
           }}
           required
+          onChange={(e) =>
+            handleChange("additionalDetails", {
+              [e.target.name]: e.target.value,
+            })
+          }
         ></TextField>
         <TextField
           fullWidth
           label="Exam Date"
           id="outlined-required"
           type="date"
-          // defaultValue="2020-05-26"
           InputLabelProps={{
             shrink: true,
           }}
+          name={"examDate"}
+          onChange={(e) =>
+            handleChange("additionalDetails", {
+              [e.target.name]: e.target.value,
+            })
+          }
           required
         ></TextField>
       </Stack>
@@ -85,13 +96,20 @@ const NptelForm = ({ handleChange }) => {
           renderInput={(params) => (
             <TextField {...params} label="Class Received(if any)" />
           )}
+          onChange={(e, v) =>
+            handleChange("additionalDetails", {
+              Class: v ? v.label : "",
+            })
+          }
         />
 
         <TextField
           fullWidth
           label="Reimbursement Amount"
           id="outlined-required"
+          name={"amountToReimbursement"}
           required
+          onChange={(e) => handleChange(e.target.name, e.target.value)}
         ></TextField>
       </Stack>
     </>
