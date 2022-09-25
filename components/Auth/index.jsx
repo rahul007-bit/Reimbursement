@@ -11,6 +11,8 @@ export const Auth = ({ children, user }) => {
   const { loading, userLoggedIn, userData } = useUserProfile({
     token: token,
   });
+  const router = useRouter();
+
   useEffect(() => {
     if (!userLoggedIn && !loading && !userData) {
       console.log(loading);
@@ -23,8 +25,6 @@ export const Auth = ({ children, user }) => {
         router.push("/");
     }
   }, [loading, router, userData, userLoggedIn]);
-
-  const router = useRouter();
 
   if (loading)
     return (
