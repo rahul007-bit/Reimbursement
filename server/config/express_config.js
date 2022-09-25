@@ -17,7 +17,7 @@ export default async (app, config) => {
   app.use(morgan("dev", { stream: logger.stream }));
 
   // setup body parser and cookie parser
-  app.use(bodyParser.json({ limit: "10mb" }));
+  app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 
   // makes responses faster by compressing them

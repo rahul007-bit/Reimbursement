@@ -6,7 +6,8 @@ import config from "../../config/index.js";
 
 const User_Schema = new mongoose.Schema(
   {
-    name: String,
+    first_name: String,
+    last_Name: String,
     email: String,
     moodleId: String,
     password: String,
@@ -15,8 +16,8 @@ const User_Schema = new mongoose.Schema(
     year: String,
     type: {
       type: String,
-      enum: ["Student", "Stuff"],
-      default: "Student",
+      enum: ["student", "teacher"],
+      default: "student",
     },
   },
   {
@@ -40,7 +41,7 @@ User_Schema.methods.valid_password = function valid_password(password) {
 // generate a jwt token and save inside session
 User_Schema.methods.gen_auth_token = async function gen_auth_token(loginInfo) {
   const expiresIn = "10h";
-  let token
+  let token;
   try {
     const payload = { userId: this._id };
     token = jwt.sign(payload, config.jwtSecret, { expiresIn }); // eslint-disable-line

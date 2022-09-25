@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import config from "../../../config/index.js";
-import { loggers } from "winston";
-
+import loggers from "../../../config/logger.js";
+import User from "../../../model/user/model.js";
 export const userAuth = async (req, res, next) => {
   const token = req.headers["x-auth-token"];
   try {
@@ -19,16 +19,24 @@ export const userAuth = async (req, res, next) => {
         }
       );
       if (!payload.success) {
-        return req
+        return res
           .status(401)
-          .json({ success: false, message: payload.message });
+          .json({ success: false, message: "Invalid token", status: 401 });
       }
       req.userId = payload.message.userId;
-      next();
+      const user = User.findOne({ _id: payload.message.userId });
+      if (user) {
+        req.user = user;
+        next();
+      } else {
+        return res
+          .status(401)
+          .json({ message: "User Not found", success: false, status: 401 });
+      }
     } else {
       return res
         .status(401)
-        .json({ success: false, message: "Token is required" });
+        .json({ success: false, status: 401, message: "Token is required" });
     }
   } catch (error) {
     loggers.error(error.message);

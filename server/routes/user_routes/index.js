@@ -5,6 +5,7 @@ import config from "../../config/index.js";
 import controller from "../../controllers/user/index.js";
 import requestValidator from "../../services/user/requestValidator.js";
 const limit = rateLimit(config.rateLimiter);
+import { reimbursementValidator } from "../../services/reimbursement/requestValidation.js";
 
 export default async (router) => {
   router.post(
@@ -19,4 +20,21 @@ export default async (router) => {
     celebrate(requestValidator.signIn),
     controller.signIn
   );
+
+  router.post(
+    "/user/requestReimburse",
+    limit,
+    userAuth,
+    celebrate(reimbursementValidator.requestReimbursement),
+    controller.applyReimbursement
+  );
+
+  router.get(
+    "/user/getReimburse",
+    limit,
+    userAuth,
+    controller.viewReimbursement
+  );
+
+  // router.get("/user/details", limit, userAuth, controller.viewProfile);
 };

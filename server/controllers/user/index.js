@@ -1,46 +1,101 @@
 import config from "../../config/index.js";
-import User from "../../model/user/model.js"
+import {
+  createReimbursement,
+  getReimbursement,
+} from "../../services/reimbursement/index.js";
+import User from "../../model/user/model.js";
 
 const controller = Object.create(null); // {}
 controller.signUp = async (req, res) => {
-    const { moodleId, password } = req.body;
-    const user = await User.findOne({ moodleId: moodleId })
+  try {
+    const { moodleId, password, firstName, lastName } = req.body;
+
+    const user = await User.findOne({ moodleId: moodleId });
     if (user) {
-        return res.status(400).send({ sucess: true, message: "User already exists with provided moodleId" })
-
-    }
-     else {
-        const newUser = new User();
-        const hashPassword= newUser.generate_hash(password);
-
-        await User.create({
-            moodleId:moodleId,password:hashPassword
-        })
-        return res.send({sucess:true,message:"SignUp successful"})
-
-    }
-    console.log(user);
-    return res.send(user)
-};
-controller.signIn = async (req, res) => {
-    const { moodleId, password } = req.body;
-    const user = await User.findOne({ moodleId: moodleId })
-    if (user == null) {
-        return res.send({ sucess: false, message: "Invalid Moodleid" })
+      return res.status(400).send({
+        success: true,
+        message: "User already exists with provided moodle Id",
+      });
     } else {
-        if (await user.valid_password(password)) {
-            const userData = {}
-            userData.username = user.username;
-            userData.profile_pic = user.profile_pic;
-            return res.send({ sucess: true, message: "Login successfull", userData: userData })
-        }
-
+      const newUser = new User();
+      const hashPassword = newUser.generate_hash(password);
+      await User.create({
+        first_name: firstName,
+        last_name: lastName,
+        moodleId: moodleId,
+        password: hashPassword,
+      });
+      return res
+        .status(201)
+        .send({ success: true, message: "SignUp successful" });
     }
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
 };
-controller.updateProfile = async (req, res) => { };
-controller.viewProfile = async (req, res) => { };
-controller.applyReimbursement = async (req, res) => { };
-controller.viewReimbursement = async (req, res) => { };
-controller.deleteReimbursement = async (req, res) => { };
+
+controller.signIn = async (req, res) => {
+  try {
+    const { moodleId, password } = req.body;
+    const user = await User.findOne({ moodleId: moodleId });
+    if (!user) {
+      return res
+        .status(404)
+        .send({ success: false, message: "Invalid credential provided" });
+    } else {
+      if (await user.valid_password(password)) {
+        const userData = {};
+        userData.username = user.username;
+        userData.profile_pic = user.profile_pic;
+        const token = await user.gen_auth_token();
+        return res.send({
+          success: true,
+          message: "Login successfully",
+          userData: userData,
+          auth_token: token,
+        });
+      } else {
+        return res
+          .status(404)
+          .send({ success: false, message: "Invalid credential provided" });
+      }
+    }
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+controller.updateProfile = async (req, res) => {};
+controller.viewProfile = async (req, res) => {};
+controller.applyReimbursement = async (req, res) => {
+  try {
+    const user_id = req.userId;
+    const { certificate_name, bankDetails, amountToReimbursement } = req.body;
+    const result = await createReimbursement({
+      certificate_name,
+      user_id,
+      bankDetails,
+      amountToReimbursement,
+    });
+    return res.status(result.status).json(result);
+  } catch (error) {
+    return res
+      .status(500)
+      .send({ success: false, message: error.message, status: 500 });
+  }
+};
+controller.viewReimbursement = async (req, res) => {
+  try {
+    const query = req.query;
+    query.userId = req.userId;
+    const result = await getReimbursement(query);
+    return res.status(result.status).json(result);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: error.message, status: 500 });
+  }
+};
+controller.deleteReimbursement = async (req, res) => {};
 
 export default controller;
