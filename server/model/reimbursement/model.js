@@ -8,6 +8,7 @@ const Reimbursement_Schema = new mongoose.Schema({
     accountNumber: String,
     IFSCode: String,
   },
+
   amountToReimbursement: String,
   status: {
     type: String,
@@ -15,6 +16,7 @@ const Reimbursement_Schema = new mongoose.Schema({
     default: "PENDING",
   },
   additionalDetails: Object,
+  department: String,
 });
 
 const Reimbursement = new mongoose.model("Reimbursement", Reimbursement_Schema);

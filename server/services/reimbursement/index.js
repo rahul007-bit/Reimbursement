@@ -6,6 +6,7 @@ export const createReimbursement = async ({
   user_id,
   bankDetails,
   amountToReimbursement,
+  department,
 }) => {
   try {
     await Reimbursement.create({
@@ -13,6 +14,7 @@ export const createReimbursement = async ({
       user_id: user_id,
       bankDetails: bankDetails,
       amountToReimbursement: amountToReimbursement,
+      department: department,
     });
     return {
       success: true,

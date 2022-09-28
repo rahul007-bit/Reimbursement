@@ -7,7 +7,7 @@ import requestValidator from "../../services/user/requestValidator.js";
 const limit = rateLimit(config.rateLimiter);
 import { reimbursementValidator } from "../../services/reimbursement/requestValidation.js";
 
-export default async (router) => {
+const router = async (router) => {
   router.post(
     "/user/sign_up",
     limit,
@@ -38,3 +38,4 @@ export default async (router) => {
 
   // router.get("/user/details", limit, userAuth, controller.viewProfile);
 };
+export default router;

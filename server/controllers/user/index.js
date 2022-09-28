@@ -70,12 +70,14 @@ controller.viewProfile = async (req, res) => {};
 controller.applyReimbursement = async (req, res) => {
   try {
     const user_id = req.userId;
+    const department = req.user.department;
     const { certificate_name, bankDetails, amountToReimbursement } = req.body;
     const result = await createReimbursement({
       certificate_name,
       user_id,
       bankDetails,
       amountToReimbursement,
+      department,
     });
     return res.status(result.status).json(result);
   } catch (error) {
@@ -84,6 +86,7 @@ controller.applyReimbursement = async (req, res) => {
       .send({ success: false, message: error.message, status: 500 });
   }
 };
+
 controller.viewReimbursement = async (req, res) => {
   try {
     const query = req.query;
