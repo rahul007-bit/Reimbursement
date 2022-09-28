@@ -14,6 +14,7 @@ const requestValidator = {
       lastName: Joi.string(),
       moodleId: Joi.string().required(),
       password: Joi.string().required(),
+      type: Joi.string().required(),
     }),
   },
 };
