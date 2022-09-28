@@ -9,7 +9,7 @@ export const Auth = ({ children, user }) => {
   useEffect(() => {
     setHaveToken(true);
     setToken(localStorage.getItem("auth-token"));
-  }, [token]);
+  }, []);
 
   const { loading, userLoggedIn, userData } = useUserProfile({
     token: token,
@@ -26,7 +26,7 @@ export const Auth = ({ children, user }) => {
       if (userData.type === "user" && router.asPath === "/admin")
         router.push("/");
     }
-  }, [loading, router, userData, userLoggedIn, haveToken]);
+  }, [loading, router, userLoggedIn, haveToken]);
 
   if (loading)
     return (

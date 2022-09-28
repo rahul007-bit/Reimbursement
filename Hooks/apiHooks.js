@@ -131,7 +131,7 @@ export const useUserProfile = ({ token }) => {
     return () => {
       // controller.abort();
     };
-  }, [token, userData]);
+  }, [token]);
   return {
     loading: loading,
     userLoggedIn: userLoggedIn,
