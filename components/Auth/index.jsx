@@ -26,7 +26,7 @@ export const Auth = ({ children, user }) => {
       if (userData.type === "user" && router.asPath === "/admin")
         router.push("/");
     }
-  }, [loading, router, userLoggedIn, haveToken]);
+  }, [loading, router, userLoggedIn, haveToken, userData]);
 
   if (loading)
     return (

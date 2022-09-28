@@ -103,7 +103,7 @@ export const useUserProfile = ({ token }) => {
         headers: header,
         // signal: controller.signal,
       };
-      fetch(url + `api/details`, requestOptions)
+      fetch(url + `details`, requestOptions)
         .then((response) => response.json())
         .then((result) => {
           if (result.status === 200) {
