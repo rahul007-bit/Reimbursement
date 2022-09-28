@@ -52,7 +52,8 @@ export default function SignUp({ setSnackType, setMessage, setOpen }) {
         const response = error.response.data;
         setOpen(true);
         setSnackType("error");
-        setMessage(response.message);
+        if (response) setMessage(response.message);
+        else setMessage("Oops! Something went wrong");
         console.log(response);
       })
       .finally(() => setLoading(false));

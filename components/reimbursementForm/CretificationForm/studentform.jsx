@@ -11,7 +11,7 @@ const Studentform = ({ handleChange }) => {
 
   return (
     <>
-      <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
+      <Stack direction={{ sm: "column", md: "row" }} gap={1}>
         <TextField
           fullWidth
           label="Student Name"

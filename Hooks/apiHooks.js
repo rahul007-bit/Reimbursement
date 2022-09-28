@@ -112,6 +112,9 @@ export const useUserProfile = ({ token }) => {
             sessionStorage.setItem("user", JSON.stringify(result.data));
             setUserLoggedIn(true);
           } else if (result.status === 401) {
+            localStorage.removeItem("auth-token");
+            sessionStorage.clear();
+
             setUserLoggedIn(false);
           } else {
             setUserLoggedIn(false);
@@ -128,7 +131,7 @@ export const useUserProfile = ({ token }) => {
     return () => {
       // controller.abort();
     };
-  }, [token]);
+  }, [token, userData]);
   return {
     loading: loading,
     userLoggedIn: userLoggedIn,

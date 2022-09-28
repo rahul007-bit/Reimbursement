@@ -43,7 +43,7 @@ export default function SignIn({ setSnackType, setMessage, setOpen }) {
           localStorage.setItem("auth-token", token);
           setTimeout(() => {
             router.push("/");
-          }, 1000);
+          }, 800);
         }
 
         console.log(result);

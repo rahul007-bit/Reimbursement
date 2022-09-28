@@ -18,20 +18,25 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 // const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Dashboard", "Logout"];
+const settings = [
+  { name: "Profile" },
+  { name: "Dashboard", link: "/" },
+  { name: "Logout", link: "/logout" },
+];
 
 const HeaderBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [user, setUser] = useState(false);
+  const [user, setUser] = useState(null);
   useEffect(() => {
-    const token = localStorage.getItem("auth-token");
-
-    if (!token) {
-      setUser(false);
-    } else setUser(true);
+    // const token = localStorage.getItem("auth-token");
+    setUser(JSON.parse(sessionStorage.getItem("user")));
   }, []);
-
+  // useEffect(() => {
+  //   if (user) {
+  //     setUser(false);
+  //   }
+  // }, [user]);
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -176,9 +181,13 @@ const HeaderBar = () => {
                   onClose={handleCloseUserMenu}
                 >
                   {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">{setting}</Typography>
-                    </MenuItem>
+                    <Link href={setting.link || ""} key={setting}>
+                      <MenuItem onClick={handleCloseUserMenu}>
+                        <Typography textAlign="center">
+                          {setting.name}
+                        </Typography>
+                      </MenuItem>
+                    </Link>
                   ))}
                 </Menu>
               </Box>

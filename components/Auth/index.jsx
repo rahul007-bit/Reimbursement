@@ -5,17 +5,19 @@ import { useUserProfile } from "../../Hooks/apiHooks";
 import { useState } from "react";
 export const Auth = ({ children, user }) => {
   const [token, setToken] = useState(null);
+  const [haveToken, setHaveToken] = useState(false);
   useEffect(() => {
+    setHaveToken(true);
     setToken(localStorage.getItem("auth-token"));
-  }, []);
+  }, [token]);
+
   const { loading, userLoggedIn, userData } = useUserProfile({
     token: token,
   });
   const router = useRouter();
 
   useEffect(() => {
-    if (!userLoggedIn && !loading && !userData) {
-      console.log(loading);
+    if (haveToken && !userLoggedIn && !loading && !userData) {
       router.push("/login");
     }
     if (!loading && userData) {
@@ -24,7 +26,7 @@ export const Auth = ({ children, user }) => {
       if (userData.type === "user" && router.asPath === "/admin")
         router.push("/");
     }
-  }, [loading, router, userData, userLoggedIn]);
+  }, [loading, router, userData, userLoggedIn, haveToken]);
 
   if (loading)
     return (

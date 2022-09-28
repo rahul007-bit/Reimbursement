@@ -5,9 +5,9 @@ import Autocomplete from "@mui/material/Autocomplete";
 const NptelForm = ({ handleChange }) => {
   return (
     <>
-      <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
+      <Stack direction={{ sm: "column", md: "row" }} gap={1}>
         <TextField
-          sx={{ width: 255 }}
+          fullWidth
           label="Course Name"
           id="outlined-required"
           required
@@ -22,7 +22,7 @@ const NptelForm = ({ handleChange }) => {
           disablePortal
           id="combo-box-demo"
           options={[{ label: "First Half" }, { label: "Second half" }]}
-          sx={{ width: 260 }}
+          sx={{ minWidth: "260px" }}
           renderInput={(params) => (
             <TextField {...params} label="Academic Year" />
           )}
@@ -37,7 +37,7 @@ const NptelForm = ({ handleChange }) => {
       <Typography variant="h8" gutterBottom>
         Duration
       </Typography>
-      <Stack direction={{ sm: "column", lg: "row" }} spacing={3}>
+      <Stack direction={{ sm: "column", lg: "row" }} gap={1}>
         <TextField
           fullWidth
           label="Course Start Date"

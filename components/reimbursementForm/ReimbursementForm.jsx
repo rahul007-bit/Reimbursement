@@ -13,14 +13,36 @@ import {
   Typography,
   TextField,
   Autocomplete,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
+import { submit } from "../../Hooks/apiHooks";
+import PaymentDetails from "./paymentDetails";
+import { useRouter } from "next/router";
 
 const ReimbursementForm = () => {
   const [certificationDetails, setCertificationDetails] = useState({});
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const router = useRouter();
   const handleSubmit = (event) => {
     event.preventDefault();
+    submit("user/requestReimburse", { certificationDetails }).then(
+      (response) => {
+        if (response.status === 200 || response.success) {
+          setOpen(true);
+          setMessage("Successfully Applied");
+          setTimeout(() => {
+            router.push("/");
+          }, 500);
+        } else if (response.status === 400 || response.validation?.body) {
+          setOpen(true);
+          setMessage(response.validation.body.message);
+        }
+      }
+    );
     console.log(certificationDetails);
   };
   const handleChange = (name, value) => {
@@ -62,7 +84,7 @@ const ReimbursementForm = () => {
                     required
                     onChange={(e, v) =>
                       handleChange("additionalDetails", {
-                        [e.target.name]: v ? v.label : "",
+                        ["name"]: v ? v.label : "",
                       })
                     }
                     options={[{ label: "Student" }, { label: "Teacher" }]}
@@ -72,26 +94,23 @@ const ReimbursementForm = () => {
                     // onInputChange={getUserDetails}
                   />
                   {/* render when user is student */}
-                  {certificationDetails.user === "Student" && (
-                    <StudentForm handleChange={handleChange} />
-                  )}
+                  {certificationDetails.additionalDetails?.name ===
+                    "Student" && <StudentForm handleChange={handleChange} />}
                   {/* render when user is stuff */}
 
-                  {certificationDetails.user === "Teacher" && (
-                    <StaffForm handleChange={handleChange} />
-                  )}
+                  {certificationDetails.additionalDetails?.name ===
+                    "Teacher" && <StaffForm handleChange={handleChange} />}
 
-                  {certificationDetails.user && (
+                  {certificationDetails.additionalDetails?.name && (
                     <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
                       <Autocomplete
                         name="certification"
-                        disablePortal
                         id="combo-box-demo"
                         options={[
                           { label: "NPTEL" },
-                          { label: "GlobalCertification" },
-                          { label: "Paperpublication" },
-                          { label: "FTTP/STP" },
+                          { label: "Global Certification" },
+                          { label: "Paper Publication" },
+                          { label: "FTTP / STP" },
                         ]}
                         onChange={(e, v) =>
                           handleChange("certification", v ? v.label : "")
@@ -104,20 +123,28 @@ const ReimbursementForm = () => {
                       />
                     </Stack>
                   )}
-                  {certificationDetails.certification === "NPTEL" && (
-                    <NptelForm handleChange={handleChange} />
-                  )}
-                  {certificationDetails.certification ===
-                    "GlobalCertification" && (
-                    <GlobalCertification handleChange={handleChange} />
-                  )}
-                  {certificationDetails.certification ===
-                    "Paperpublication" && (
-                    <PaperPublication handleChange={handleChange} />
-                  )}
-                  {certificationDetails.certification === "FTTP/STP" && (
-                    <Fdpform handleChange={handleChange} />
-                  )}
+                  {certificationDetails.additionalDetails?.name &&
+                    certificationDetails.certification === "NPTEL" && (
+                      <NptelForm handleChange={handleChange} />
+                    )}
+                  {certificationDetails.additionalDetails?.name &&
+                    certificationDetails.certification ===
+                      "Global Certification" && (
+                      <GlobalCertification handleChange={handleChange} />
+                    )}
+                  {certificationDetails.additionalDetails?.name &&
+                    certificationDetails.certification ===
+                      "Paper Publication" && (
+                      <PaperPublication handleChange={handleChange} />
+                    )}
+                  {certificationDetails.additionalDetails?.name &&
+                    certificationDetails.certification === "FTTP / STP" && (
+                      <Fdpform handleChange={handleChange} />
+                    )}
+                  {certificationDetails.additionalDetails?.name &&
+                    certificationDetails.certification && (
+                      <PaymentDetails handleChange={handleChange} />
+                    )}
                   <LoadingButton
                     variant="contained"
                     loading={false}
@@ -128,6 +155,21 @@ const ReimbursementForm = () => {
                 </Stack>
               </Box>
             </form>
+            {open && (
+              <Snackbar
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+              >
+                <Alert
+                  onClose={handleClose}
+                  severity={snackType}
+                  sx={{ width: "100%" }}
+                >
+                  {message}
+                </Alert>
+              </Snackbar>
+            )}
           </Box>
         </div>
       </div>
