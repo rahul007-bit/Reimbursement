@@ -2,8 +2,10 @@ import { Avatar, Box, Button, Typography } from "@mui/material";
 import React from "react";
 import Link from "next/link";
 import UserTable from "./UserTable";
-
+import { useFetch } from "../../Hooks/apiHooks";
 export const UserHome = () => {
+  const { loading, data } = useFetch("user/getReimburse", []);
+
   return (
     <>
       {/* top part */}
@@ -56,7 +58,7 @@ export const UserHome = () => {
           alignItems: "center",
         }}
       >
-        <UserTable />
+        {!loading && data && <UserTable data={data} />}
       </Box>
     </>
   );

@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useState } from "react";
 import axios from "axios";
 
-export const url = "http://localhost:8080/";
+export const url = "http://localhost:8080/api/";
 
 const initialState = {
   loading: true,

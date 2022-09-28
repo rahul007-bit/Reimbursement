@@ -11,7 +11,7 @@ const PaymentDetails = ({ handleChange }) => {
         required
         name={"accountNumber"}
         onChange={(e) =>
-          handleChange("backDetails", {
+          handleChange("bankDetails", {
             [e.target.name]: e.target.value,
           })
         }
@@ -23,7 +23,7 @@ const PaymentDetails = ({ handleChange }) => {
         required
         name={"IFSCode"}
         onChange={(e) =>
-          handleChange("backDetails", {
+          handleChange("bankDetails", {
             [e.target.name]: e.target.value,
           })
         }
