@@ -9,6 +9,7 @@ export const reimbursementValidator = {
         IFSCode: Joi.string().required(),
       }),
       amountToReimbursement: Joi.string().required(),
+      additionalDetails: Joi.object(),
     }),
   },
 };
