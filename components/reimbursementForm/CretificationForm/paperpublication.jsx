@@ -19,12 +19,24 @@ const PaperPublication = ({ handleChange }) => {
         label="Name of Journal/Conference"
         id="outlined-required"
         required
+        name="journal_name"
+        onChange={(e) =>
+          handleChange("additionalDetails", {
+            [e.target.name]: e.target.value,
+          })
+        }
       ></TextField>
       <TextField
         fullWidth
         label="Title of Publication"
         id="outlined-required"
         required
+        name="publication_title"
+        onChange={(e) =>
+          handleChange("additionalDetails", {
+            [e.target.name]: e.target.value,
+          })
+        }
       ></TextField>
 
       <TextField
@@ -32,6 +44,13 @@ const PaperPublication = ({ handleChange }) => {
         label="Name of Author/Authors"
         placeholder="Placeholder"
         multiline
+        required
+        name="author_name"
+        onChange={(e) =>
+          handleChange("additionalDetails", {
+            [e.target.name]: e.target.value,
+          })
+        }
       />
       <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
         <TextField
@@ -39,6 +58,8 @@ const PaperPublication = ({ handleChange }) => {
           label="Reimbursement Amount"
           id="outlined-required"
           required
+          name={"amountToReimbursement"}
+          onChange={(e) => handleChange(e.target.name, e.target.value)}
         ></TextField>
 
         <TextField
@@ -51,6 +72,12 @@ const PaperPublication = ({ handleChange }) => {
             shrink: true,
           }}
           required
+          name={"date"}
+          onchange={(e) =>
+            handleChange("additionalDetails", {
+              [e.target.name]: e.target.value,
+            })
+          }
         ></TextField>
       </Stack>
 

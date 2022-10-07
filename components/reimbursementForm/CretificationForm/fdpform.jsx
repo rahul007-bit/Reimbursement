@@ -9,6 +9,12 @@ const Fdpform = ({ handleChange }) => {
         label="Name of FDP/STTP"
         id="outlined-required"
         required
+        name={"coursename"}
+        onChange={(e) =>
+          handleChange("additionalDetails", {
+            [e.target.name]: e.target.value,
+          })
+        }
       ></TextField>
       <Typography variant="h8" gutterBottom>
         Duration
@@ -19,39 +25,59 @@ const Fdpform = ({ handleChange }) => {
           label="Start Date"
           id="outlined-required"
           type="date"
+          required
+          name={"startdate"}
+          onChange={(e) =>
+            handleChange("additionalDetails", {
+              [e.target.name]: e.target.value,
+            })
+          }
           // defaultValue="2020-05-26"
           InputLabelProps={{
             shrink: true,
           }}
-          required
         ></TextField>
         <TextField
           fullWidth
           label="End Date"
           id="outlined-required"
           type="date"
+          required
+          name={"enddate"}
+          onChange={(e) =>
+            handleChange("additionalDetails", {
+              [e.target.name]: e.target.value,
+            })
+          }
           // defaultValue="2020-05-26"
           InputLabelProps={{
             shrink: true,
           }}
-          required
         ></TextField>
       </Stack>
       <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
         <TextField
-          name="name"
           fullWidth
           label="Organizing Institute/Company"
           id="outlined-required"
-          onChange={handleChange}
           required
+          name={"organizingcompany"}
+          onChange={(e) =>
+            handleChange("additionalDetails", {
+              [e.target.name]: e.target.value,
+            })
+          }
         ></TextField>
         <TextField
-          name="name"
+          name="domain"
           fullWidth
           label="Domain"
           id="outlined-required"
-          onChange={handleChange}
+          onChange={(e) =>
+            handleChange("additionalDetails", {
+              [e.target.name]: e.target.value,
+            })
+          }
           required
         ></TextField>
       </Stack>
