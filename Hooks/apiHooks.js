@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useState } from "react";
 import axios from "axios";
 
-export const url = "http://localhost:8080/";
+export const url = "http://localhost:8080/api/";
 
 const initialState = {
   loading: true,
@@ -103,7 +103,7 @@ export const useUserProfile = ({ token }) => {
         headers: header,
         // signal: controller.signal,
       };
-      fetch(url + `api/details`, requestOptions)
+      fetch(url + `details`, requestOptions)
         .then((response) => response.json())
         .then((result) => {
           if (result.status === 200) {
@@ -131,7 +131,7 @@ export const useUserProfile = ({ token }) => {
     return () => {
       // controller.abort();
     };
-  }, [token, userData]);
+  }, [token]);
   return {
     loading: loading,
     userLoggedIn: userLoggedIn,

@@ -8,7 +8,7 @@ import {
   TablePagination,
   TableRow,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 
 const columns = [
   { id: "Certificate_name", label: "Certificate Name", minWidth: 170 },
@@ -56,10 +56,16 @@ function createData(name, code, population, size) {
 //   createData("Brazil", "BR", 210147125, 8515767),
 // ];
 
-export default function UserTable() {
+export default function UserTable({ data }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [row, setRow] = React.useState([]);
 
+  useEffect(() => {
+    if (data.data) {
+      setRow(data.data);
+    }
+  }, [data]);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -87,22 +93,19 @@ export default function UserTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {/*{rows*/}
-            {/*  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)*/}
-            {/*  .map((row) => {*/}
-            {/*    return (*/}
-            {/*      <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>*/}
-            {/*        {columns.map((column) => {*/}
-            {/*          const value = row[column.id];*/}
-            {/*          return (*/}
-            {/*            <TableCell key={column.id} align={column.align}>*/}
-            {/*              {value}*/}
-            {/*            </TableCell>*/}
-            {/*          );*/}
-            {/*        })}*/}
-            {/*      </TableRow>*/}
-            {/*    );*/}
-            {/*  })}*/}
+            {row
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row1) => {
+                return (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
+                    <TableCell>{row1.certificate_name}</TableCell>
+                    <TableCell>{"27-Sep"}</TableCell>
+                    <TableCell>{"Pending"}</TableCell>
+                    <TableCell>{row1.amountToReimbursement}</TableCell>
+                    <TableCell>{"Pending"}</TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </TableContainer>

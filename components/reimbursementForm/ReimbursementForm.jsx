@@ -27,17 +27,26 @@ const ReimbursementForm = () => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const router = useRouter();
+  const handleClose = () => {
+    setOpen(false);
+    setSnackType("");
+    setMessage("");
+  };
+  const [snackType, setSnackType] = useState("");
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    submit("user/requestReimburse", { certificationDetails }).then(
+    submit("user/requestReimburse", { ...certificationDetails }).then(
       (response) => {
         if (response.status === 200 || response.success) {
           setOpen(true);
           setMessage("Successfully Applied");
+          setSnackType("success");
           setTimeout(() => {
             router.push("/");
           }, 500);
         } else if (response.status === 400 || response.validation?.body) {
+          setSnackType("error");
           setOpen(true);
           setMessage(response.validation.body.message);
         }
@@ -104,7 +113,7 @@ const ReimbursementForm = () => {
                   {certificationDetails.additionalDetails?.name && (
                     <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
                       <Autocomplete
-                        name="certification"
+                        name="certificate_name"
                         id="combo-box-demo"
                         options={[
                           { label: "NPTEL" },
@@ -113,7 +122,7 @@ const ReimbursementForm = () => {
                           { label: "FTTP / STP" },
                         ]}
                         onChange={(e, v) =>
-                          handleChange("certification", v ? v.label : "")
+                          handleChange("certificate_name", v ? v.label : "")
                         }
                         // onInputChange={getCertification}
                         sx={{ width: "100%" }}
@@ -124,25 +133,25 @@ const ReimbursementForm = () => {
                     </Stack>
                   )}
                   {certificationDetails.additionalDetails?.name &&
-                    certificationDetails.certification === "NPTEL" && (
+                    certificationDetails.certificate_name === "NPTEL" && (
                       <NptelForm handleChange={handleChange} />
                     )}
                   {certificationDetails.additionalDetails?.name &&
-                    certificationDetails.certification ===
+                    certificationDetails.certificate_name ===
                       "Global Certification" && (
                       <GlobalCertification handleChange={handleChange} />
                     )}
                   {certificationDetails.additionalDetails?.name &&
-                    certificationDetails.certification ===
+                    certificationDetails.certificate_name ===
                       "Paper Publication" && (
                       <PaperPublication handleChange={handleChange} />
                     )}
                   {certificationDetails.additionalDetails?.name &&
-                    certificationDetails.certification === "FTTP / STP" && (
+                    certificationDetails.certificate_name === "FTTP / STP" && (
                       <Fdpform handleChange={handleChange} />
                     )}
                   {certificationDetails.additionalDetails?.name &&
-                    certificationDetails.certification && (
+                    certificationDetails.certificate_name && (
                       <PaymentDetails handleChange={handleChange} />
                     )}
                   <LoadingButton
