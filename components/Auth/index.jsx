@@ -19,8 +19,8 @@ export const Auth = ({ children, user }) => {
   const router = useRouter();
 
   useEffect(() => {
-    console.log(haveToken);
-    if (haveToken && !userLoggedIn && !loading && !userData) {
+    console.log(haveToken, !userLoggedIn, !loading, !userData);
+    if (haveToken && !loading && !userLoggedIn && !userData) {
       router.push("/login");
     }
     if (haveToken && !loading && userData) {

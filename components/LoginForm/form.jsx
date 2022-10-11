@@ -22,10 +22,6 @@ export default function SignIn({ setSnackType, setMessage, setOpen }) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     setLoading(true);
-    console.log({
-      moodleId: data.get("moodle_id"),
-      password: data.get("password"),
-    });
     // axios({
     //   url: "https://reimbursementserver.herokuapp.com/api/user/sign_in",
     //   method: "POST",
@@ -55,11 +51,11 @@ export default function SignIn({ setSnackType, setMessage, setOpen }) {
         }
       })
       .catch((err) => {
-        const response = err.response;
-        console.log(response);
+        // const response = err.response;
+        console.log(err);
         setOpen(true);
         setSnackType("error");
-        setMessage(response.data.message);
+        setMessage(err.message);
       })
       .finally(() => setLoading(false));
   };
