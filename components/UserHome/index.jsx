@@ -1,4 +1,10 @@
-import { Avatar, Box, Button, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  CircularProgress,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import Link from "next/link";
 import UserTable from "./UserTable";
@@ -58,7 +64,7 @@ export const UserHome = () => {
           alignItems: "center",
         }}
       >
-        {!loading && data && <UserTable data={data} />}
+        {!loading ? data && <UserTable data={data} /> : <CircularProgress />}
       </Box>
     </>
   );

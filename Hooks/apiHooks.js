@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useReducer, useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 export const url = "https://reimbursementserver.herokuapp.com/api/"; //https://reimbursementserver.herokuapp.com/"http://localhost:8080/api/";
 
@@ -86,8 +87,9 @@ export const useUserProfile = ({ token }) => {
   const [loading, setLoading] = useState(true);
   const [userLoggedIn, setUserLoggedIn] = useState(true);
   const [userData, setUserData] = useState(null);
-
+  const router = useRouter();
   useEffect(() => {
+    const controller = new AbortController();
     setUserData(JSON.parse(sessionStorage.getItem("user")));
     if (!token) {
       setLoading(false);
@@ -101,7 +103,7 @@ export const useUserProfile = ({ token }) => {
       const requestOptions = {
         method: "GET",
         headers: header,
-        // signal: controller.signal,
+        signal: controller.signal,
       };
       fetch(url + `details`, requestOptions)
         .then((response) => response.json())
@@ -114,7 +116,7 @@ export const useUserProfile = ({ token }) => {
           } else if (result.status === 401) {
             localStorage.removeItem("auth-token");
             sessionStorage.clear();
-
+            router.push("/login");
             setUserLoggedIn(false);
           } else {
             setUserLoggedIn(false);
@@ -129,7 +131,7 @@ export const useUserProfile = ({ token }) => {
       setUserLoggedIn(true);
     }
     return () => {
-      // controller.abort();
+      controller.abort();
     };
   }, [token]);
   return {
