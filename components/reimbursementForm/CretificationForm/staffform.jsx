@@ -7,7 +7,7 @@ const Staffform = ({ handleChange }) => {
     <>
       <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
         <TextField
-          name="name"
+          name="staff_name"
           fullWidth
           label="Staff Name"
           onChange={(e) =>

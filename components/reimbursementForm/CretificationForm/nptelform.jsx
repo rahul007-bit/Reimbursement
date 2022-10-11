@@ -3,6 +3,8 @@ import { Stack, Box, TextField, Typography } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 
 const NptelForm = ({ handleChange }) => {
+  const [value, setValue] = React.useState([null, null]);
+
   return (
     <>
       <Stack direction={{ sm: "column", md: "row" }} gap={1}>

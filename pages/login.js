@@ -25,10 +25,10 @@ const Login = () => {
     setMessage("");
   };
 
-  // if (token) {
-  //   router.push("/");
-  //   return <></>;
-  // }
+  if (token) {
+    router.push("/");
+    return <></>;
+  }
   return (
     <>
       <Head>

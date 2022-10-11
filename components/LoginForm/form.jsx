@@ -13,6 +13,7 @@ import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { LoadingButton } from "@mui/lab";
+import { submit } from "../../Hooks/apiHooks";
 
 export default function SignIn({ setSnackType, setMessage, setOpen }) {
   const [loading, setLoading] = useState(false);
@@ -25,35 +26,40 @@ export default function SignIn({ setSnackType, setMessage, setOpen }) {
       moodleId: data.get("moodle_id"),
       password: data.get("password"),
     });
-    axios({
-      url: "http://localhost:8080/api/user/sign_in",
-      method: "POST",
-      data: {
-        moodleId: data.get("moodle_id"),
-        password: data.get("password"),
-      },
+    // axios({
+    //   url: "https://reimbursementserver.herokuapp.com/api/user/sign_in",
+    //   method: "POST",
+    // data: {
+    //   moodleId: data.get("moodle_id"),
+    //   password: data.get("password"),
+    // },
+    // })
+    submit("user/sign_in", {
+      moodleId: data.get("moodle_id"),
+      password: data.get("password"),
     })
       .then((response) => {
-        const result = response.data;
-        if (result.success) {
+        // const result = response.data;
+        if (response.success) {
           setOpen(true);
           setSnackType("success");
-          setMessage(result.message);
-          const token = result.auth_token;
+          setMessage(response.message);
+          const token = response.auth_token;
           localStorage.setItem("auth-token", token);
           setTimeout(() => {
             router.push("/");
           }, 800);
+        } else {
+          setSnackType("error");
+          setMessage(response.message);
         }
-
-        console.log(result);
       })
       .catch((err) => {
         const response = err.response;
+        console.log(response);
         setOpen(true);
         setSnackType("error");
-        setMessage(response.message);
-        console.log(response);
+        setMessage(response.data.message);
       })
       .finally(() => setLoading(false));
   };

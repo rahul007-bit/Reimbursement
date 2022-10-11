@@ -16,7 +16,7 @@ import {
 import { LoadingButton } from "@mui/lab";
 import Link from "next/link";
 import axios from "axios";
-
+import { submit } from "../../Hooks/apiHooks";
 export default function SignUp({ setSnackType, setMessage, setOpen }) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -32,17 +32,18 @@ export default function SignUp({ setSnackType, setMessage, setOpen }) {
       lastName: data.get("lastName"),
       type: data.get("type"),
     };
-    axios({
-      url: "http://localhost:8080/api/user/sign_up",
-      method: "POST",
-      data: body,
-    })
+    // axios({
+    //   url: "https://reimbursementserver.herokuapp.com/api/user/sign_up",
+    //   method: "POST",
+    //   data: body,
+    // })
+    submit("user/sign_up", body)
       .then((response) => {
-        const result = response.data;
-        if (result.success) {
+        // const result = response.data;
+        if (response.success || response.status === 200) {
           setOpen(true);
           setSnackType("success");
-          setMessage(result.message);
+          setMessage(response.message);
           setTimeout(() => {
             router.replace("/login");
           }, 700);

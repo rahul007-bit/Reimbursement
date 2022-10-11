@@ -13,11 +13,11 @@ export const theme = createTheme({
   palette: {
     type: "light",
     primary: {
-      main: "#424483",
+      main: "#571261",
       contrastText: "#ffffff",
     },
     secondary: {
-      main: "#a3aabb",
+      main: "#ECB22F",
     },
     info: {
       main: "#9ccc65",
@@ -34,7 +34,7 @@ export const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: `'Poppins', sans-serif`,
+    fontFamily: '"Martel Sans", "Helvetica", "Arial", sans-serif',
   },
 });
 

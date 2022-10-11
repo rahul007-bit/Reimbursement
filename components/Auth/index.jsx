@@ -5,6 +5,7 @@ import { useUserProfile } from "../../Hooks/apiHooks";
 import { useState } from "react";
 export const Auth = ({ children, user }) => {
   const [token, setToken] = useState(null);
+
   const [haveToken, setHaveToken] = useState(false);
   useEffect(() => {
     setHaveToken(true);
@@ -14,13 +15,15 @@ export const Auth = ({ children, user }) => {
   const { loading, userLoggedIn, userData } = useUserProfile({
     token: token,
   });
+
   const router = useRouter();
 
   useEffect(() => {
+    console.log(haveToken);
     if (haveToken && !userLoggedIn && !loading && !userData) {
       router.push("/login");
     }
-    if (!loading && userData) {
+    if (haveToken && !loading && userData) {
       if (userData.type === "admin" && router.asPath === "/")
         router.push("/admin");
       if (userData.type === "user" && router.asPath === "/admin")
