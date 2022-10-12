@@ -1,16 +1,15 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import Table from "./Dashboard/Table";
+import Chats from "./Dashboard/Chats";
+import { Divider } from "@mui/material";
 
 const Dashboard = () => {
-  const [admin, setAdmin] = useState(false);
-
-  useEffect(() => {
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    if (user && user.type === "admin") setAdmin(true);
-  }, []);
-
-  if (!admin) return <></>;
-  return <>hello</>;
+  return (
+    <>
+      <Chats />
+      {/* <Divider sx={{ my: 5 }} variant="middle" /> */}
+      {/* <Table /> */}
+    </>
+  );
 };
-
 export default Dashboard;

@@ -2,7 +2,8 @@ import { useEffect, useMemo, useReducer, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 
-export const url = "https://reimbursementserver.herokuapp.com/api/"; //https://reimbursementserver.herokuapp.com/"http://localhost:8080/api/";
+// export const url = "https://reimbursementserver.herokuapp.com/api/"; //https://reimbursementserver.herokuapp.com/"http://localhost:8080/api/";
+export const url = "http://localhost:8000/api/"; //https://reimbursementserver.herokuapp.com/"http://localhost:8080/api/";
 
 const initialState = {
   loading: true,
@@ -38,6 +39,7 @@ export function useFetch(endpoint, initialData = [], fullUrl = false) {
           "x-auth-token": token,
           "Content-Type": "application/json",
         }),
+        // mode: "no-cors",
       })
         .then(async (response) => {
           if (!response.ok) {

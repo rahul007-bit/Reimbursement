@@ -1,5 +1,5 @@
 import React from "react";
-import Dashboard from "../../components/Admin/Dashboard";
+import AdminDashboard from "../../components/Admin";
 import Header from "../../components/header/header";
 import { Auth } from "../../components/Auth/index";
 
@@ -8,7 +8,7 @@ const AdminHome = () => {
     <>
       <Auth user={"admin"}>
         <Header />
-        <Dashboard />
+        <AdminDashboard />
       </Auth>
     </>
   );

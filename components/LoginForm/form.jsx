@@ -15,7 +15,12 @@ import { useRouter } from "next/router";
 import { LoadingButton } from "@mui/lab";
 import { submit } from "../../Hooks/apiHooks";
 
-export default function SignIn({ setSnackType, setMessage, setOpen }) {
+export default function SignIn({
+  setSnackType,
+  setMessage,
+  setOpen,
+  usedIn: usedFor = "user",
+}) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const handleSubmit = (event) => {
@@ -30,7 +35,7 @@ export default function SignIn({ setSnackType, setMessage, setOpen }) {
     //   password: data.get("password"),
     // },
     // })
-    submit("user/sign_in", {
+    submit(`${usedFor}/sign_in`, {
       moodleId: data.get("moodle_id"),
       password: data.get("password"),
     })
@@ -42,6 +47,7 @@ export default function SignIn({ setSnackType, setMessage, setOpen }) {
           setMessage(response.message);
           const token = response.auth_token;
           localStorage.setItem("auth-token", token);
+          console.log(response);
           setTimeout(() => {
             router.push("/");
           }, 800);
@@ -102,10 +108,10 @@ export default function SignIn({ setSnackType, setMessage, setOpen }) {
             label="Password"
             type="password"
           />
-          <FormControlLabel
+          {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
-          />
+          /> */}
           <LoadingButton
             loading={loading}
             type="submit"
@@ -131,7 +137,13 @@ export default function SignIn({ setSnackType, setMessage, setOpen }) {
             {/*    </Typography>*/}
             {/*  </Button>*/}
             {/*</Grid>*/}
-            <Grid item>
+            <Box
+              sx={{
+                display: "flex",
+                width: 1,
+                justifyContent: "space-between",
+              }}
+            >
               <Link href={"/signup"}>
                 <Typography
                   sx={{
@@ -145,7 +157,20 @@ export default function SignIn({ setSnackType, setMessage, setOpen }) {
                   {"Don't have an account? Sign Up"}
                 </Typography>
               </Link>
-            </Grid>
+              <Link href={"/admin/sign_in"}>
+                <Typography
+                  sx={{
+                    cursor: "pointer",
+                    ":hover": {
+                      textDecoration: "underline",
+                    },
+                  }}
+                  variant={"caption"}
+                >
+                  {"Login as admin?"}
+                </Typography>
+              </Link>
+            </Box>
           </Grid>
         </Box>
       </Paper>

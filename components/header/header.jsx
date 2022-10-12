@@ -19,12 +19,12 @@ import { useEffect, useState } from "react";
 
 // const pages = ["Products", "Pricing", "Blog"];
 const settings = [
-  { name: "Profile" },
+  { name: "Reset Password", link: "/resetpassword" },
   { name: "Dashboard", link: "/" },
   { name: "Logout", link: "/logout" },
 ];
 
-const HeaderBar = () => {
+const HeaderBar = ({ children }) => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [user, setUser] = useState(null);
@@ -54,53 +54,59 @@ const HeaderBar = () => {
   };
 
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
-        <Toolbar
-          disableGutters
-          sx={{ display: "flex", width: 1, justifyContent: "space-between" }}
-        >
-          <Link href="/">
-            <Typography
-              variant="h6"
-              noWrap
+    <>
+      <Box sx={{ display: "flex" }}>
+        <AppBar position="static">
+          <Container maxWidth="xl">
+            <Toolbar
+              disableGutters
               sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                fontFamily: "Fira Mono",
-                fontWeight: 700,
-                letterSpacing: ".1rem",
-                color: "inherit",
-                textDecoration: "none",
-                cursor: "pointer",
+                display: "flex",
+                width: 1,
+                justifyContent: "space-between",
               }}
             >
-              Reimbursement
-            </Typography>
-          </Link>
+              <Link href="/">
+                <Typography
+                  variant="h6"
+                  noWrap
+                  sx={{
+                    mr: 2,
+                    display: { xs: "none", md: "flex" },
+                    fontFamily: "Fira Mono",
+                    fontWeight: 700,
+                    letterSpacing: ".1rem",
+                    color: "inherit",
+                    textDecoration: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  Reimbursement
+                </Typography>
+              </Link>
 
-          <Link href={"/"}>
-            <Typography
-              variant="h5"
-              noWrap
-              sx={{
-                mr: 2,
-                display: { xs: "flex", md: "none" },
-                flexGrow: 1,
-                fontFamily: "Fira Mono",
-                fontWeight: 700,
-                letterSpacing: ".1rem",
-                color: "inherit",
-                textDecoration: "none",
-              }}
-            >
-              Reimbursement
-            </Typography>
-          </Link>
+              <Link href={"/"}>
+                <Typography
+                  variant="h5"
+                  noWrap
+                  sx={{
+                    mr: 2,
+                    display: { xs: "flex", md: "none" },
+                    flexGrow: 1,
+                    fontFamily: "Fira Mono",
+                    fontWeight: 700,
+                    letterSpacing: ".1rem",
+                    color: "inherit",
+                    textDecoration: "none",
+                  }}
+                >
+                  Reimbursement
+                </Typography>
+              </Link>
 
-          {user ? (
-            <>
-              {/* <Box
+              {user ? (
+                <>
+                  {/* <Box
                 sx={{
                   flexGrow: 1,
                   display: { xs: "none", md: "flex" },
@@ -118,63 +124,68 @@ const HeaderBar = () => {
                     </Button>
                   ))}
               </Box> */}
-              <Box>
-                <Tooltip title="Open settings">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar
-                      alt="Remy Sharp"
-                      src="/static/images/avatar/2.jpg"
-                    />
-                  </IconButton>
-                </Tooltip>
-                <Menu
-                  sx={{ mt: "45px" }}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
-                  {settings.map((setting) => (
-                    <Link
-                      href={setting.link || ""}
-                      key={JSON.stringify(setting)}
+                  <Box>
+                    <Tooltip title="Open settings">
+                      <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                        <Avatar
+                          alt="Remy Sharp"
+                          src="/static/images/avatar/2.jpg"
+                        />
+                      </IconButton>
+                    </Tooltip>
+                    <Menu
+                      sx={{ mt: "45px" }}
+                      id="menu-appbar"
+                      anchorEl={anchorElUser}
+                      anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      keepMounted
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      open={Boolean(anchorElUser)}
+                      onClose={handleCloseUserMenu}
                     >
-                      <MenuItem onClick={handleCloseUserMenu}>
-                        <Typography textAlign="center">
-                          {setting.name}
-                        </Typography>
-                      </MenuItem>
+                      {settings.map((setting) => (
+                        <Link
+                          href={setting.link || ""}
+                          key={JSON.stringify(setting)}
+                        >
+                          <MenuItem onClick={handleCloseUserMenu}>
+                            <Typography textAlign="center">
+                              {setting.name}
+                            </Typography>
+                          </MenuItem>
+                        </Link>
+                      ))}
+                    </Menu>
+                  </Box>
+                </>
+              ) : (
+                <>
+                  <Box sx={{ display: "flex" }}>
+                    <Link href={"/login"}>
+                      <Typography sx={{ cursor: "pointer" }} marginRight={2}>
+                        Login
+                      </Typography>
                     </Link>
-                  ))}
-                </Menu>
-              </Box>
-            </>
-          ) : (
-            <>
-              <Box sx={{ display: "flex" }}>
-                <Link href={"/login"}>
-                  <Typography sx={{ cursor: "pointer" }} marginRight={2}>
-                    Login
-                  </Typography>
-                </Link>
-                <Link href={"/signup"}>
-                  <Typography sx={{ cursor: "pointer" }}>Sign Up</Typography>
-                </Link>
-              </Box>
-            </>
-          )}
-        </Toolbar>
-      </Container>
-    </AppBar>
+                    <Link href={"/signup"}>
+                      <Typography sx={{ cursor: "pointer" }}>
+                        Sign Up
+                      </Typography>
+                    </Link>
+                  </Box>
+                </>
+              )}
+            </Toolbar>
+          </Container>
+        </AppBar>
+        {children}
+      </Box>
+    </>
   );
 };
 export default HeaderBar;

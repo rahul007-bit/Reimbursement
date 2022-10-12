@@ -13,11 +13,11 @@ export const theme = createTheme({
   palette: {
     type: "light",
     primary: {
-      main: "#571261",
+      main: "#424483",
       contrastText: "#ffffff",
     },
     secondary: {
-      main: "#ECB22F",
+      main: "#a3aabb",
     },
     info: {
       main: "#9ccc65",
@@ -27,7 +27,7 @@ export const theme = createTheme({
       primary: "#434242",
     },
     background: {
-      default: "#f6f6f7",
+      default: "#F3F3F8",
     },
     warning: {
       main: "#fb8c00",
