@@ -3,7 +3,13 @@ import React from "react";
 import Link from "next/link";
 import UserTable from "./UserTable";
 import { useFetch } from "../../Hooks/apiHooks";
+import { useState } from "react";
+import { useEffect } from "react";
 export const UserHome = () => {
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    setUser(JSON.parse(sessionStorage.getItem("user")));
+  }, []);
   const { loading, data } = useFetch("user/getReimburse", []);
 
   return (
@@ -31,8 +37,12 @@ export const UserHome = () => {
           }}
         />
         <Box sx={{ display: "grid", marginX: 2 }}>
-          <Typography variant={"h4"}>UserName</Typography>
-          <Typography variant={"h6"}>User email</Typography>
+          <Typography variant={"h4"}>
+            {user ? user.user.first_name : "username"}
+          </Typography>
+          <Typography variant={"h6"}>
+            {user ? user.user.moodleId : "moodleId"}
+          </Typography>
         </Box>
       </Box>
       <Box

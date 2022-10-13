@@ -145,6 +145,19 @@ export default function SignIn({ setSnackType, setMessage, setOpen }) {
                   {"Don't have an account? Sign Up"}
                 </Typography>
               </Link>
+              <Link href={"/forgot"}>
+                <Typography
+                  sx={{
+                    cursor: "pointer",
+                    ":hover": {
+                      textDecoration: "underline",
+                    },
+                  }}
+                  variant={"caption"}
+                >
+                  {"Forgot Password?"}
+                </Typography>
+              </Link>
             </Grid>
           </Grid>
         </Box>
