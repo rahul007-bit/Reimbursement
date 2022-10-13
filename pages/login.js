@@ -6,10 +6,10 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import Link from "next/link";
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+
 const Login = () => {
   const router = useRouter();
 
@@ -26,10 +26,10 @@ const Login = () => {
     setMessage("");
   };
 
-  // if (token) {
-  //   router.push("/");
-  //   return <></>;
-  // }
+  if (token) {
+    router.push("/");
+    return <></>;
+  }
   return (
     <>
       <Head>
