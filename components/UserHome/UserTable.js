@@ -95,6 +95,7 @@ export default function UserTable({ data, user: usedIn = "User" }) {
                     tabIndex={-1}
                     key={row1._id}
                     onClick={handleClick}
+                    className={`${usedIn === "admin" ? "cursor-pointer" : ""}`}
                   >
                     <TableCell align="center">
                       {row1.certificate_name}

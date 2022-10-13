@@ -23,6 +23,8 @@ import { submit, useFetch } from "../../../Hooks/apiHooks";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { LoadingButton } from "@mui/lab";
+import TablePastRecords from "./TablePastRecords";
+import AllRecords from "./AllRecords";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -248,6 +250,8 @@ const ViewRequestTable = () => {
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               </Box>
+              <TablePastRecords reload={reload} />
+              <AllRecords reload={reload} />
             </CardContent>
           </Card>
         </Box>

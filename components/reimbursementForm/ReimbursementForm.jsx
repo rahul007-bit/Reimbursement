@@ -69,12 +69,15 @@ const ReimbursementForm = () => {
       return;
     }
     console.log(imageUrl1);
-    submit("user/requestReimburse", {
+    const body = {
       ...certificationDetails,
       // recipientUrl: imageUrl2,
       certificateUrl: imageUrl1,
-      department: "IT",
-    }).then((response) => {
+    };
+    body.additionalDetails.first_name = user.user.first_name;
+    body.additionalDetails.email = user.user.email;
+    body.department = user.user.department;
+    submit("user/requestReimburse", body).then((response) => {
       if (response.status === 200 || response.success) {
         setOpen(true);
         setMessage("Successfully Applied");

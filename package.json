@@ -21,6 +21,7 @@
     "@mui/x-data-grid": "^5.17.6",
     "@mui/x-date-pickers-pro": "^5.0.4",
     "axios": "^0.27.2",
+    "csv-file-validator": "^2.0.0",
     "dayjs": "^1.11.5",
     "echarts": "^5.4.0",
     "echarts-for-react": "^3.0.2",

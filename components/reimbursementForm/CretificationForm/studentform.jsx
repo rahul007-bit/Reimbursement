@@ -23,6 +23,7 @@ const Studentform = ({ handleChange, user }) => {
           label="Email"
           name={"email"}
           required
+          value={user.user?.email}
           onChange={(e) =>
             handleChange("additionalDetails", {
               [e.target.name]: e.target.value,

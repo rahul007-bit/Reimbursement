@@ -125,6 +125,7 @@ const GlobalCertification = ({ handleChange }) => {
           fullWidth
           label="Applied through"
           id="outlined-required"
+          name={"Applied_through"}
           required
           onChange={(e) =>
             handleChange("additionalDetails", {

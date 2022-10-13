@@ -16,6 +16,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Button from "@mui/material/Button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 // const pages = ["Products", "Pricing", "Blog"];
 const settings = [
@@ -28,6 +29,7 @@ const HeaderBar = ({ children }) => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [user, setUser] = useState(null);
+  const router = useRouter();
   useEffect(() => {
     // const token = localStorage.getItem("auth-token");
     setUser(JSON.parse(sessionStorage.getItem("user")));
