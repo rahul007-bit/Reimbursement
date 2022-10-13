@@ -1,25 +1,32 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
+  Button,
   Card,
   CardContent,
+  CircularProgress,
   Divider,
-  Typography,
-  Button,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  TablePagination,
   Modal,
-  TextField,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+  TextField,
+  Typography,
 } from "@mui/material";
 import { v4 as uuid } from "uuid";
-import { useFetch } from "../../../Hooks/apiHooks";
-import Image from "next/image";
+import { submit, useFetch } from "../../../Hooks/apiHooks";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import { LoadingButton } from "@mui/lab";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const columns = [
   { id: uuid(), label: "Certificate Name", align: "center", minWidth: 170 },
@@ -59,13 +66,19 @@ const columns = [
 ];
 
 const ViewRequestTable = () => {
-  const { loading, data } = useFetch("reimbursement/fullInfo?get=PENDING", []);
-
+  const [reload, setReload] = useState(false);
+  const { loading, data } = useFetch("reimbursement/fullInfo?get=PENDING", [
+    reload,
+  ]);
+  const [message, setMessage] = useState("");
+  const [snackType, setSnackType] = useState("");
+  const [open, setOpen] = useState(false);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [row, setRow] = React.useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [selected, setSelected] = useState(null);
+  const [loadingButton, setLoadingButton] = useState(false);
   useEffect(() => {
     if (!loading && data) {
       const reimburseData = data.data;
@@ -85,13 +98,45 @@ const ViewRequestTable = () => {
   const showModal = (details) => () => {
     setOpenModal(true);
     setSelected(() => {
-      const values = {
-        ...details,
-        ...details.additionalDetails,
-      };
       // delete values.additionalDetails;
-      return values;
+      return {
+        ...details,
+      };
     });
+  };
+
+  const handleApprove = () => {
+    try {
+      setLoadingButton(true);
+      submit("reimbursement/approve", {
+        reimburse_id: selected._id,
+      })
+        .then((response) => {
+          if (response.status === 200 || response.success) {
+            setReload((prevState) => !prevState);
+            setOpenModal(false);
+            setOpen(true);
+            setMessage("Successfully Approved");
+            setSnackType("success");
+          } else {
+            setOpen(true);
+            setMessage(response.message);
+            setSnackType("error");
+          }
+        })
+        .finally(() => setLoadingButton(false));
+    } catch (error) {
+      setOpen(true);
+      setLoadingButton(false);
+      setSnackType("error");
+      setMessage(error.message);
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSnackType(null);
+    setMessage("");
   };
 
   return (
@@ -117,77 +162,81 @@ const ViewRequestTable = () => {
                   <Typography variant={"button"}>Export </Typography>
                 </Button>
                 <Box sx={{ my: 4 }}>
-                  <TableContainer sx={{ maxHeight: 440 }}>
-                    <Table stickyHeader aria-label="sticky table">
-                      <TableHead>
-                        <TableRow>
-                          {columns.map((column) => (
-                            <TableCell
-                              key={column.id}
-                              align={column.align}
-                              style={{ minWidth: column.minWidth }}
-                            >
-                              {column.label}
-                            </TableCell>
-                          ))}
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {row
-                          .slice(
-                            page * rowsPerPage,
-                            page * rowsPerPage + rowsPerPage
-                          )
-                          .map((row1) => {
-                            return (
-                              <TableRow
-                                hover
-                                role="checkbox"
-                                tabIndex={-1}
-                                key={row1._id}
+                  {!loading ? (
+                    <TableContainer sx={{ maxHeight: 440 }}>
+                      <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                          <TableRow>
+                            {columns.map((column) => (
+                              <TableCell
+                                key={column.id}
+                                align={column.align}
+                                style={{ minWidth: column.minWidth }}
                               >
-                                <TableCell align="center">
-                                  {row1.certificate_name}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {new Date(
-                                    row1.created_at
-                                  ).toLocaleDateString()}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {row1.user[0].first_name}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {row1.user[0].moodleId}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {row1.amountToReimbursement}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {row1.status}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {row1.bankDetails.accountNumber}
-                                </TableCell>
-                                <TableCell align="center">
-                                  {row1.bankDetails.IFSCode}
-                                </TableCell>
-                                <TableCell align="center">
-                                  <Button
-                                    variant={"contained"}
-                                    onClick={showModal(row1)}
-                                  >
-                                    <Typography variant={"button"}>
-                                      View Request
-                                    </Typography>
-                                  </Button>
-                                </TableCell>
-                              </TableRow>
-                            );
-                          })}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
+                                {column.label}
+                              </TableCell>
+                            ))}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {row
+                            .slice(
+                              page * rowsPerPage,
+                              page * rowsPerPage + rowsPerPage
+                            )
+                            .map((row1) => {
+                              return (
+                                <TableRow
+                                  hover
+                                  role="checkbox"
+                                  tabIndex={-1}
+                                  key={row1._id}
+                                >
+                                  <TableCell align="center">
+                                    {row1.certificate_name}
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    {new Date(
+                                      row1.created_at
+                                    ).toLocaleDateString()}
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    {row1.user[0].first_name}
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    {row1.user[0].moodleId}
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    {row1.amountToReimbursement}
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    {row1.status}
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    {row1.bankDetails.accountNumber}
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    {row1.bankDetails.IFSCode}
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    <Button
+                                      variant={"contained"}
+                                      onClick={showModal(row1)}
+                                    >
+                                      <Typography variant={"button"}>
+                                        View Request
+                                      </Typography>
+                                    </Button>
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  ) : (
+                    <CircularProgress />
+                  )}
                 </Box>
                 <TablePagination
                   rowsPerPageOptions={[10, 25, 100]}
@@ -230,12 +279,10 @@ const ViewRequestTable = () => {
                   <TextField
                     label={"certificate Name"}
                     value={selected.certificate_name}
-                    disabled
                   />
                   <TextField
                     label={"Reimbursement Amount"}
                     value={selected.amountToReimbursement}
-                    disabled
                   />
                   {/*<TextField*/}
                   {/*  label={"Course Name"}*/}
@@ -246,45 +293,50 @@ const ViewRequestTable = () => {
                       label={data[0]}
                       key={i}
                       value={selected.additionalDetails[data[0]]}
-                      disabled
                     />
                   ))}
                   <TextField
-                    label={"certificate"}
-                    value={selected.certificate_name}
-                    disabled
+                    label={"Account Number"}
+                    value={selected.bankDetails.accountNumber}
                   />
                   <TextField
-                    label={"certificate"}
-                    value={selected.certificate_name}
-                    disabled
+                    label={"IFSCode"}
+                    value={selected.bankDetails.IFSCode}
                   />
-                  <TextField
-                    label={"certificate"}
-                    value={selected.certificate_name}
-                    disabled
-                  />
-                  <TextField
-                    label={"certificate"}
-                    value={selected.certificate_name}
-                    disabled
-                  />
-                  <TextField
-                    label={"certificate"}
-                    value={selected.certificate_name}
-                    disabled
-                  />
-                  <img
-                    src={selected.certificateUrl}
-                    alt=""
-                    width={"100px"}
-                    height={"100px"}
-                  />
+                  {selected.certificateUrl ? (
+                    <img
+                      src={selected.certificateUrl}
+                      alt=""
+                      width={"100px"}
+                      height={"100px"}
+                    />
+                  ) : (
+                    <Typography>Certificate is not Provided</Typography>
+                  )}
                 </Stack>
+                <LoadingButton
+                  loading={loadingButton}
+                  onClick={handleApprove}
+                  sx={{ m: 2 }}
+                  variant={"contained"}
+                >
+                  Approve
+                </LoadingButton>
               </CardContent>
             )}
           </Card>
         </Modal>
+        {open && (
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert
+              onClose={handleClose}
+              severity={snackType}
+              sx={{ width: "100%" }}
+            >
+              {message}
+            </Alert>
+          </Snackbar>
+        )}
       </Box>
     </>
   );

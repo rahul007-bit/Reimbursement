@@ -42,7 +42,6 @@ const PaperPublication = ({ handleChange }) => {
       <TextField
         id="outlined-textarea"
         label="Name of Author/Authors"
-        placeholder="Placeholder"
         multiline
         required
         name="author_name"
@@ -57,8 +56,8 @@ const PaperPublication = ({ handleChange }) => {
           fullWidth
           label="Reimbursement Amount"
           id="outlined-required"
-          required
           name={"amountToReimbursement"}
+          required
           onChange={(e) => handleChange(e.target.name, e.target.value)}
         ></TextField>
 

@@ -16,6 +16,14 @@ const Fdpform = ({ handleChange }) => {
           })
         }
       ></TextField>
+      <TextField
+        fullWidth
+        label="Reimbursement Amount"
+        id="outlined-required"
+        name={"amountToReimbursement"}
+        required
+        onChange={(e) => handleChange(e.target.name, e.target.value)}
+      ></TextField>
       <Typography variant="h8" gutterBottom>
         Duration
       </Typography>

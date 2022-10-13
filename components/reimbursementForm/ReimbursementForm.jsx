@@ -73,6 +73,7 @@ const ReimbursementForm = () => {
       ...certificationDetails,
       // recipientUrl: imageUrl2,
       certificateUrl: imageUrl1,
+      department: "IT",
     }).then((response) => {
       if (response.status === 200 || response.success) {
         setOpen(true);

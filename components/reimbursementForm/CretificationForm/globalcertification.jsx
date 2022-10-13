@@ -116,13 +116,9 @@ const GlobalCertification = ({ handleChange }) => {
           fullWidth
           label="Reimbursement Amount"
           id="outlined-required"
+          name={"amountToReimbursement"}
           required
-          name="reimbursement_amount"
-          onChange={(e) =>
-            handleChange("additionalDetails", {
-              [e.target.name]: e.target.value,
-            })
-          }
+          onChange={(e) => handleChange(e.target.name, e.target.value)}
         ></TextField>
 
         <TextField
