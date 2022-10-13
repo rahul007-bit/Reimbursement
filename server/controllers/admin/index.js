@@ -1,5 +1,11 @@
 import config from "../../config/index.js";
 import Admin from "../../model/admin/model.js";
+import {
+  getFullReimbursement,
+  getFullReimbursementInfo,
+  getReimbursement,
+  ReimbursementCount,
+} from "../../services/reimbursement/index.js";
 
 const controller = Object.create(null); // {}
 controller.signUp = async (req, res) => {
@@ -13,10 +19,10 @@ controller.signUp = async (req, res) => {
     });
   } else {
     const newAdmin = new Admin();
-    const haspassword = await newAdmin.generate_hash(password);
+    const hashpassword = await newAdmin.generate_hash(password);
     await Admin.create({
       moodleId: moodleId,
-      password: haspassword,
+      password: hashpassword,
       firstName: firstName,
       lastName: lastName,
     });
@@ -47,7 +53,7 @@ controller.signIn = async (req, res) => {
       name: admin.name,
     };
 
-    const token = admin.gen_auth_token();
+    const token = await admin.gen_auth_token();
     return res.status(200).json({
       status: 200,
       data: responseData,
@@ -59,10 +65,49 @@ controller.signIn = async (req, res) => {
     return res.status(500).json({ status: 500, message: error.message });
   }
 };
-controller.updateProfile = async (req, res) => {};
-controller.viewProfile = async (req, res) => {};
-controller.applyReimbursement = async (req, res) => {};
-controller.viewReimbursement = async (req, res) => {};
-controller.deleteReimbursement = async (req, res) => {};
+
+controller.getReimburseCount = async (req, res) => {
+  try {
+    const get = req.query.get;
+    const result = await ReimbursementCount(get);
+    return res.status(result.status).send(result);
+  } catch (error) {
+    return res.status(500).send({
+      status: 500,
+      message: error.message,
+      success: false,
+    });
+  }
+};
+
+controller.getFullReimbursementInfo = async (req, res) => {
+  try {
+    const get = req.query.get;
+    console.log("hmm");
+    const result = await getFullReimbursementInfo(get);
+    return res.status(result.status).send(result);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: error.message,
+      success: false,
+    });
+  }
+};
+
+controller.getFullReimbursement = async (req, res) => {
+  try {
+    const result = await getFullReimbursement();
+    return res.status(result.status).send(result);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: error.message,
+      success: false,
+    });
+  }
+};
 
 export default controller;

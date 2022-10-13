@@ -10,6 +10,8 @@ export const reimbursementValidator = {
       }),
       amountToReimbursement: Joi.string().required(),
       additionalDetails: Joi.object(),
+      certificateUrl: Joi.string().required(),
+      department: Joi.string().required(),
     }),
   },
 };

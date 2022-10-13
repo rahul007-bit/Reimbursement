@@ -71,13 +71,23 @@ controller.applyReimbursement = async (req, res) => {
   try {
     const user_id = req.userId;
     const department = req.user.department;
-    const { certificate_name, bankDetails, amountToReimbursement } = req.body;
+    const {
+      certificate_name,
+      bankDetails,
+      amountToReimbursement,
+      additionalDetails,
+      certificateUrl,
+      // recipientUrl,
+    } = req.body;
     const result = await createReimbursement({
       certificate_name,
       user_id,
       bankDetails,
       amountToReimbursement,
       department,
+      additionalDetails,
+      // recipientUrl,
+      certificateUrl,
     });
     return res.status(result.status).json(result);
   } catch (error) {

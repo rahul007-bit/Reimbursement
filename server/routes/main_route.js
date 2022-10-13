@@ -63,8 +63,7 @@ router.get("/details", limit, async (req, res) => {
         const admin = await Admin.findOne({ _id: payload.message.id });
         if (admin) {
           return res.status(200).json({
-            user: admin,
-            type: "admin",
+            data: { user: admin, type: "admin" },
             status: 200,
             success: true,
             message: "success",

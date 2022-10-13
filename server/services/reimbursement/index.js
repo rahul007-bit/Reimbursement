@@ -1,5 +1,6 @@
 import Reimbursement from "../../model/reimbursement/model.js";
 import logger from "../../config/logger.js";
+import user from "../../controllers/user/index.js";
 
 export const createReimbursement = async ({
   certificate_name,
@@ -7,6 +8,9 @@ export const createReimbursement = async ({
   bankDetails,
   amountToReimbursement,
   department,
+  additionalDetails,
+  // recipientUrl,
+  certificateUrl,
 }) => {
   try {
     await Reimbursement.create({
@@ -15,6 +19,9 @@ export const createReimbursement = async ({
       bankDetails: bankDetails,
       amountToReimbursement: amountToReimbursement,
       department: department,
+      additionalDetails: additionalDetails,
+      certificateUrl: certificateUrl,
+      // recipientUrl: recipientUrl,
     });
     return {
       success: true,
@@ -34,18 +41,20 @@ export const getReimbursement = async (query) => {
 
     let params = Object.create(null);
 
-    if (query.postId) {
-      params["_id"] = query.postId;
-    }
     if (query.createdAt) {
       let date = new Date(query.createdAt);
-      let result = new Date(date.getTime() + 1 * 24 * 60 * 60 * 1000);
+      let result = new Date(date.getTime() + 24 * 60 * 60 * 1000);
       params["startDate"] = date;
       params["endDate"] = result;
     }
+
     if (query.userId) {
       params["user_id"] = query.userId;
     }
+    if (query.status) {
+      params["status"] = query.status;
+    }
+
     const sortOptions = {
       [sortBy]: sortOrder,
     };
@@ -77,6 +86,100 @@ export const getReimbursement = async (query) => {
       status: 404,
     };
   } catch (error) {
+    console.error(error);
     return { success: false, message: error.message, status: 500 };
+  }
+};
+
+export const ReimbursementCount = async (get) => {
+  try {
+    const result = await Reimbursement.aggregate([
+      { $group: { _id: `$${get}`, Total: { $sum: 1 } } },
+    ]);
+    return {
+      status: 200,
+      message: "Here we go!",
+      success: true,
+      data: result,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: error.message,
+      success: false,
+    };
+  }
+};
+
+export const getFullReimbursementInfo = async (get) => {
+  try {
+    const result = await Reimbursement.aggregate([
+      {
+        $match: { status: get },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_id",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+    ]);
+    return {
+      status: 200,
+      success: true,
+      message: "Got your data",
+      data: result,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      success: false,
+      message: error.message,
+    };
+  }
+};
+export const getFullReimbursement = async () => {
+  try {
+    const result = await Reimbursement.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_id",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+    ]);
+    return {
+      status: 200,
+      success: true,
+      message: "Got your data",
+      data: result,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const updateReimbursement = async (id, details) => {
+  try {
+    await Reimbursement.findOneAndUpdate({ _id: id }, { details });
+    return {
+      status: 200,
+      success: true,
+      message: "Record has been updated successfully",
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      success: false,
+      message: error.message,
+    };
   }
 };

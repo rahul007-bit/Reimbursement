@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt-nodejs";
 import jwt from "jsonwebtoken";
+import logger from "../../config/logger.js";
+import config from "../../config/index.js";
 
 const Admin_Schema = new mongoose.Schema(
   {
