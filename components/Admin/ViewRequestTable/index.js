@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -13,9 +13,13 @@ import {
   TableCell,
   TableBody,
   TablePagination,
+  Modal,
+  TextField,
+  Stack,
 } from "@mui/material";
 import { v4 as uuid } from "uuid";
 import { useFetch } from "../../../Hooks/apiHooks";
+import Image from "next/image";
 
 const columns = [
   { id: uuid(), label: "Certificate Name", align: "center", minWidth: 170 },
@@ -60,7 +64,8 @@ const ViewRequestTable = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [row, setRow] = React.useState([]);
-
+  const [openModal, setOpenModal] = useState(false);
+  const [selected, setSelected] = useState(null);
   useEffect(() => {
     if (!loading && data) {
       const reimburseData = data.data;
@@ -76,6 +81,19 @@ const ViewRequestTable = () => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  const showModal = (details) => () => {
+    setOpenModal(true);
+    setSelected(() => {
+      const values = {
+        ...details,
+        ...details.additionalDetails,
+      };
+      // delete values.additionalDetails;
+      return values;
+    });
+  };
+
   return (
     <>
       <Box
@@ -155,7 +173,10 @@ const ViewRequestTable = () => {
                                   {row1.bankDetails.IFSCode}
                                 </TableCell>
                                 <TableCell align="center">
-                                  <Button variant={"contained"}>
+                                  <Button
+                                    variant={"contained"}
+                                    onClick={showModal(row1)}
+                                  >
                                     <Typography variant={"button"}>
                                       View Request
                                     </Typography>
@@ -181,6 +202,89 @@ const ViewRequestTable = () => {
             </CardContent>
           </Card>
         </Box>
+        <Modal
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Card
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 600,
+              // bgcolor: "background.paper",
+              boxShadow: 24,
+              maxHeight: 700,
+              p: 1,
+              overflowY: "scroll",
+            }}
+          >
+            {openModal && (
+              <CardContent>
+                <Typography variant={"h6"}>Reimbursement details</Typography>
+                <Divider variant={"fullWidth"} sx={{ mb: 3 }} />
+                <Stack spacing={2}>
+                  <TextField
+                    label={"certificate Name"}
+                    value={selected.certificate_name}
+                    disabled
+                  />
+                  <TextField
+                    label={"Reimbursement Amount"}
+                    value={selected.amountToReimbursement}
+                    disabled
+                  />
+                  {/*<TextField*/}
+                  {/*  label={"Course Name"}*/}
+                  {/*  value={selected.certificate_name}*/}
+                  {/*/>*/}
+                  {Object.entries(selected.additionalDetails).map((data, i) => (
+                    <TextField
+                      label={data[0]}
+                      key={i}
+                      value={selected.additionalDetails[data[0]]}
+                      disabled
+                    />
+                  ))}
+                  <TextField
+                    label={"certificate"}
+                    value={selected.certificate_name}
+                    disabled
+                  />
+                  <TextField
+                    label={"certificate"}
+                    value={selected.certificate_name}
+                    disabled
+                  />
+                  <TextField
+                    label={"certificate"}
+                    value={selected.certificate_name}
+                    disabled
+                  />
+                  <TextField
+                    label={"certificate"}
+                    value={selected.certificate_name}
+                    disabled
+                  />
+                  <TextField
+                    label={"certificate"}
+                    value={selected.certificate_name}
+                    disabled
+                  />
+                  <img
+                    src={selected.certificateUrl}
+                    alt=""
+                    width={"100px"}
+                    height={"100px"}
+                  />
+                </Stack>
+              </CardContent>
+            )}
+          </Card>
+        </Modal>
       </Box>
     </>
   );
