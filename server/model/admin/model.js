@@ -37,7 +37,7 @@ Admin_Schema.methods.gen_auth_token = async function gen_auth_token() {
   const expiresIn = "10h";
   try {
     const payload = { id: this._id };
-    var token = jwt.sign(payload, config.jwtSecret, { expiresIn }); // eslint-disable-line
+    var token = jwt.sign(payload, config.jwtSecret); // eslint-disable-line
   } catch (error) {
     logger.error(error);
     throw error;

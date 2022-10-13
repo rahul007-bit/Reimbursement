@@ -1,11 +1,14 @@
 import config from "../../config/index.js";
 import Admin from "../../model/admin/model.js";
 import {
+  approveReimbursement,
   getFullReimbursement,
   getFullReimbursementInfo,
   getReimbursement,
   ReimbursementCount,
 } from "../../services/reimbursement/index.js";
+import { createUser, getUser } from "../../services/user/index.js";
+import logger from "../../config/logger.js";
 
 const controller = Object.create(null); // {}
 controller.signUp = async (req, res) => {
@@ -83,7 +86,6 @@ controller.getReimburseCount = async (req, res) => {
 controller.getFullReimbursementInfo = async (req, res) => {
   try {
     const get = req.query.get;
-    console.log("hmm");
     const result = await getFullReimbursementInfo(get);
     return res.status(result.status).send(result);
   } catch (error) {
@@ -110,4 +112,46 @@ controller.getFullReimbursement = async (req, res) => {
   }
 };
 
+controller.approveReimburse = async (req, res) => {
+  try {
+    const { reimburse_id } = req.body;
+    const result = await approveReimbursement(reimburse_id);
+    return res.status(result.status).send(result);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      status: 500,
+      message: error.message,
+      success: false,
+    });
+  }
+};
+
+controller.getUsers = async (req, res) => {
+  try {
+    const result = await getUser();
+    return res.status(result.status).send(result);
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({
+      status: 500,
+      message: error.message,
+      success: false,
+    });
+  }
+};
+controller.addUsers = async (req, res) => {
+  try {
+    const { users } = req.body;
+    const result = await createUser(users);
+    return res.status(result.status).send(result);
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({
+      status: 500,
+      message: error.message,
+      success: false,
+    });
+  }
+};
 export default controller;

@@ -14,7 +14,7 @@ const Reimbursement_Schema = new mongoose.Schema(
     amountToReimbursement: String,
     status: {
       type: String,
-      enum: ["PENDING", "In Process", "Completed"],
+      enum: ["PENDING", "In Process", "Approved"],
       default: "PENDING",
     },
     additionalDetails: { type: Object, default: {} },

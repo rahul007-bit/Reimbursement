@@ -28,4 +28,14 @@ export default async (router) => {
     limiter,
     controller.getFullReimbursement
   );
+  router.post(
+    "/reimbursement/approve",
+    // adminAuth,
+    limiter,
+    controller.approveReimburse
+  );
+
+  router.get("/getUser", limiter, controller.getUsers);
+
+  router.post("/addUsers", limiter, controller.addUsers);
 };

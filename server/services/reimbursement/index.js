@@ -1,7 +1,7 @@
 import Reimbursement from "../../model/reimbursement/model.js";
 import logger from "../../config/logger.js";
 import user from "../../controllers/user/index.js";
-
+import nodemailer from "nodemailer";
 export const createReimbursement = async ({
   certificate_name,
   user_id,
@@ -23,6 +23,45 @@ export const createReimbursement = async ({
       certificateUrl: certificateUrl,
       // recipientUrl: recipientUrl,
     });
+
+    let mailTransporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.email,
+        pass: process.env.pass,
+      },
+    });
+
+    let mailDetailsUser = {
+      from: process.env.email,
+      to: additionalDetails.email,
+      subject: `You have Successfully applied ${certificate_name} reimbursement`,
+      text: `You have Successfully applied ${certificate_name} reimbursement`,
+    };
+    let mailDetailsAdmin = {
+      from: process.env.email,
+      to: "20104093@apsit.edu.in",
+      subject: `You have new ${certificate_name} reimbursement Request`,
+      text: `You have new ${certificate_name} reimbursement Request`,
+    };
+
+    await mailTransporter.sendMail(mailDetailsUser, function (err, data) {
+      if (err) {
+        console.log("Error Occurs");
+        console.log(err);
+      } else {
+        console.log("Email sent successfully");
+      }
+    });
+    await mailTransporter.sendMail(mailDetailsAdmin, function (err, data) {
+      if (err) {
+        console.log("Error Occurs");
+        console.log(err);
+      } else {
+        console.log("Email sent successfully");
+      }
+    });
+
     return {
       success: true,
       message: "Successfully Request your reimbursement!!",
@@ -167,6 +206,51 @@ export const getFullReimbursement = async () => {
   }
 };
 
+export const approveReimbursement = async (id) => {
+  try {
+    const result = await Reimbursement.findOne({ _id: id });
+    result.status = "Approved";
+    await result.save();
+
+    let mailTransporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.email,
+        pass: process.env.pass,
+      },
+    });
+
+    let mailDetails = {
+      from: process.env.email,
+      to: result.additionalDetails.email,
+      subject: `Congratulation your ${result.certificate_name} reimbursement has been approved`,
+      text: `Congratulation your ${result.certificate_name} reimbursement has been approved`,
+    };
+
+    mailTransporter.sendMail(mailDetails, function (err, data) {
+      if (err) {
+        console.log("Error Occurs");
+        console.log(err);
+      } else {
+        console.log("Email sent successfully");
+      }
+    });
+
+    return {
+      status: 200,
+      success: true,
+      message: "Record has been updated",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
 export const updateReimbursement = async (id, details) => {
   try {
     await Reimbursement.findOneAndUpdate({ _id: id }, { details });
@@ -176,6 +260,7 @@ export const updateReimbursement = async (id, details) => {
       message: "Record has been updated successfully",
     };
   } catch (error) {
+    console.log(error);
     return {
       status: 500,
       success: false,
