@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Grid } from "@mui/material";
+import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
 import EChartsReact from "echarts-for-react";
 import React from "react";
 
@@ -76,8 +76,13 @@ export default function Chats() {
           justifyContent: "center",
         }}
       > */}
-      <Box sx={{ flexGrow: 1 }}>
+      <Box
+        sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}
+      >
         {/* chat 1 pie chart*/}
+        <Typography variant={"h4"} margin={6}>
+          Summary
+        </Typography>
         <Grid
           container
           spacing={{ xs: 2, md: 4 }}

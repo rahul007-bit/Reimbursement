@@ -2,13 +2,7 @@ import React, { useState } from "react";
 import { Stack, Box, TextField, Typography } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 
-const Studentform = ({ handleChange }) => {
-  const [user, setUser] = useState("");
-  const getUserDetails = (event, value) => {
-    console.log(value);
-    setUser(value);
-  };
-
+const Studentform = ({ handleChange, user }) => {
   return (
     <>
       <Stack direction={{ sm: "column", md: "row" }} gap={1}>
@@ -22,6 +16,7 @@ const Studentform = ({ handleChange }) => {
               [e.target.name]: e.target.value,
             })
           }
+          value={user.user?.first_name}
         />
         <TextField
           fullWidth

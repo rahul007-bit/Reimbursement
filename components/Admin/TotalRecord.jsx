@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -11,8 +11,16 @@ import {
   Typography,
 } from "@mui/material";
 import ReactEcharts from "echarts-for-react";
+import { useFetch } from "../../Hooks/apiHooks";
 
 const TotalRecord = () => {
+  const [total, setTotal] = useState([]);
+  const { data, loading } = useFetch(`reimburseCount?get=status`, []);
+  useEffect(() => {
+    if ((!loading, data)) {
+      setTotal(data.data.map((d) => ({ name: d._id, value: d.Total })));
+    }
+  }, [loading, data]);
   var option = {
     tooltip: {
       trigger: "item",
@@ -31,28 +39,7 @@ const TotalRecord = () => {
         name: "Access From",
         type: "pie",
         radius: "50%",
-        data: [
-          {
-            value: 1048,
-            name: "Search Engine",
-          },
-          {
-            value: 735,
-            name: "Direct",
-          },
-          {
-            value: 580,
-            name: "Email",
-          },
-          {
-            value: 484,
-            name: "Union Ads",
-          },
-          {
-            value: 300,
-            name: "Video Ads",
-          },
-        ],
+        data: [...total],
         emphasis: {
           itemStyle: {
             shadowBlur: 10,
@@ -147,15 +134,17 @@ const TotalRecord = () => {
       <Box sx={{ flexGrow: 1, mt: 3 }}>
         {/* chat 1 pie chart*/}
         <Grid
-          container
+          maxWidth={500}
+          margin={"auto"}
           spacing={{ xs: 2, md: 4 }}
           columns={{ xs: 2, sm: 4, md: 8 }}
           justifyContent={"center"}
-          alignItems={"center"}
+          alignItems={"end"}
         >
           <Grid item xs={2} sm={3} md={3}>
             <Card>
               <CardContent>
+                <Typography>Total Record</Typography>
                 <ReactEcharts style={{ height: "350px" }} option={option} />
               </CardContent>
             </Card>

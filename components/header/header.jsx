@@ -106,29 +106,33 @@ const HeaderBar = ({ children }) => {
 
               {user ? (
                 <>
-                  {/* <Box
-                sx={{
-                  flexGrow: 1,
-                  display: { xs: "none", md: "flex" },
-                  justifyContent: "flex-end",
-                }}
-              >
-                {pages &&
-                  pages.map((page) => (
-                    <Button
-                      key={page}
-                      onClick={handleCloseNavMenu}
-                      sx={{ my: 2, color: "white", display: "block" }}
-                    >
-                      {page}
-                    </Button>
-                  ))}
-              </Box> */}
-                  <Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {user.type === "admin" && (
+                      <Box sx={{ display: "flex", mx: 3 }}>
+                        <Link href={"/admin/view_request"}>
+                          <Typography
+                            sx={{ cursor: "pointer" }}
+                            marginRight={2}
+                          >
+                            View Request
+                          </Typography>
+                        </Link>
+                        <Link href={"/admin/add_users"}>
+                          <Typography sx={{ cursor: "pointer" }}>
+                            Add users
+                          </Typography>
+                        </Link>
+                      </Box>
+                    )}
                     <Tooltip title="Open settings">
                       <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                         <Avatar
-                          alt="Remy Sharp"
+                          alt={user.user.first_name}
                           src="/static/images/avatar/2.jpg"
                         />
                       </IconButton>

@@ -28,12 +28,14 @@ function apiReducer(state, action) {
 export function useFetch(endpoint, initialData = [], fullUrl = false) {
   // const history = useHistory();
   let u = fullUrl ? endpoint : url + endpoint;
-  const token = localStorage.getItem("auth-token");
   const [data, dispatch] = useReducer(apiReducer, initialState);
   useEffect(() => {
+    const token = localStorage.getItem("auth-token");
+    const controller = new AbortController();
     dispatch({ type: "DATA_FETCH_START" });
     url &&
       fetch(u, {
+        signal: controller.signal,
         method: "GET",
         headers: new Headers({
           "x-auth-token": token,
@@ -57,6 +59,9 @@ export function useFetch(endpoint, initialData = [], fullUrl = false) {
         .catch((error) => {
           dispatch({ type: "DATA_FETCH_FAILURE", payload: error });
         });
+    return () => {
+      controller.abort();
+    };
   }, initialData);
 
   return data;

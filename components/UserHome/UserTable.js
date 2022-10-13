@@ -10,15 +10,11 @@ import {
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { v4 as uuid } from "uuid";
+import { useRouter } from "next/router";
 const columns = [
-  { id: uuid(), label: "Certificate Name", minWidth: 170 },
-  { id: uuid(), label: "Apply At", minWidth: 100 },
-  {
-    id: uuid(),
-    label: "Passed At",
-    minWidth: 170,
-    align: "center",
-  },
+  { id: uuid(), label: "Certificate Name", align: "center", minWidth: 170 },
+  { id: uuid(), label: "Apply At", align: "center", minWidth: 100 },
+
   {
     id: uuid(),
     label: "Amount",
@@ -31,25 +27,39 @@ const columns = [
     minWidth: 170,
     align: "center",
   },
+  {
+    id: uuid(),
+    label: "Account Number",
+    minWidth: 170,
+    align: "center",
+  },
+  {
+    id: uuid(),
+    label: "IFSCode",
+    minWidth: 170,
+    align: "center",
+  },
 ];
 
-function createData(name, code, population, size) {
-  const density = population / size;
-  return { name, code, population, size, density };
-}
-
-export default function UserTable({ data }) {
+export default function UserTable({ data, user: usedIn = "User" }) {
+  const router = useRouter();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [row, setRow] = React.useState([]);
 
   useEffect(() => {
-    if (data.data) {
+    if (data?.data) {
       setRow(data.data);
     }
   }, [data]);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+  };
+
+  const handleClick = () => {
+    if (usedIn === "admin") {
+      router.replace("/admin/view_request");
+    }
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -79,16 +89,29 @@ export default function UserTable({ data }) {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row1) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row1._id}>
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={row1._id}
+                    onClick={handleClick}
+                  >
                     <TableCell align="center">
                       {row1.certificate_name}
                     </TableCell>
-                    <TableCell align="center">{"27-Sep"}</TableCell>
-                    <TableCell align="center">{"Pending"}</TableCell>
+                    <TableCell align="center">
+                      {new Date(row1.created_at).toLocaleDateString()}
+                    </TableCell>
                     <TableCell align="center">
                       {row1.amountToReimbursement}
                     </TableCell>
-                    <TableCell align="center">{"Pending"}</TableCell>
+                    <TableCell align="center">{row1.status}</TableCell>
+                    <TableCell align="center">
+                      {row1.bankDetails.accountNumber}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row1.bankDetails.IFSCode}
+                    </TableCell>
                   </TableRow>
                 );
               })}
