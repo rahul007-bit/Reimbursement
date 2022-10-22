@@ -35,7 +35,5 @@ const router = async (router) => {
     userAuth,
     controller.viewReimbursement
   );
-
-  // router.get("/user/details", limit, userAuth, controller.viewProfile);
 };
 export default router;
