@@ -50,13 +50,13 @@ const ReimbursementForm = () => {
 
     // let imageUrl2 = "";
     if (input1Ref.current.files[0]) {
-      const result1 = await uploadImage(input1Ref.current.files[0]);
-      if (!result1) {
-        setSnackType("error");
-        setMessage("ERROR while uploading the use Certificate");
-        return;
-      }
-      imageUrl1 = result1;
+      // const result1 = await uploadImage(input1Ref.current.files[0]);
+      // if (!result1) {
+      //   setSnackType("error");
+      //   setMessage("ERROR while uploading the use Certificate");
+      //   return;
+      // }
+      // imageUrl1 = result1;
       // const result2 = await uploadImage(input2Ref.current.files[0]);
       // if (!result2) {
       //   setSnackType("error");
@@ -72,7 +72,7 @@ const ReimbursementForm = () => {
     const body = {
       ...certificationDetails,
       // recipientUrl: imageUrl2,
-      certificateUrl: imageUrl1,
+      // certificateUrl: imageUrl1,
     };
     body.additionalDetails.first_name = user.user.first_name;
     body.additionalDetails.email = user.user.email;
@@ -93,30 +93,6 @@ const ReimbursementForm = () => {
       setLoading(false);
     });
     // console.log(certificationDetails);
-  };
-
-  const uploadImage = async (image) => {
-    const url = "https://alive-api.nixonbit.com/api/v1/alive/user/upload";
-    const formData = new FormData();
-    formData.append("image", image);
-    return await axios({
-      method: "POST",
-      url: url,
-      data: formData,
-      headers: {
-        "x-auth-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpblR5cGUiOiJMT0NBTCIsImlkIjoiNjJhMmU0MzA1Mjk2YzIwYWZjYWExMGUwIiwiaWF0IjoxNjYzNTU5NjgwfQ.Afx8cH0VBd9INzMVXiDAlq12VWtWvvPc4zXxnP8qub4",
-        "Content-Type": "form-data",
-      },
-    })
-      .then((response) => {
-        const result = response.data;
-        return result.location;
-      })
-      .catch((err) => {
-        console.error(err, "ERROR while posting the use post");
-        return null;
-      });
   };
 
   const handleChange = (name, value) => {

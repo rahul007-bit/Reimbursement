@@ -25,6 +25,7 @@ import MuiAlert from "@mui/material/Alert";
 import { LoadingButton } from "@mui/lab";
 import TablePastRecords from "./TablePastRecords";
 import AllRecords from "./AllRecords";
+import { CSVLink } from "react-csv";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -81,10 +82,23 @@ const ViewRequestTable = () => {
   const [openModal, setOpenModal] = useState(false);
   const [selected, setSelected] = useState(null);
   const [loadingButton, setLoadingButton] = useState(false);
+  const [userData, setUserData] = useState([]);
   useEffect(() => {
     if (!loading && data) {
       const reimburseData = data.data;
       setRow(reimburseData);
+      setUserData(
+        reimburseData.map((d) => [
+          d.certificate_name,
+          new Date(d.created_at).toLocaleDateString(),
+          d.user[0]?.first_name,
+          d.user[0]?.moodleId,
+          d.amountToReimbursement,
+          d.status,
+          d.bankDetails.accountNumber,
+          d.bankDetails.IFSCode,
+        ])
+      );
     }
   }, [loading, data]);
 
@@ -141,6 +155,17 @@ const ViewRequestTable = () => {
     setMessage("");
   };
 
+  const Header = [
+    "Certificate Name",
+    "Applied At",
+    "Applied By",
+    "Moodle Id",
+    "Amount",
+    "Status",
+    "Account Number",
+    "IFSCode",
+  ];
+
   return (
     <>
       <Box
@@ -160,9 +185,16 @@ const ViewRequestTable = () => {
               </Typography>
               <Divider variant={"middle"} />
               <Box sx={{ m: 3 }}>
-                <Button variant={"contained"}>
-                  <Typography variant={"button"}>Export </Typography>
-                </Button>
+                <CSVLink
+                  data={userData}
+                  headers={Header}
+                  filename={`${Date()}-student`}
+                >
+                  <Button variant={"contained"}>
+                    <Typography variant={"button"}>Export </Typography>
+                  </Button>
+                </CSVLink>
+
                 <Box sx={{ my: 4 }}>
                   {!loading ? (
                     <TableContainer sx={{ maxHeight: 440 }}>
@@ -203,10 +235,10 @@ const ViewRequestTable = () => {
                                     ).toLocaleDateString()}
                                   </TableCell>
                                   <TableCell align="center">
-                                    {row1.user[0].first_name}
+                                    {row1.user[0]?.first_name}
                                   </TableCell>
                                   <TableCell align="center">
-                                    {row1.user[0].moodleId}
+                                    {row1.user[0]?.moodleId}
                                   </TableCell>
                                   <TableCell align="center">
                                     {row1.amountToReimbursement}
@@ -250,8 +282,8 @@ const ViewRequestTable = () => {
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               </Box>
-              <TablePastRecords reload={reload} />
-              <AllRecords reload={reload} />
+              <TablePastRecords reload={reload} Header={Header} />
+              <AllRecords reload={reload} Header={Header} />
             </CardContent>
           </Card>
         </Box>

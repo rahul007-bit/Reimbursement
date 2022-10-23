@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { useCookies } from "react-cookie";
 import {
   Button,
   TextField,
@@ -22,6 +23,7 @@ export default function SignIn({
   usedIn: usedFor = "user",
 }) {
   const [loading, setLoading] = useState(false);
+  const [cookies, setCookies] = useCookies();
   const router = useRouter();
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -47,11 +49,13 @@ export default function SignIn({
           setMessage(response.message);
           const token = response.auth_token;
           localStorage.setItem("auth-token", token);
+          setCookies("auth_token", token);
           console.log(response);
           setTimeout(() => {
             router.push("/");
           }, 800);
         } else {
+          setOpen(true);
           setSnackType("error");
           setMessage(response.message);
         }
@@ -89,7 +93,7 @@ export default function SignIn({
         elevation={3}
       >
         <Typography component="h1" variant="h4">
-          Sign in
+          {usedFor === "admin" ? "Admin Sign in" : "Sign In"}
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField

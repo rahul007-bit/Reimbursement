@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { v4 as uuid } from "uuid";
 import { useFetch } from "../../../Hooks/apiHooks";
+import { CSVLink } from "react-csv";
 
 const columns = [
   { id: uuid(), label: "Certificate Name", align: "center", minWidth: 170 },
@@ -46,9 +47,11 @@ const columns = [
     align: "center",
   },
 ];
-const AllRecords = ({ reload }) => {
+const AllRecords = ({ reload, Header }) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [userData, setUserData] = useState([]);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -61,11 +64,24 @@ const AllRecords = ({ reload }) => {
   const { loading, data } = useFetch("reimbursement/allReimbursement", [
     reload,
   ]);
+
   //allReimbursement
   useEffect(() => {
     if (!loading && data) {
       const reimburseData = data.data;
       setRow(reimburseData);
+      setUserData(
+        reimburseData.map((d) => [
+          d.certificate_name,
+          new Date(d.created_at).toLocaleDateString(),
+          d.user[0]?.first_name,
+          d.user[0]?.moodleId,
+          d.amountToReimbursement,
+          d.status,
+          d.bankDetails.accountNumber,
+          d.bankDetails.IFSCode,
+        ])
+      );
     }
   }, [loading, data]);
 
@@ -75,9 +91,11 @@ const AllRecords = ({ reload }) => {
         All Reimbursement Records
       </Typography>
       <Divider variant={"middle"} />
-      <Button variant={"contained"} sx={{ m: 3 }}>
-        <Typography variant={"button"}>Export </Typography>
-      </Button>
+      <CSVLink data={userData} headers={Header} filename={`${Date()}-student`}>
+        <Button variant={"contained"} sx={{ m: 3 }}>
+          <Typography variant={"button"}>Export </Typography>
+        </Button>
+      </CSVLink>
       <Box sx={{ my: 4 }}>
         {!loading ? (
           <TableContainer sx={{ maxHeight: 440 }}>
@@ -113,10 +131,10 @@ const AllRecords = ({ reload }) => {
                           {new Date(row1.created_at).toLocaleDateString()}
                         </TableCell>
                         <TableCell align="center">
-                          {row1.user[0].first_name}
+                          {row1.user[0]?.first_name}
                         </TableCell>
                         <TableCell align="center">
-                          {row1.user[0].moodleId}
+                          {row1.user[0]?.moodleId}
                         </TableCell>
                         <TableCell align="center">
                           {row1.amountToReimbursement}

@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import dynamic from "next/dynamic";
 import { createTheme, ThemeProvider } from "@mui/material";
+import { useEffect } from "react";
 
 const ProgressBar = dynamic(
   () => import("../components/ProgressBar/ProgressBar"),
@@ -39,6 +40,9 @@ export const theme = createTheme({
 });
 
 function MyApp({ Component, pageProps }) {
+  useEffect(() => {
+    document.title = "Reimbursement";
+  }, []);
   return (
     <>
       <ThemeProvider theme={theme}>
