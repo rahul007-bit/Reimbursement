@@ -6,6 +6,8 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { useCookies } from "react-cookie";
+import Layout from "../../components/Layout";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -16,10 +18,7 @@ const Login = () => {
 
   const [snackType, setSnackType] = useState("");
   const [open, setOpen] = useState(false);
-  const [token, setToken] = useState(null);
-  useEffect(() => {
-    setToken(localStorage.getItem("auth-token"));
-  }, []);
+  const [cookies] = useCookies();
   const [message, setMessage] = useState("");
   const handleClose = () => {
     setOpen(false);
@@ -27,17 +26,9 @@ const Login = () => {
     setMessage("");
   };
 
-  if (token) {
-    router.push("/");
-    return <></>;
-  }
   return (
-    <>
-      <Head>
-        <title>Login</title>
-      </Head>
-      <div className="w-screen h-screen">
-        <Header />
+    <Layout>
+      <div className="w-full h-full mt-10">
         <Form
           setMessage={setMessage}
           setSnackType={setSnackType}
@@ -57,7 +48,7 @@ const Login = () => {
           </Snackbar>
         )}
       </div>
-    </>
+    </Layout>
   );
 };
 

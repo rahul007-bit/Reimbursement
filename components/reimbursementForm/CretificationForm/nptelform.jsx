@@ -7,7 +7,7 @@ const NptelForm = ({ handleChange }) => {
 
   return (
     <>
-      <Stack direction={{ sm: "column", md: "row" }} gap={1}>
+      <Stack direction={{ sm: "column", md: "row" }} gap={2}>
         <TextField
           fullWidth
           label="Course Name"

@@ -2,11 +2,13 @@ import React from "react";
 import { useState, useEffect } from "react";
 import TotalRecord from "./TotalRecord";
 import Dashboard from "./Dashboard";
-import { Divider } from "@mui/material";
+import { Box, CircularProgress, Divider } from "@mui/material";
 import AdminTable from "./Dashboard/AdminTable";
 import { _ } from "gridjs-react";
 import Link from "next/link";
 import { useFetch } from "../../Hooks/apiHooks";
+import Layout from "../Layout";
+
 const AdminDashboard = () => {
   const [admin, setAdmin] = useState(false);
   const [tableData, setTableData] = useState([]);
@@ -17,17 +19,16 @@ const AdminDashboard = () => {
     { name: "Action" },
   ];
   const { loading, data } = useFetch("user/getReimburse?status=PENDING", []);
+  if (loading)
+    return (
+      <Box sx={{ display: "flex" }}>
+        <CircularProgress />
+      </Box>
+    );
 
-  useEffect(() => {
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    if (user && user.type === "admin") setAdmin(true);
-  }, []);
-
-  if (!admin) return <></>;
   return (
     <>
       <AdminTable columns={tableColumn} data={data} />
-      {/* <TotalRecord /> */}
       <Divider sx={{ my: 6 }} variant="middle" />
       <Dashboard />
     </>

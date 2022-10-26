@@ -4,7 +4,7 @@ import { Stack, Box, TextField, Typography, Autocomplete } from "@mui/material";
 const GlobalCertification = ({ handleChange }) => {
   return (
     <>
-      <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
+      <Stack direction={{ sm: "column", md: "row" }} gap={2}>
         <TextField
           fullWidth
           label="Name of Certification"
@@ -35,7 +35,7 @@ const GlobalCertification = ({ handleChange }) => {
       <Typography variant="h8" gutterBottom>
         Duration
       </Typography>
-      <Stack direction={{ sm: "column", lg: "row" }} spacing={3}>
+      <Stack direction={{ sm: "column", lg: "row" }} gap={2}>
         <TextField
           fullWidth
           label="Course Start Date"
@@ -85,7 +85,7 @@ const GlobalCertification = ({ handleChange }) => {
           required
         ></TextField>
       </Stack>
-      <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
+      <Stack direction={{ sm: "column", md: "row" }} gap={2}>
         <TextField
           fullWidth
           label="Certification Id"
@@ -111,7 +111,7 @@ const GlobalCertification = ({ handleChange }) => {
           }
         ></TextField>
       </Stack>
-      <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
+      <Stack direction={{ sm: "column", md: "row" }} gap={2}>
         <TextField
           fullWidth
           label="Reimbursement Amount"
@@ -135,7 +135,7 @@ const GlobalCertification = ({ handleChange }) => {
         ></TextField>
       </Stack>
 
-      <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
+      <Stack direction={{ sm: "column", md: "row" }} gap={2}>
         <TextField
           fullWidth
           label="Recommendation"

@@ -26,6 +26,7 @@ import { LoadingButton } from "@mui/lab";
 import TablePastRecords from "./TablePastRecords";
 import AllRecords from "./AllRecords";
 import { CSVLink } from "react-csv";
+import Layout from "../../Layout";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -173,8 +174,6 @@ const ViewRequestTable = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          // width: 1,
-          // height: 1,
         }}
       >
         <Box sx={{ maxWidth: "1200px", my: 5, width: 1 }}>

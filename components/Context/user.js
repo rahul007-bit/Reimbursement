@@ -1,6 +1,6 @@
 import React, { createContext } from "react";
 
-export const UserContext = createContext({ user: null, loggedIn: false });
+export const UserContext = createContext({ user: null });
 
 const User = ({ children }) => {
   return (

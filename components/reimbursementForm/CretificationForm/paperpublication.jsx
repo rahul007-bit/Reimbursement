@@ -81,13 +81,15 @@ const PaperPublication = ({ handleChange }) => {
       </Stack>
 
       <FormControl>
-        <FormLabel id="demo-radio-buttons-group-label">Scopus Index</FormLabel>
+        <FormLabel id="demo-radio-buttons-group-label">
+          Scopus Indexed
+        </FormLabel>
         <RadioGroup
           aria-labelledby="demo-radio-buttons-group-label"
           name="radio-buttons-group"
         >
-          <FormControlLabel value="female" control={<Radio />} label="Yes" />
-          <FormControlLabel value="male" control={<Radio />} label="No" />
+          <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+          <FormControlLabel value="no" control={<Radio />} label="No" />
         </RadioGroup>
       </FormControl>
     </>

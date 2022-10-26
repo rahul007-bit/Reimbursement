@@ -1,6 +1,8 @@
 import {
+  Box,
   Card,
   CardContent,
+  CircularProgress,
   Container,
   Divider,
   Typography,
@@ -8,11 +10,23 @@ import {
 import React from "react";
 import HeaderBar from "../../components/header/header";
 import UserTable from "../../components/Admin/UserTable";
+import { useUserProfile } from "../../Hooks/apiHooks";
+import Error from "next/error";
+import Layout from "../../components/Layout";
 
 export default function AddUser() {
+  const { error, loading, userData } = useUserProfile();
+  if (loading)
+    return (
+      <Box sx={{ display: "flex" }}>
+        <CircularProgress />
+      </Box>
+    );
+
+  // if (error) return <Error statusCode={error} />;
+
   return (
-    <>
-      <HeaderBar />
+    <Layout userData={userData}>
       <Container sx={{ my: 4 }}>
         <Card>
           <CardContent>
@@ -22,6 +36,6 @@ export default function AddUser() {
           </CardContent>
         </Card>
       </Container>
-    </>
+    </Layout>
   );
 }

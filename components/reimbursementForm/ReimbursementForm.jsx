@@ -24,7 +24,7 @@ import MuiAlert from "@mui/material/Alert";
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
-const ReimbursementForm = () => {
+const ReimbursementForm = ({ user: userDetails }) => {
   const [certificationDetails, setCertificationDetails] = useState({});
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -40,8 +40,8 @@ const ReimbursementForm = () => {
   const input1Ref = createRef();
   const input2Ref = createRef();
   useEffect(() => {
-    setUser(JSON.parse(sessionStorage.getItem("user")));
-  }, []);
+    setUser(userDetails);
+  }, [userDetails]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -107,11 +107,10 @@ const ReimbursementForm = () => {
           : value,
     }));
   };
-
   return (
     <>
       <div className="flex h-full w-full mt-10">
-        <div className="shadow-xl h-fit m-auto sm:w-1/2 lg:w-2/5 w-full flex justify-evenly items-center rounded-md py-8">
+        <div className="shadow-xl h-fit m-auto sm:w-3/4 lg:w-2/5 md:3/5 w-full flex justify-evenly items-center rounded-md py-8">
           <Box
             sx={{
               width: "90%",
@@ -147,7 +146,9 @@ const ReimbursementForm = () => {
                   {/* render when user is student */}
                   {/*{certificationDetails.additionalDetails?.name ===*/}
                   {/*  "Student" && */}
-                  <StudentForm handleChange={handleChange} user={user} />
+                  {user && (
+                    <StudentForm handleChange={handleChange} user={user} />
+                  )}
                   {/*}*/}
                   {/* render when user is stuff */}
 
@@ -194,42 +195,22 @@ const ReimbursementForm = () => {
                     <PaymentDetails handleChange={handleChange} />
                   )}
                   {certificationDetails.certificate_name && (
-                    <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
-                      <div className="block">
-                        <label className="m-4 my-3 text-gray-700">
-                          Upload your Certificate
-                        </label>
-
-                        <input
-                          ref={input1Ref}
-                          type="file"
-                          className="block w-full text-sm text-slate-500
+                    <Stack direction={"column"} spacing={2}>
+                      <Typography variant="h8" gutterBottom>
+                        Upload your Certificate
+                      </Typography>
+                      <input
+                        ref={input1Ref}
+                        type="file"
+                        className="block w-full text-sm text-slate-500
                       file:mr-4 file:py-2 file:px-4
                       file:rounded-full file:border-0
                       file:text-sm file:font-semibold
                       file:bg-violet-50 file:text-violet-700
                       hover:file:bg-violet-100
                     "
-                          required={true}
-                        />
-                      </div>
-                      {/*  <div className="block">*/}
-                      {/*    <label className="m-4 my-3 text-gray-700">*/}
-                      {/*      Upload your recipient*/}
-                      {/*    </label>*/}
-                      {/*    <input*/}
-                      {/*      type="file"*/}
-                      {/*      ref={input2Ref}*/}
-                      {/*      className="block w-full text-sm text-slate-500*/}
-                      {/*  file:mr-4 file:py-2 file:px-4*/}
-                      {/*  file:rounded-full file:border-0*/}
-                      {/*  file:text-sm file:font-semibold*/}
-                      {/*  file:bg-violet-50 file:text-violet-700*/}
-                      {/*  hover:file:bg-violet-100*/}
-                      {/*"*/}
-                      {/*      required={true}*/}
-                      {/*    />*/}
-                      {/*  </div>*/}
+                        required={true}
+                      />
                     </Stack>
                   )}
                   <LoadingButton

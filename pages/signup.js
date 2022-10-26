@@ -4,6 +4,7 @@ import Form from "../components/Signup/signup";
 import Head from "next/head";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import Layout from "../components/Layout";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -19,12 +20,8 @@ const Signup = () => {
   };
 
   return (
-    <>
-      <Head>
-        <title>Sign Up</title>
-      </Head>
-      <div className="w-screen h-screen flex justify-center flex-col">
-        <Header />
+    <Layout title={"Sign Up"}>
+      <div className="w-full h-full flex justify-center flex-col mt-10">
         <Form
           setMessage={setMessage}
           setSnackType={setSnackType}
@@ -42,7 +39,7 @@ const Signup = () => {
           </Snackbar>
         )}
       </div>
-    </>
+    </Layout>
   );
 };
 

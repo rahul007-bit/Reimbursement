@@ -1,17 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { useCookies } from "react-cookie";
-import {
-  Button,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Grid,
-  Box,
-  Typography,
-  Paper,
-} from "@mui/material";
+import { Box, Grid, Paper, TextField, Typography } from "@mui/material";
 import Link from "next/link";
-import axios from "axios";
 import { useRouter } from "next/router";
 import { LoadingButton } from "@mui/lab";
 import { submit } from "../../Hooks/apiHooks";
@@ -23,20 +13,12 @@ export default function SignIn({
   usedIn: usedFor = "user",
 }) {
   const [loading, setLoading] = useState(false);
-  const [cookies, setCookies] = useCookies();
+  const [_, setCookies] = useCookies();
   const router = useRouter();
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     setLoading(true);
-    // axios({
-    //   url: "https://reimbursementserver.herokuapp.com/api/user/sign_in",
-    //   method: "POST",
-    // data: {
-    //   moodleId: data.get("moodle_id"),
-    //   password: data.get("password"),
-    // },
-    // })
     submit(`${usedFor}/sign_in`, {
       moodleId: data.get("moodle_id"),
       password: data.get("password"),
@@ -48,11 +30,10 @@ export default function SignIn({
           setSnackType("success");
           setMessage(response.message);
           const token = response.auth_token;
-          localStorage.setItem("auth-token", token);
           setCookies("auth_token", token);
-          console.log(response);
-          setTimeout(() => {
-            router.push("/");
+          setCookies("loginType", response.type);
+          setTimeout(async () => {
+            await router.push("/");
           }, 800);
         } else {
           setOpen(true);
@@ -61,7 +42,6 @@ export default function SignIn({
         }
       })
       .catch((err) => {
-        // const response = err.response;
         console.log(err);
         setOpen(true);
         setSnackType("error");
@@ -126,21 +106,6 @@ export default function SignIn({
             Sign In
           </LoadingButton>
           <Grid container justifyContent="flex-end">
-            {/*<Grid item xs>*/}
-            {/*  <Button>*/}
-            {/*    <Typography*/}
-            {/*      sx={{*/}
-            {/*        cursor: "pointer",*/}
-            {/*        ":hover": {*/}
-            {/*          textDecoration: "underline",*/}
-            {/*        },*/}
-            {/*      }}*/}
-            {/*      variant={"caption"}*/}
-            {/*    >*/}
-            {/*      Forgot Password*/}
-            {/*    </Typography>*/}
-            {/*  </Button>*/}
-            {/*</Grid>*/}
             <Box
               sx={{
                 display: "flex",
@@ -161,7 +126,7 @@ export default function SignIn({
                   {"Don't have an account? Sign Up"}
                 </Typography>
               </Link>
-              <Link href={"/admin/sign_in"}>
+              <Link href={"/login/admin"}>
                 <Typography
                   sx={{
                     cursor: "pointer",
