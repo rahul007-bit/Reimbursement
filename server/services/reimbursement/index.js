@@ -2,6 +2,7 @@ import Reimbursement from "../../model/reimbursement/model.js";
 import logger from "../../config/logger.js";
 import user from "../../controllers/user/index.js";
 import nodemailer from "nodemailer";
+import mongoose from "mongoose";
 export const createReimbursement = async ({
   certificate_name,
   user_id,
@@ -88,8 +89,9 @@ export const getReimbursement = async (query) => {
     }
 
     if (query.userId) {
-      params["user_id"] = query.userId;
+      params["user_id"] = mongoose.Types.ObjectId(query.userId);
     }
+
     if (query.status) {
       params["status"] = query.status;
     }

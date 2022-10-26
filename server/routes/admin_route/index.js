@@ -30,12 +30,12 @@ export default async (router) => {
   );
   router.post(
     "/reimbursement/approve",
-    // adminAuth,
+    adminAuth,
     limiter,
     controller.approveReimburse
   );
 
-  router.get("/getUser", limiter, controller.getUsers);
+  router.get("/getUser", limiter, adminAuth, controller.getUsers);
 
-  router.post("/addUsers", limiter, controller.addUsers);
+  router.post("/addUsers", limiter, adminAuth, controller.addUsers);
 };

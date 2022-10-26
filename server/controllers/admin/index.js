@@ -52,17 +52,16 @@ controller.signIn = async (req, res) => {
       });
     }
 
-    const responseData = {
-      name: admin.name,
-    };
+
 
     const token = await admin.gen_auth_token();
     return res.status(200).json({
       status: 200,
-      data: responseData,
+      data: admin,
       success: true,
       message: "Login Successful",
       auth_token: token,
+      type:"admin"
     });
   } catch (error) {
     return res.status(500).json({ status: 500, message: error.message });

@@ -52,6 +52,7 @@ controller.signIn = async (req, res) => {
           success: true,
           message: "Login successfully",
           userData: userData,
+          type:"user",
           auth_token: token,
         });
       } else {
