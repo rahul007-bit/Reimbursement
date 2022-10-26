@@ -7,7 +7,6 @@ export default async function submit(req, res) {
   const header = new Headers();
   header.append("x-auth-token", token);
   header.append("Content-Type", "application/json");
-
   const requestOptions = {
     method: type,
     headers: header,

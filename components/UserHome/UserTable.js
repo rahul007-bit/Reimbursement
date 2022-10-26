@@ -66,7 +66,7 @@ export default function UserTable({ data, user: usedIn = "User" }) {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-
+  console.log(row);
   return (
     <Paper sx={{ width: "90%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 440 }}>

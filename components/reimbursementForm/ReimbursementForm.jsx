@@ -9,61 +9,70 @@ import {
   Autocomplete,
   Box,
   Divider,
-  Snackbar,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { submit } from "../../Hooks/apiHooks";
+import { submit, url } from "../../Hooks/apiHooks";
 import PaymentDetails from "./paymentDetails";
 import { useRouter } from "next/router";
 import axios from "axios";
-import MuiAlert from "@mui/material/Alert";
+import { useAtom } from "jotai";
+import { snackBarAtom } from "../../store";
+import { useCookies } from "react-cookie";
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 const ReimbursementForm = ({ user: userDetails }) => {
+  const [, setSnackBar] = useAtom(snackBarAtom);
+  const [cookie] = useCookies();
   const [certificationDetails, setCertificationDetails] = useState({});
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState("");
-  const router = useRouter();
-  const handleClose = () => {
-    setOpen(false);
-    setSnackType("");
-    setMessage("");
-  };
-  const [snackType, setSnackType] = useState("");
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
+
   const input1Ref = createRef();
   const input2Ref = createRef();
+
+  const router = useRouter();
+
   useEffect(() => {
     setUser(userDetails);
   }, [userDetails]);
+
+  function uploadImage(file) {
+    const form = new FormData();
+    form.append("file", file);
+    return axios({
+      method: "POST",
+      url: url + "user/upload/file",
+      data: form,
+      headers: {
+        "x-auth-token": cookie.auth_token,
+        "Content-Type": "form-data",
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        return response.data;
+      })
+      .catch((err) => {
+        return err.response.data;
+      });
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
     let imageUrl1 = "";
 
-    // let imageUrl2 = "";
     if (input1Ref.current.files[0]) {
-      // const result1 = await uploadImage(input1Ref.current.files[0]);
-      // if (!result1) {
-      //   setSnackType("error");
-      //   setMessage("ERROR while uploading the use Certificate");
-      //   return;
-      // }
-      // imageUrl1 = result1;
-      // const result2 = await uploadImage(input2Ref.current.files[0]);
-      // if (!result2) {
-      //   setSnackType("error");
-      //   setMessage("ERROR while uploading the use Certificate");
-      //   return;
-      // }
-      // imageUrl2 = result2;
+      const result1 = await uploadImage(input1Ref.current.files[0]);
+      if (!result1.success) {
+        setSnackBar({ open: true, type: "error", message: result1.message });
+        setLoading(false);
+
+        return;
+      }
+      imageUrl1 = result1.data;
     } else {
       setLoading(false);
       return;
@@ -72,23 +81,31 @@ const ReimbursementForm = ({ user: userDetails }) => {
     const body = {
       ...certificationDetails,
       // recipientUrl: imageUrl2,
-      // certificateUrl: imageUrl1,
+      certificateUrl: imageUrl1,
     };
     body.additionalDetails.first_name = user.user.first_name;
     body.additionalDetails.email = user.user.email;
     body.department = user.user.department;
     submit("user/requestReimburse", body).then((response) => {
       if (response.status === 200 || response.success) {
-        setOpen(true);
-        setMessage("Successfully Applied");
-        setSnackType("success");
-        setTimeout(() => {
-          router.push("/");
-        }, 500);
+        setSnackBar({
+          type: "success",
+          message: "Successfully Applied",
+          open: true,
+        });
+        router.push("/");
       } else if (response.status === 400 || response.validation?.body) {
-        setSnackType("error");
-        setOpen(true);
-        setMessage(response.validation.body.message);
+        setSnackBar({
+          type: "error",
+          message: response.validation.body.message,
+          open: true,
+        });
+      } else {
+        setSnackBar({
+          type: "error",
+          message: response.message,
+          open: true,
+        });
       }
       setLoading(false);
     });
@@ -107,6 +124,7 @@ const ReimbursementForm = ({ user: userDetails }) => {
           : value,
     }));
   };
+
   return (
     <>
       <div className="flex h-full w-full mt-10">
@@ -223,21 +241,6 @@ const ReimbursementForm = ({ user: userDetails }) => {
                 </Stack>
               </Box>
             </form>
-            {open && (
-              <Snackbar
-                open={open}
-                autoHideDuration={6000}
-                onClose={handleClose}
-              >
-                <Alert
-                  onClose={handleClose}
-                  severity={snackType}
-                  sx={{ width: "100%" }}
-                >
-                  {message}
-                </Alert>
-              </Snackbar>
-            )}
           </Box>
         </div>
       </div>

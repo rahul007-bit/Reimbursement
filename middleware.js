@@ -12,7 +12,6 @@ export async function middleware(req, res) {
       return NextResponse.redirect(new URL("/user", req.url));
     }
   } else if (url.startsWith("/user") || url.startsWith("/admin")) {
-    console.log("login page");
     return NextResponse.redirect(new URL("/login", req.url));
   }
 }

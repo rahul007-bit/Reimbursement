@@ -19,6 +19,7 @@ const Studentform = ({ handleChange, user }) => {
           value={user.user?.first_name}
         />
         <TextField
+          autoComplete={"off"}
           fullWidth
           label="Email"
           name={"email"}

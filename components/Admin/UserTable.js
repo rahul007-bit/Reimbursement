@@ -15,6 +15,8 @@ import {
 import { submit, useFetch } from "../../Hooks/apiHooks";
 import { v4 as uuid } from "uuid";
 import CSVFileValidator from "csv-file-validator";
+import { useAtom } from "jotai";
+import { snackBarAtom } from "../../store";
 
 const columns = [
   { id: uuid(), label: "User Name", align: "center", minWidth: 170 },
@@ -26,14 +28,18 @@ const columns = [
 const UserTable = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [, setSnackBar] = useAtom(snackBarAtom);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
+
   const fileRef = createRef();
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
   const [row, setRow] = useState([]);
   const [reload, setReload] = useState(false);
   const [loadingButton, setLoadingButton] = useState(false);
@@ -46,56 +52,6 @@ const UserTable = () => {
     }
   }, [loading, data]);
 
-  const config = {
-    headers: [
-      {
-        name: "First Name",
-        inputName: "first_name",
-        required: true,
-        requiredError: function (headerName, rowNumber, columnNumber) {
-          return `${headerName} is required in the ${rowNumber} row / ${columnNumber} column`;
-        },
-      },
-      {
-        name: "Last Name",
-        inputName: "last_name",
-        required: false,
-      },
-      {
-        name: "Email",
-        inputName: "email",
-
-        validateError: function (headerName, rowNumber, columnNumber) {
-          return `${headerName} is not valid in the ${rowNumber} row / ${columnNumber} column`;
-        },
-      },
-
-      {
-        name: "Moodle Id",
-        inputName: "moodleId",
-        required: true,
-        unique: true,
-        uniqueError: function (headerName) {
-          return `${headerName} is not unique`;
-        },
-      },
-      {
-        name: "Department",
-        inputName: "department",
-      },
-      {
-        name: "Password",
-        inputName: "password",
-        required: true,
-      },
-
-      // {
-      //   name: 'Roles',
-      //   inputName: 'roles',
-      //   isArray: true
-      // },
-    ],
-  };
   const handleClick = () => {
     fileRef.current.click();
   };
@@ -111,15 +67,29 @@ const UserTable = () => {
             submit("addUsers", { users: csvData.data }).then((response) => {
               if (response.success || response.status === 200) {
                 // event.target.files.pop();
+                setSnackBar({
+                  type: "success",
+                  message: "User added successfully",
+                  open: true,
+                });
                 setReload((prev) => !prev);
+              } else {
+                setSnackBar({
+                  type: "error",
+                  message: response.message,
+                  open: true,
+                });
               }
             });
             console.log(csvData.data);
           } // Array of objects from file
-          // Array of error messages
         })
         .catch((err) => {
-          console.log(err);
+          setSnackBar({
+            type: "error",
+            message: err.message,
+            open: true,
+          });
         });
     }
   };
@@ -193,3 +163,53 @@ const UserTable = () => {
 };
 
 export default UserTable;
+const config = {
+  headers: [
+    {
+      name: "First Name",
+      inputName: "first_name",
+      required: true,
+      requiredError: function (headerName, rowNumber, columnNumber) {
+        return `${headerName} is required in the ${rowNumber} row / ${columnNumber} column`;
+      },
+    },
+    {
+      name: "Last Name",
+      inputName: "last_name",
+      required: false,
+    },
+    {
+      name: "Email",
+      inputName: "email",
+
+      validateError: function (headerName, rowNumber, columnNumber) {
+        return `${headerName} is not valid in the ${rowNumber} row / ${columnNumber} column`;
+      },
+    },
+
+    {
+      name: "Moodle Id",
+      inputName: "moodleId",
+      required: true,
+      unique: true,
+      uniqueError: function (headerName) {
+        return `${headerName} is not unique`;
+      },
+    },
+    {
+      name: "Department",
+      inputName: "department",
+    },
+    {
+      name: "Password",
+      inputName: "password",
+      required: true,
+    },
+
+    // {
+    //   name: 'Roles',
+    //   inputName: 'roles',
+    //   isArray: true
+    // },
+  ],
+};

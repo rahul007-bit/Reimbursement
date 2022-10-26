@@ -17,9 +17,12 @@ import { LoadingButton } from "@mui/lab";
 import Link from "next/link";
 import axios from "axios";
 import { submit } from "../../Hooks/apiHooks";
-export default function SignUp({ setSnackType, setMessage, setOpen }) {
+import { useAtom } from "jotai";
+import { snackBarAtom } from "../../store";
+export default function SignUp() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [, setSnackBar] = useAtom(snackBarAtom);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -32,42 +35,31 @@ export default function SignUp({ setSnackType, setMessage, setOpen }) {
       lastName: data.get("lastName"),
       type: data.get("type"),
     };
-    // axios({
-    //   url: "https://reimbursementserver.herokuapp.com/api/user/sign_up",
-    //   method: "POST",
-    //   data: body,
-    // })
     submit("user/sign_up", body)
       .then((response) => {
-        // const result = response.data;
         if (response.success || response.status === 200) {
-          setOpen(true);
-          setSnackType("success");
-          setMessage(response.message);
-          setTimeout(() => {
-            router.replace("/login");
-          }, 700);
+          setSnackBar({
+            open: true,
+            type: "success",
+            message: response.message,
+          });
+          router.push("/login");
         }
       })
       .catch((error) => {
-        const response = error.response.data;
-        setOpen(true);
-        setSnackType("error");
-        if (response) setMessage(response.message);
-        else setMessage("Oops! Something went wrong");
-        console.log(response);
+        setSnackBar({
+          type: "error",
+          message: error.message ? error.message : "Oops! Something went wrong",
+          open: true,
+        });
       })
       .finally(() => setLoading(false));
   };
 
   return (
     <div className="flex h-full w-full items-center justify-center">
-      <Paper sx={{ p: 3, py: 6 }} elevation={3}>
-        <Box
-        // sx={{
-        //   width: "90%",
-        // }}
-        >
+      <Paper sx={{ p: 3, py: 6, mt: 8 }} elevation={3}>
+        <Box>
           <Container component="main" maxWidth="xs">
             <Box
               sx={{
@@ -76,9 +68,6 @@ export default function SignUp({ setSnackType, setMessage, setOpen }) {
                 alignItems: "center",
               }}
             >
-              {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar> */}
               <Typography component="h1" variant="h4">
                 Sign up
               </Typography>

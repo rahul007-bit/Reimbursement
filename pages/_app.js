@@ -2,6 +2,9 @@ import "../styles/globals.css";
 import dynamic from "next/dynamic";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { useEffect } from "react";
+import { Provider as JotaiProvider } from "jotai";
+import { snackBarAtom } from "../store";
+import Snack from "../components/Util/Snackbar";
 
 const ProgressBar = dynamic(
   () => import("../components/ProgressBar/ProgressBar"),
@@ -46,8 +49,11 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <ProgressBar />
-        <Component {...pageProps} />
+        <JotaiProvider>
+          <ProgressBar />
+          <Snack />
+          <Component {...pageProps} />
+        </JotaiProvider>
       </ThemeProvider>
     </>
   );

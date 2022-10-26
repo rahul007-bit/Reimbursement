@@ -5,16 +5,14 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { LoadingButton } from "@mui/lab";
 import { submit } from "../../Hooks/apiHooks";
+import { useAtom } from "jotai";
+import { snackBarAtom } from "../../store";
 
-export default function SignIn({
-  setSnackType,
-  setMessage,
-  setOpen,
-  usedIn: usedFor = "user",
-}) {
+export default function SignIn({ usedIn: usedFor = "user" }) {
   const [loading, setLoading] = useState(false);
   const [_, setCookies] = useCookies();
   const router = useRouter();
+  const [, setSnackBar] = useAtom(snackBarAtom);
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -26,9 +24,11 @@ export default function SignIn({
       .then((response) => {
         // const result = response.data;
         if (response.success) {
-          setOpen(true);
-          setSnackType("success");
-          setMessage(response.message);
+          setSnackBar({
+            type: "success",
+            message: response.message,
+            open: true,
+          });
           const token = response.auth_token;
           setCookies("auth_token", token);
           setCookies("loginType", response.type);
@@ -36,16 +36,12 @@ export default function SignIn({
             await router.push("/");
           }, 800);
         } else {
-          setOpen(true);
-          setSnackType("error");
-          setMessage(response.message);
+          setSnackBar({ type: "error", message: response.message, open: true });
         }
       })
       .catch((err) => {
         console.log(err);
-        setOpen(true);
-        setSnackType("error");
-        setMessage(err.message);
+        setSnackBar({ type: "error", message: err.message, open: true });
       })
       .finally(() => setLoading(false));
   };
@@ -69,6 +65,7 @@ export default function SignIn({
           alignItems: "center",
           maxWidth: "480px",
           p: 4,
+          mt: 8,
         }}
         elevation={3}
       >
@@ -91,6 +88,7 @@ export default function SignIn({
             name="password"
             label="Password"
             type="password"
+            autoComplete={"on"}
           />
           {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}

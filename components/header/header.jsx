@@ -51,11 +51,13 @@ const HeaderBar = ({ children, userDetails, window }) => {
     <>
       <Box sx={{ display: "flex" }}>
         <AppBar
-          position="static"
+          position="fixed"
           elevation={0}
           sx={{
             width: { sm: `calc(100% - ${drawerWidth}px)` },
             ml: { sm: `${drawerWidth}px` },
+            backgroundColor: "rgb(38 40 112 / 87%)",
+            backdropFilter: "blur(10px)",
           }}
         >
           <Container maxWidth="xl">
