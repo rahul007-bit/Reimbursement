@@ -9,7 +9,7 @@ const Reimbursement_Schema = new mongoose.Schema(
       accountNumber: String,
       IFSCode: String,
     },
-    certificateUrl: String,
+    certificateUrl: Object,
     // recipientUrl: String,
     amountToReimbursement: String,
     status: {

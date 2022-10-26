@@ -24,7 +24,7 @@ export const userAuth = async (req, res, next) => {
           .json({ success: false, message: "Invalid token", status: 401 });
       }
       req.userId = payload.message.userId;
-      const user = User.findOne({ _id: payload.message.userId });
+      const user = await User.findOne({ _id: payload.message.userId });
       if (user) {
         req.user = user;
         next();

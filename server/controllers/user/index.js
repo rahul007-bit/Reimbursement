@@ -4,6 +4,10 @@ import {
   getReimbursement,
 } from "../../services/reimbursement/index.js";
 import User from "../../model/user/model.js";
+import multer from "multer";
+import multerStorage from "../../config/multerStorage.js";
+const storage = multerStorage();
+export const upload = multer({ storage: storage });
 
 const controller = Object.create(null); // {}
 controller.signUp = async (req, res) => {
@@ -52,7 +56,7 @@ controller.signIn = async (req, res) => {
           success: true,
           message: "Login successfully",
           userData: userData,
-          type:"user",
+          type: "user",
           auth_token: token,
         });
       } else {
@@ -80,6 +84,7 @@ controller.applyReimbursement = async (req, res) => {
       certificateUrl,
       // recipientUrl,
     } = req.body;
+    console.log(req.body);
     const result = await createReimbursement({
       certificate_name,
       user_id,
@@ -112,4 +117,48 @@ controller.viewReimbursement = async (req, res) => {
 };
 controller.deleteReimbursement = async (req, res) => {};
 
+controller.checkFile = async (req, res, next) => {
+  try {
+    if (req.headers["content-length"] / (1024 * 1024) > 1) {
+      return res.status(400).json({
+        message: "File size should be less than 1Mb",
+        success: false,
+        status: 400,
+      });
+    }
+    return next();
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: error.message, status: 500 });
+  }
+};
+controller.uploadFile = upload.single("file");
+controller.uploadFileResponse = async (req, res) => {
+  try {
+    const file = req.file;
+    console.log(file);
+    if (file) {
+      const response = {
+        success: true,
+        message: "File uploaded successfully",
+        data: {
+          url: file.details.Location,
+          filename: file.originalname,
+          type: file.mimetype,
+        },
+      };
+      return res.status(200).json(response);
+    }
+    return res.status(501).json({
+      success: false,
+      message: "Oops failed to upload file",
+      status: 501,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: error.message, status: 500 });
+  }
+};
 export default controller;

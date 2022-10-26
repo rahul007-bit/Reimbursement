@@ -24,7 +24,7 @@ export const adminAuth = async (req, res, next) => {
                     .json({ success: false, message: "Invalid token", status: 401 });
             }
             req.userId = payload.message.id;
-            const user = Admin.findOne({ _id: payload.message.id });
+            const user = await Admin.findOne({ _id: payload.message.id });
             if (user) {
                 req.user = user;
                 next();
