@@ -7,7 +7,7 @@ import {
   getReimbursement,
   ReimbursementCount,
 } from "../../services/reimbursement/index.js";
-import { createUser, getUser } from "../../services/user/index.js";
+import { createUser, getUser, removeUser } from "../../services/user/index.js";
 import logger from "../../config/logger.js";
 
 const controller = Object.create(null); // {}
@@ -52,8 +52,6 @@ controller.signIn = async (req, res) => {
       });
     }
 
-
-
     const token = await admin.gen_auth_token();
     return res.status(200).json({
       status: 200,
@@ -61,7 +59,7 @@ controller.signIn = async (req, res) => {
       success: true,
       message: "Login Successful",
       auth_token: token,
-      type:"admin"
+      type: "admin",
     });
   } catch (error) {
     return res.status(500).json({ status: 500, message: error.message });
@@ -153,4 +151,32 @@ controller.addUsers = async (req, res) => {
     });
   }
 };
+
+controller.removeUser = async (req, res) => {
+  try {
+    const { user_id } = req.body;
+    const result = await removeUser(user_id);
+    return res.status(result.status).send(result);
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({
+      status: 500,
+      message: error.message,
+      success: false,
+    });
+  }
+};
+
+controller.viewReimbursement = async (req, res) => {
+  try {
+    const query = req.query;
+    const result = await getReimbursement(query);
+    return res.status(result.status).json(result);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: error.message, status: 500 });
+  }
+};
+
 export default controller;

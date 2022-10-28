@@ -34,8 +34,10 @@ export default async (router) => {
     limiter,
     controller.approveReimburse
   );
-
+  router.get("/getReimburse", limiter, adminAuth, controller.viewReimbursement);
   router.get("/getUser", limiter, adminAuth, controller.getUsers);
 
   router.post("/addUsers", limiter, adminAuth, controller.addUsers);
+
+  router.delete("/user/remove", limiter, adminAuth, controller.removeUser);
 };

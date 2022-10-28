@@ -99,7 +99,6 @@ export const getReimbursement = async (query) => {
     const sortOptions = {
       [sortBy]: sortOrder,
     };
-
     // const totalResults = await Reimbursement.countDocuments({
     //   $or: [
     //     params,
@@ -108,11 +107,9 @@ export const getReimbursement = async (query) => {
     // });
 
     const results = await Reimbursement.find({
-      $or: [
-        params,
-        { createdAt: { $gte: params.startDate, $lt: params.endDate } },
-      ],
+      $or: [params],
     });
+    console.log(results);
     if (results.length > 0)
       return {
         success: true,

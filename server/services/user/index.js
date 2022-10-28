@@ -48,3 +48,21 @@ export const getUser = async () => {
     };
   }
 };
+
+export const removeUser = async (id) => {
+  try {
+    await User.deleteOne({ _id: id });
+    return {
+      status: 200,
+      success: true,
+      message: "User Removed Successfully!",
+    };
+  } catch (error) {
+    logger.error(error);
+    return {
+      status: 500,
+      success: false,
+      message: error.message,
+    };
+  }
+};

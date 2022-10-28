@@ -6,8 +6,13 @@ import {
 import User from "../../model/user/model.js";
 import multer from "multer";
 import multerStorage from "../../config/multerStorage.js";
+import fs from "fs";
+import { exec }  from "child_process"
+import path from "path";
+
 const storage = multerStorage();
 export const upload = multer({ storage: storage });
+export const compress = multer({ dest: 'tmp/' })
 
 const controller = Object.create(null); // {}
 controller.signUp = async (req, res) => {
@@ -161,4 +166,58 @@ controller.uploadFileResponse = async (req, res) => {
       .json({ success: false, message: error.message, status: 500 });
   }
 };
+
+// controller.compressFile =
+
+controller.compress = async (req,res) =>{
+  if (!fs.existsSync(process.cwd() + "/compress/")) {
+    fs.mkdir(process.cwd() + "/compress",(err) => {
+      // => [Error: EPERM: operation not permitted, mkdir 'C:\']);
+      console.log(err)
+      }
+    )}
+  if (!fs.existsSync(process.cwd() + "/uploads/")){
+    fs.mkdir(process.cwd() + "/uploads",(err) => {
+          // => [Error: EPERM: operation not permitted, mkdir 'C:\']);
+          console.log(err)
+        }
+    )}
+
+  console.log(req.file);
+  const timeStamp = new Date().toISOString();
+  const tmp_path = req.file.path; //     	 tmp/filename
+  const target_path = "uploads/" + req.file.originalname.replace(/\s/g, "");
+  const src = fs.createReadStream(tmp_path);
+  const dest = fs.createWriteStream(target_path);
+  src.pipe(dest);
+
+  const command =
+      "gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -dPDFSETTINGS=/ebook -dCompatibilityLevel=1.4 -sOutputFile=" +
+      "compress/" +
+      timeStamp +
+      ".pdf " +
+      "uploads/" +
+      req.file.originalname.replace(/\s/g, "");
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.log(error);
+    }
+    if (stderr) {
+      console.log(stderr);
+    }
+    console.log(stdout);
+    fs.readdir("tmp", (err, files) => {
+      if (err) throw err;
+      for (const file of files) {
+        fs.unlink(path.join("tmp", file), (err) => {
+          if (err)  console.log(err);
+        });
+      }
+    });
+
+    return res.download("compress/" + timeStamp + ".pdf");
+    // return res.json({message:"pass"})
+  });
+}
+
 export default controller;
