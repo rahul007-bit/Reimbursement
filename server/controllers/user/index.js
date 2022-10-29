@@ -207,7 +207,7 @@ controller.compress = async (req, res) => {
     }
     console.log(stdout);
     cleanupFunction("tmp");
-    cleanupFunction("upload");
+    cleanupFunction("uploads");
     res.download("compress/" + timeStamp + ".pdf");
     cleanupFunction("compress");
     return;
