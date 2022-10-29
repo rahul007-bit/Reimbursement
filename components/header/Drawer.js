@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import {
+  Compress,
   Dashboard,
   HowToReg,
   Login,
@@ -22,6 +23,7 @@ import {
 import Link from "next/link";
 
 const Drawer = ({ userDetails }) => {
+  console.log(userDetails);
   return (
     <div>
       <Box>
@@ -43,8 +45,8 @@ const Drawer = ({ userDetails }) => {
                   maxWidth: "100px",
                   my: 1,
                 }}
-                src={userDetails && userDetails.user.profile}
-                alt={userDetails ? userDetails.user.first_name : "username"}
+                src={userDetails && userDetails?.user?.profile}
+                alt={userDetails ? userDetails?.user.first_name : "username"}
               />
             </Box>
             <Box
@@ -132,6 +134,30 @@ const Drawer = ({ userDetails }) => {
               <ListItemText primary={"Add Users"} />
             </ListItemButton>
           </Link>
+        </List>
+      )}
+      {userDetails && userDetails.type === "user" && (
+        <List>
+          <ListItem disablePadding>
+            <Link href={"/user/reimbursement"}>
+              <ListItemButton>
+                <ListItemIcon>
+                  <RequestQuote />
+                </ListItemIcon>
+                <ListItemText primary={"Apply new Request"} />
+              </ListItemButton>
+            </Link>
+          </ListItem>
+          <ListItem disablePadding>
+            <Link href={"/user/compress-pdf"}>
+              <ListItemButton>
+                <ListItemIcon>
+                  <Compress />
+                </ListItemIcon>
+                <ListItemText primary={"Compress Pdf"} />
+              </ListItemButton>
+            </Link>
+          </ListItem>
         </List>
       )}
     </div>

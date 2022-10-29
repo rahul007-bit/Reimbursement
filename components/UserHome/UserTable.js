@@ -1,4 +1,6 @@
 import {
+  Box,
+  Button,
   Paper,
   Table,
   TableBody,
@@ -7,10 +9,12 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Typography,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 import { useRouter } from "next/router";
+import CustomModal from "../Util/CustomModal";
 const columns = [
   { id: uuid(), label: "Certificate Name", align: "center", minWidth: 170 },
   { id: uuid(), label: "Apply At", align: "center", minWidth: 100 },
@@ -39,6 +43,12 @@ const columns = [
     minWidth: 170,
     align: "center",
   },
+  {
+    id: uuid(),
+    label: "Action",
+    minWidth: 170,
+    align: "center",
+  },
 ];
 
 export default function UserTable({ data, user: usedIn = "User" }) {
@@ -46,7 +56,8 @@ export default function UserTable({ data, user: usedIn = "User" }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [row, setRow] = React.useState([]);
-
+  const [openModal, setOpenModal] = useState(false);
+  const [selected, setSelected] = useState(null);
   useEffect(() => {
     if (data?.data) {
       setRow(data.data);
@@ -66,9 +77,25 @@ export default function UserTable({ data, user: usedIn = "User" }) {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-  console.log(row);
+
+  const showModal = (details) => () => {
+    setOpenModal(true);
+    setSelected(() => {
+      // delete values.additionalDetails;
+      return {
+        ...details,
+      };
+    });
+  };
+
   return (
-    <Paper sx={{ width: "90%", overflow: "hidden" }}>
+    <Paper sx={{ width: "90%", overflow: "hidden", my: 3 }}>
+      <Typography variant="h5" margin={1}>
+        Reimbursement Request
+      </Typography>
+      <Button onClick={handleClick} sx={{ m: 1.5 }} variant="contained">
+        Open Request Page
+      </Button>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -94,7 +121,6 @@ export default function UserTable({ data, user: usedIn = "User" }) {
                     role="checkbox"
                     tabIndex={-1}
                     key={row1._id}
-                    onClick={handleClick}
                     className={`${usedIn === "admin" ? "cursor-pointer" : ""}`}
                   >
                     <TableCell align="center">
@@ -113,6 +139,15 @@ export default function UserTable({ data, user: usedIn = "User" }) {
                     <TableCell align="center">
                       {row1.bankDetails.IFSCode}
                     </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        variant={"contained"}
+                        onClick={showModal(row1)}
+                        size={"small"}
+                      >
+                        <Typography variant={"button"}>View Request</Typography>
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -127,6 +162,12 @@ export default function UserTable({ data, user: usedIn = "User" }) {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+      <CustomModal
+        setOpenModal={setOpenModal}
+        openModal={openModal}
+        selected={selected}
+        usedIn={"user"}
       />
     </Paper>
   );

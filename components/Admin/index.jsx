@@ -10,15 +10,13 @@ import { useFetch } from "../../Hooks/apiHooks";
 import Layout from "../Layout";
 
 const AdminDashboard = () => {
-  const [admin, setAdmin] = useState(false);
-  const [tableData, setTableData] = useState([]);
   const tableColumn = [
     { name: "Student Name" },
     { name: "Status" },
     { name: "Requested on" },
     { name: "Action" },
   ];
-  const { loading, data } = useFetch("user/getReimburse?status=PENDING", []);
+  const { loading, data } = useFetch("getReimburse?status=PENDING", []);
   if (loading)
     return (
       <Box sx={{ display: "flex" }}>

@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useReducer, useState } from "react";
 import { useRouter } from "next/router";
 import { Cookies, useCookies } from "react-cookie";
-// export const url = "https://reimbursementserver.herokuapp.com/api/"; //https://reimbursementserver.herokuapp.com/"http://localhost:8080/api/";
-export const url = "http://localhost:8000/api/"; //https://reimbursementserver.herokuapp.com/"http://localhost:8080/api/";
+export const url = "https://quiet-thicket-18761.herokuapp.com/api/"; //https://reimbursementserver.herokuapp.com/"http://localhost:8080/api/";
+// export const url = "http://localhost:8000/api/"; //https://reimbursementserver.herokuapp.com/"http://localhost:8080/api/";
 
 const initialState = {
   loading: true,
@@ -92,7 +92,8 @@ export const useUserProfile = () => {
   const [error, setError] = useState(null);
   useEffect(() => {
     const controller = new AbortController();
-    const user = JSON.parse(sessionStorage.getItem("user"));
+    const session = sessionStorage.getItem("user");
+    const user = !!session ? JSON.parse(session) : session;
     if (user) {
       setUserData(user);
       setLoading(false);

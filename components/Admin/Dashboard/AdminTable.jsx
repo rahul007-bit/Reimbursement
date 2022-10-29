@@ -18,9 +18,6 @@ export default function AdminTable({ data }) {
         flexDirection: "column",
       }}
     >
-      <Typography variant="h6" marginBottom={4}>
-        Reimbursement Request
-      </Typography>
       <UserTable data={data} user={"admin"} />
     </Box>
   );

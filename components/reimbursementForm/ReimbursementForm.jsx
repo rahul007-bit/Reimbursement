@@ -38,25 +38,24 @@ const ReimbursementForm = ({ user: userDetails }) => {
     setUser(userDetails);
   }, [userDetails]);
 
-  function uploadImage(file) {
+  async function uploadImage(file) {
     const form = new FormData();
     form.append("file", file);
-    return axios({
-      method: "POST",
-      url: url + "user/upload/file",
-      data: form,
-      headers: {
-        "x-auth-token": cookie.auth_token,
-        "Content-Type": "form-data",
-      },
-    })
-      .then((response) => {
-        console.log(response);
-        return response.data;
-      })
-      .catch((err) => {
-        return err.response.data;
+    try {
+      const response = await axios({
+        method: "POST",
+        url: url + "user/upload/file",
+        data: form,
+        headers: {
+          "x-auth-token": cookie.auth_token,
+          "Content-Type": "form-data",
+        },
       });
+      console.log(response);
+      return response.data;
+    } catch (err) {
+      return err.response.data;
+    }
   }
 
   const handleSubmit = async (event) => {
@@ -84,7 +83,7 @@ const ReimbursementForm = ({ user: userDetails }) => {
       certificateUrl: imageUrl1,
     };
     body.additionalDetails.first_name = user.user.first_name;
-    body.additionalDetails.email = user.user.email;
+    // body.additionalDetails.email = user.user.email;
     body.department = user.user.department;
     submit("user/requestReimburse", body).then((response) => {
       if (response.status === 200 || response.success) {

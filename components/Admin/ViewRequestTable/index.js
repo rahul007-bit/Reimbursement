@@ -5,6 +5,10 @@ import {
   Card,
   CardContent,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Divider,
   Modal,
   Stack,
@@ -20,13 +24,13 @@ import {
 } from "@mui/material";
 import { v4 as uuid } from "uuid";
 import { submit, useFetch } from "../../../Hooks/apiHooks";
-import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { LoadingButton } from "@mui/lab";
-import TablePastRecords from "./TablePastRecords";
-import AllRecords from "./AllRecords";
 import { CSVLink } from "react-csv";
-import Layout from "../../Layout";
+import Link from "next/link";
+import { useAtom } from "jotai";
+import { snackBarAtom } from "../../../store";
+import CustomModal from "../../Util/CustomModal";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -74,9 +78,6 @@ const ViewRequestTable = () => {
   const { loading, data } = useFetch("reimbursement/fullInfo?get=PENDING", [
     reload,
   ]);
-  const [message, setMessage] = useState("");
-  const [snackType, setSnackType] = useState("");
-  const [open, setOpen] = useState(false);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [row, setRow] = React.useState([]);
@@ -84,6 +85,7 @@ const ViewRequestTable = () => {
   const [selected, setSelected] = useState(null);
   const [loadingButton, setLoadingButton] = useState(false);
   const [userData, setUserData] = useState([]);
+  const [, setSnackBar] = useAtom(snackBarAtom);
   useEffect(() => {
     if (!loading && data) {
       const reimburseData = data.data;
@@ -132,28 +134,24 @@ const ViewRequestTable = () => {
           if (response.status === 200 || response.success) {
             setReload((prevState) => !prevState);
             setOpenModal(false);
-            setOpen(true);
-            setMessage("Successfully Approved");
-            setSnackType("success");
+            setSnackBar({
+              type: "success",
+              open: true,
+              message: "Successfully Approved",
+            });
           } else {
-            setOpen(true);
-            setMessage(response.message);
-            setSnackType("error");
+            setSnackBar({
+              type: "error",
+              open: true,
+              message: response.message,
+            });
           }
         })
         .finally(() => setLoadingButton(false));
     } catch (error) {
-      setOpen(true);
+      setSnackBar({ type: "error", open: true, message: error.message });
       setLoadingButton(false);
-      setSnackType("error");
-      setMessage(error.message);
     }
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setSnackType(null);
-    setMessage("");
   };
 
   const Header = [
@@ -255,6 +253,7 @@ const ViewRequestTable = () => {
                                     <Button
                                       variant={"contained"}
                                       onClick={showModal(row1)}
+                                      size={"small"}
                                     >
                                       <Typography variant={"button"}>
                                         View Request
@@ -281,97 +280,19 @@ const ViewRequestTable = () => {
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               </Box>
-              <TablePastRecords reload={reload} Header={Header} />
-              <AllRecords reload={reload} Header={Header} />
+              {/*<TablePastRecords reload={reload} Header={Header} />*/}
+              {/*<AllRecords reload={reload} Header={Header} />*/}
             </CardContent>
           </Card>
         </Box>
-        <Modal
-          open={openModal}
-          onClose={() => setOpenModal(false)}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Card
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 600,
-              // bgcolor: "background.paper",
-              boxShadow: 24,
-              maxHeight: 700,
-              p: 1,
-              overflowY: "scroll",
-            }}
-          >
-            {openModal && (
-              <CardContent>
-                <Typography variant={"h6"}>Reimbursement details</Typography>
-                <Divider variant={"fullWidth"} sx={{ mb: 3 }} />
-                <Stack spacing={2}>
-                  <TextField
-                    label={"certificate Name"}
-                    value={selected.certificate_name}
-                  />
-                  <TextField
-                    label={"Reimbursement Amount"}
-                    value={selected.amountToReimbursement}
-                  />
-                  {/*<TextField*/}
-                  {/*  label={"Course Name"}*/}
-                  {/*  value={selected.certificate_name}*/}
-                  {/*/>*/}
-                  {Object.entries(selected.additionalDetails).map((data, i) => (
-                    <TextField
-                      label={data[0]}
-                      key={i}
-                      value={selected.additionalDetails[data[0]]}
-                    />
-                  ))}
-                  <TextField
-                    label={"Account Number"}
-                    value={selected.bankDetails.accountNumber}
-                  />
-                  <TextField
-                    label={"IFSCode"}
-                    value={selected.bankDetails.IFSCode}
-                  />
-                  {selected.certificateUrl ? (
-                    <img
-                      src={selected.certificateUrl}
-                      alt=""
-                      width={"100px"}
-                      height={"100px"}
-                    />
-                  ) : (
-                    <Typography>Certificate is not Provided</Typography>
-                  )}
-                </Stack>
-                <LoadingButton
-                  loading={loadingButton}
-                  onClick={handleApprove}
-                  sx={{ m: 2 }}
-                  variant={"contained"}
-                >
-                  Approve
-                </LoadingButton>
-              </CardContent>
-            )}
-          </Card>
-        </Modal>
-        {open && (
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-            <Alert
-              onClose={handleClose}
-              severity={snackType}
-              sx={{ width: "100%" }}
-            >
-              {message}
-            </Alert>
-          </Snackbar>
-        )}
+        <CustomModal
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+          selected={selected}
+          handleApprove={handleApprove}
+          loadingButton={loadingButton}
+          usedIn={"admin"}
+        />
       </Box>
     </>
   );

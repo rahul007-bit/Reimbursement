@@ -15,7 +15,7 @@ const Layout = ({ children, userData, title: Header = "Reimbursement" }) => {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
-          mt: 8,
+          mt: { sm: 8, xs: "56.2px" },
         }}
       >
         {children}

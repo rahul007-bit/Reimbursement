@@ -11,41 +11,41 @@ import UserTable from "./UserTable";
 import { useFetch } from "../../Hooks/apiHooks";
 import { useState } from "react";
 import { useEffect } from "react";
-export const UserHome = ({ userData }) => {
+import Empty from "../Util/Empty";
+export const UserHome = ({ userData, status }) => {
   const [user, setUser] = useState(null);
   useEffect(() => {
     setUser(userData);
   }, [userData]);
-  const { loading, data } = useFetch("user/getReimburse", []);
+  const { loading, data } = useFetch(
+    `user/getReimburse${status ? `?status=${status}` : ""}`,
+    []
+  );
 
   return (
     <>
-      {/* top part */}
-
-      <Box
-        sx={{
-          display: "flex",
-          width: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          height: "200px",
-        }}
-      >
-        <Link href={"/user/reimbursement"}>
-          <Button sx={{ maxWidth: "160px" }} variant={"contained"}>
-            Apply for Reimbursement
-          </Button>
-        </Link>
-      </Box>
       {/* table part */}
+      <Typography variant={"h5"} marginY={3} marginLeft={8}>
+        {" "}
+        {status ? `${status.toUpperCase()} Requests` : "All Requests"}
+      </Typography>
       <Box
         sx={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          flexDirection: "column",
         }}
       >
-        {!loading ? data && <UserTable data={data} /> : <CircularProgress />}
+        {!loading ? (
+          data ? (
+            <UserTable data={data} />
+          ) : (
+            <Empty />
+          )
+        ) : (
+          <CircularProgress />
+        )}
       </Box>
     </>
   );

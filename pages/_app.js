@@ -3,7 +3,6 @@ import dynamic from "next/dynamic";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { useEffect } from "react";
 import { Provider as JotaiProvider } from "jotai";
-import { snackBarAtom } from "../store";
 import Snack from "../components/Util/Snackbar";
 
 const ProgressBar = dynamic(
@@ -21,7 +20,7 @@ export const theme = createTheme({
       contrastText: "#ffffff",
     },
     secondary: {
-      main: "#a3aabb",
+      main: "#1e88e5",
     },
     info: {
       main: "#9ccc65",

@@ -25,6 +25,7 @@ a {
 #nprogress .bar {
   height: 3px !important;
   @apply bg-purple-400 drop-shadow-md !important;
+  z-index: 2000 !important;
 }
 
 #__next {
