@@ -1,4 +1,7 @@
-@tailwind base;
+/* @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap"); */
+/* @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"); */
+@import url("https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500&family=Martel+Sans:wght@400;600&display=swap");
+/*@tailwind base;*/
 @tailwind components;
 @tailwind utilities;
 
@@ -17,4 +20,14 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+#nprogress .bar {
+  height: 3px !important;
+  @apply bg-purple-400 drop-shadow-md !important;
+  z-index: 2000 !important;
+}
+
+#__next {
+  height: 100vh;
 }

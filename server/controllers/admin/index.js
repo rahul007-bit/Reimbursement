@@ -59,6 +59,7 @@ controller.signIn = async (req, res) => {
     return res.status(500).json({ status: 500, message: error.message });
   }
 };
+
 controller.updateProfile = async (req, res) => {};
 controller.viewProfile = async (req, res) => {};
 controller.applyReimbursement = async (req, res) => {};

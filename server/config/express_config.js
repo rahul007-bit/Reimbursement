@@ -1,7 +1,7 @@
 import bodyParser from "body-parser";
 import compress from "compression";
 import helmet from "helmet"; // Secures the app by using http headers
-import morgan from "morgan"; // Http middleware for requests logger
+import morgan from "morgan"; // Http _middleware for requests logger
 import cookieParser from "cookie-parser";
 import router from "../routes/main_route.js";
 
