@@ -7,12 +7,12 @@ import User from "../../model/user/model.js";
 import multer from "multer";
 import multerStorage from "../../config/multerStorage.js";
 import fs from "fs";
-import { exec }  from "child_process"
+import { exec } from "child_process";
 import path from "path";
 
 const storage = multerStorage();
 export const upload = multer({ storage: storage });
-export const compress = multer({ dest: 'tmp/' })
+export const compress = multer({ dest: "tmp/" });
 
 const controller = Object.create(null); // {}
 controller.signUp = async (req, res) => {
@@ -169,19 +169,19 @@ controller.uploadFileResponse = async (req, res) => {
 
 // controller.compressFile =
 
-controller.compress = async (req,res) =>{
+controller.compress = async (req, res) => {
   if (!fs.existsSync(process.cwd() + "/compress/")) {
-    fs.mkdir(process.cwd() + "/compress",(err) => {
+    fs.mkdir(process.cwd() + "/compress", (err) => {
       // => [Error: EPERM: operation not permitted, mkdir 'C:\']);
-      console.log(err)
-      }
-    )}
-  if (!fs.existsSync(process.cwd() + "/uploads/")){
-    fs.mkdir(process.cwd() + "/uploads",(err) => {
-          // => [Error: EPERM: operation not permitted, mkdir 'C:\']);
-          console.log(err)
-        }
-    )}
+      console.log(err);
+    });
+  }
+  if (!fs.existsSync(process.cwd() + "/uploads/")) {
+    fs.mkdir(process.cwd() + "/uploads", (err) => {
+      // => [Error: EPERM: operation not permitted, mkdir 'C:\']);
+      console.log(err);
+    });
+  }
 
   console.log(req.file);
   const timeStamp = new Date().toISOString();
@@ -192,12 +192,12 @@ controller.compress = async (req,res) =>{
   src.pipe(dest);
 
   const command =
-      "gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -dPDFSETTINGS=/ebook -dCompatibilityLevel=1.4 -sOutputFile=" +
-      "compress/" +
-      timeStamp +
-      ".pdf " +
-      "uploads/" +
-      req.file.originalname.replace(/\s/g, "");
+    "gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -dPDFSETTINGS=/ebook -dCompatibilityLevel=1.4 -sOutputFile=" +
+    "compress/" +
+    timeStamp +
+    ".pdf " +
+    "uploads/" +
+    req.file.originalname.replace(/\s/g, "");
   exec(command, (error, stdout, stderr) => {
     if (error) {
       console.log(error);
@@ -206,18 +206,23 @@ controller.compress = async (req,res) =>{
       console.log(stderr);
     }
     console.log(stdout);
-    fs.readdir("tmp", (err, files) => {
-      if (err) throw err;
-      for (const file of files) {
-        fs.unlink(path.join("tmp", file), (err) => {
-          if (err)  console.log(err);
-        });
-      }
-    });
-
-    return res.download("compress/" + timeStamp + ".pdf");
-    // return res.json({message:"pass"})
+    cleanupFunction("tmp");
+    cleanupFunction("upload");
+    res.download("compress/" + timeStamp + ".pdf");
+    cleanupFunction("compress");
+    return;
   });
-}
+};
+
+const cleanupFunction = (folder) => {
+  fs.readdir(folder, (err, files) => {
+    if (err) throw err;
+    for (const file of files) {
+      fs.unlink(path.join(folder, file), (err) => {
+        if (err) console.log(err);
+      });
+    }
+  });
+};
 
 export default controller;
