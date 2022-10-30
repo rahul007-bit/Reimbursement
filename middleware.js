@@ -11,6 +11,9 @@ export function middleware(req) {
     if (userType === "user" && url.startsWith("/admin")) {
       return NextResponse.redirect(new URL("/user", req.url));
     }
+    if (url.startsWith("/login") || url.startsWith("/signup")) {
+      return NextResponse.redirect(new URL(`/${userType}`, req.url));
+    }
   } else if (url.startsWith("/user") || url.startsWith("/admin")) {
     return NextResponse.redirect(new URL("/login", req.url));
   }

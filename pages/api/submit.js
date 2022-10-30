@@ -2,7 +2,8 @@ import { url } from "../../Hooks/apiHooks";
 
 export default async function submit(req, res) {
   const token = req.cookies.auth_token;
-  const { endpoint, body, type = "POST" } = JSON.parse(req.body);
+  const reqBody = JSON.parse(req.body);
+  const { endpoint, body, type = "POST" } = reqBody;
   const u = url + endpoint;
   const header = new Headers();
   header.append("x-auth-token", token);
