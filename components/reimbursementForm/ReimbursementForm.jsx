@@ -212,7 +212,7 @@ const ReimbursementForm = ({ user: userDetails }) => {
                     <PaymentDetails handleChange={handleChange} />
                   )}
                   {certificationDetails.certificate_name && (
-                    <Stack direction={"column"} spacing={2}>
+                    <Stack direction={"column"} gap={2}>
                       <Typography variant="h8" gutterBottom>
                         Upload your Certificate
                       </Typography>

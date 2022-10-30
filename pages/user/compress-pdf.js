@@ -64,6 +64,7 @@ const CompressPdf = () => {
           <Box
             sx={{
               width: "90%",
+              mt: 3,
             }}
           >
             <Typography variant="h4" mb={2}>

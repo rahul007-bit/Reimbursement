@@ -39,7 +39,7 @@ const NptelForm = ({ handleChange }) => {
       <Typography variant="h8" gutterBottom>
         Duration
       </Typography>
-      <Stack direction={{ sm: "column", lg: "row" }} gap={1}>
+      <Stack direction={{ sm: "column", lg: "row" }} gap={3}>
         <TextField
           fullWidth
           label="Course Start Date"
@@ -89,7 +89,7 @@ const NptelForm = ({ handleChange }) => {
           required
         ></TextField>
       </Stack>
-      <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
+      <Stack direction={{ sm: "column", md: "row" }} gap={3}>
         <Autocomplete
           disablePortal
           id="combo-box-demo"

@@ -89,13 +89,17 @@ export default function UserTable({ data, user: usedIn = "User" }) {
   };
 
   return (
-    <Paper sx={{ width: "90%", overflow: "hidden", my: 3 }}>
-      <Typography variant="h5" margin={1}>
-        Reimbursement Request
-      </Typography>
-      <Button onClick={handleClick} sx={{ m: 1.5 }} variant="contained">
-        Open Request Page
-      </Button>
+    <Paper sx={{ width: "90%", overflow: "hidden", my: { md: 3 } }}>
+      {usedIn === "admin" ? (
+        <>
+          <Typography variant="h5" margin={1}>
+            Reimbursement Request
+          </Typography>
+          <Button onClick={handleClick} sx={{ m: 1.5 }} variant="contained">
+            Open Request Page
+          </Button>
+        </>
+      ) : null}
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>

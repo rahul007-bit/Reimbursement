@@ -3,7 +3,7 @@ import React from "react";
 
 const PaymentDetails = ({ handleChange }) => {
   return (
-    <Stack direction={{ sm: "column", md: "row" }} spacing={3} gap={1}>
+    <Stack direction={{ sm: "column", md: "row" }} gap={3}>
       <TextField
         fullWidth
         label="Account Number"
