@@ -23,7 +23,6 @@ import {
 import Link from "next/link";
 
 const Drawer = ({ userDetails }) => {
-  console.log(userDetails);
   return (
     <div>
       <Box>
