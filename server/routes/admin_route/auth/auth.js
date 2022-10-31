@@ -18,7 +18,6 @@ export const adminAuth = async (req, res, next) => {
           }
         }
       );
-      console.log(payload);
       if (!payload.success) {
         return res
           .status(401)

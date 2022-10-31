@@ -4,7 +4,7 @@ import controller from "../../controllers/admin/index.js";
 import { adminAuth } from "./auth/auth.js";
 const limiter = rateLimit(config.rateLimiter);
 import("../../services/admin/createAdmin.js");
-export default async (router) => {
+const adminRoutes = async (router) => {
   router.post("/admin/sign_up", limiter, controller.signUp);
   router.post("/admin/sign_in", limiter, controller.signIn);
   router.get("/new", (req, res) => {
@@ -41,3 +41,4 @@ export default async (router) => {
 
   router.delete("/user/remove", limiter, adminAuth, controller.removeUser);
 };
+export default adminRoutes;

@@ -192,7 +192,7 @@ controller.compress = async (req, res) => {
   src.pipe(dest);
 
   const command =
-    "gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -dPDFSETTINGS=/ebook -dCompatibilityLevel=1.4 -sOutputFile=" +
+    "gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -dPDFSETTINGS=/screen -dCompatibilityLevel=1.4 -sOutputFile=" +
     "compress/" +
     timeStamp +
     ".pdf " +

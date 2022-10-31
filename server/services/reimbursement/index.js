@@ -96,15 +96,17 @@ export const getReimbursement = async (query) => {
       params["status"] = query.status;
     }
 
+    if (query.department) {
+      params["department"] = query.department;
+    }
+
+    if (query.certificate_name) {
+      params["certificate_name"] = query.certificate_name;
+    }
+
     const sortOptions = {
       [sortBy]: sortOrder,
     };
-    // const totalResults = await Reimbursement.countDocuments({
-    //   $or: [
-    //     params,
-    //     { createdAt: { $gte: params.startDate, $lt: params.endDate } },
-    //   ],
-    // });
 
     const results = await Reimbursement.find({
       $or: [params],
