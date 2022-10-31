@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 import config from "../../../config/index.js";
 import loggers from "../../../config/logger.js";
-import User from "../../../model/user/model.js";
-export const userAuth = async (req, res, next) => {
+import Admin from "../../../model/admin/model.js";
+export const adminAuth = async (req, res, next) => {
   const token = req.headers["x-auth-token"];
   try {
     if (token) {
@@ -23,8 +23,8 @@ export const userAuth = async (req, res, next) => {
           .status(401)
           .json({ success: false, message: "Invalid token", status: 401 });
       }
-      req.userId = payload.message.userId;
-      const user = await User.findOne({ _id: payload.message.userId });
+      req.userId = payload.message.id;
+      const user = await Admin.findOne({ _id: payload.message.id });
       if (user) {
         req.user = user;
         next();

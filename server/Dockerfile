@@ -1,9 +1,10 @@
 FROM node:16
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app/reimbursement
 COPY package.json ./
 COPY yarn.lock ./
-RUN yarn install
+RUN yarn
+RUN apt-get update && apt-get install -y ghostscript
 COPY . .
-# RUN node index
-EXPOSE 8080
+
+EXPOSE 8000
 CMD [ "node", "index.js" ]

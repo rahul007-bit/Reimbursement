@@ -17,7 +17,6 @@ import logger from "./config/logger.js";
 const app = express();
 app.use(cors());
 app.options("*", cors());
-
 // connecting to the database
 
 mongoose.connect(

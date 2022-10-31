@@ -1,22 +1,17 @@
-version: "1"
+version: '1'
 services:
-  mongodb:
-    image: mongo
-    restart: unless-stopped
-    # env_file: ./.env
+  webapp:
+    container_name: reimbursement
+    env_file: .env
+    build: .
     ports:
-      - 27017:27017
-    volumes:
-      - db:/data/db
-  app:
+      - "8000:8000"
+    restart: on-failure
     depends_on:
       - mongodb
-    build: .
-    restart: unless-stopped
+    # links:
+    #   - mongodb
+  mongodb:
+    image: mongo
     ports:
-      - 8080:8080
-    stdin_open: true
-    tty: true
-
-volumes:
-  db:
+      - "27017:27017"

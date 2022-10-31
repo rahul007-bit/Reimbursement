@@ -19,11 +19,9 @@ export default async (app, config) => {
   // setup body parser and cookie parser
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
-
+  app.use(cookieParser());
   // makes responses faster by compressing them
   app.use(compress());
-
-  // CORS configuration
 
   // load routers
 

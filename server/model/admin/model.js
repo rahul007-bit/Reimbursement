@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt-nodejs";
 import jwt from "jsonwebtoken";
+import logger from "../../config/logger.js";
+import config from "../../config/index.js";
 
 const Admin_Schema = new mongoose.Schema(
   {
@@ -35,7 +37,7 @@ Admin_Schema.methods.gen_auth_token = async function gen_auth_token() {
   const expiresIn = "10h";
   try {
     const payload = { id: this._id };
-    var token = jwt.sign(payload, config.jwtSecret, { expiresIn }); // eslint-disable-line
+    var token = jwt.sign(payload, config.jwtSecret);
   } catch (error) {
     logger.error(error);
     throw error;

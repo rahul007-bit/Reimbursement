@@ -4,6 +4,15 @@ import {
   getReimbursement,
 } from "../../services/reimbursement/index.js";
 import User from "../../model/user/model.js";
+import multer from "multer";
+import multerStorage from "../../config/multerStorage.js";
+import fs from "fs";
+import { exec } from "child_process";
+import path from "path";
+
+const storage = multerStorage();
+export const upload = multer({ storage: storage });
+export const compress = multer({ dest: "tmp/" });
 
 const controller = Object.create(null); // {}
 controller.signUp = async (req, res) => {
@@ -52,6 +61,7 @@ controller.signIn = async (req, res) => {
           success: true,
           message: "Login successfully",
           userData: userData,
+          type: "user",
           auth_token: token,
         });
       } else {
@@ -71,13 +81,24 @@ controller.applyReimbursement = async (req, res) => {
   try {
     const user_id = req.userId;
     const department = req.user.department;
-    const { certificate_name, bankDetails, amountToReimbursement } = req.body;
+    const {
+      certificate_name,
+      bankDetails,
+      amountToReimbursement,
+      additionalDetails,
+      certificateUrl,
+      // recipientUrl,
+    } = req.body;
+    console.log(req.body);
     const result = await createReimbursement({
       certificate_name,
       user_id,
       bankDetails,
       amountToReimbursement,
       department,
+      additionalDetails,
+      // recipientUrl,
+      certificateUrl,
     });
     return res.status(result.status).json(result);
   } catch (error) {
@@ -100,5 +121,108 @@ controller.viewReimbursement = async (req, res) => {
   }
 };
 controller.deleteReimbursement = async (req, res) => {};
+
+controller.checkFile = async (req, res, next) => {
+  try {
+    if (req.headers["content-length"] / (1024 * 1024) > 1) {
+      return res.status(400).json({
+        message: "File size should be less than 1Mb",
+        success: false,
+        status: 400,
+      });
+    }
+    return next();
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: error.message, status: 500 });
+  }
+};
+controller.uploadFile = upload.single("file");
+controller.uploadFileResponse = async (req, res) => {
+  try {
+    const file = req.file;
+    console.log(file);
+    if (file) {
+      const response = {
+        success: true,
+        message: "File uploaded successfully",
+        data: {
+          url: file.details.Location,
+          filename: file.originalname,
+          type: file.mimetype,
+        },
+      };
+      return res.status(200).json(response);
+    }
+    return res.status(501).json({
+      success: false,
+      message: "Oops failed to upload file",
+      status: 501,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: error.message, status: 500 });
+  }
+};
+
+// controller.compressFile =
+
+controller.compress = async (req, res) => {
+  if (!fs.existsSync(process.cwd() + "/compress/")) {
+    fs.mkdir(process.cwd() + "/compress", (err) => {
+      // => [Error: EPERM: operation not permitted, mkdir 'C:\']);
+      console.log(err);
+    });
+  }
+  if (!fs.existsSync(process.cwd() + "/uploads/")) {
+    fs.mkdir(process.cwd() + "/uploads", (err) => {
+      // => [Error: EPERM: operation not permitted, mkdir 'C:\']);
+      console.log(err);
+    });
+  }
+
+  console.log(req.file);
+  const timeStamp = new Date().toISOString();
+  const tmp_path = req.file.path; //     	 tmp/filename
+  const target_path = "uploads/" + req.file.originalname.replace(/\s/g, "");
+  const src = fs.createReadStream(tmp_path);
+  const dest = fs.createWriteStream(target_path);
+  src.pipe(dest);
+
+  const command =
+    "gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -dPDFSETTINGS=/screen -dCompatibilityLevel=1.4 -sOutputFile=" +
+    "compress/" +
+    timeStamp +
+    ".pdf " +
+    "uploads/" +
+    req.file.originalname.replace(/\s/g, "");
+  exec(command, (error, stdout, stderr) => {
+    if (error) {
+      console.log(error);
+    }
+    if (stderr) {
+      console.log(stderr);
+    }
+    console.log(stdout);
+    cleanupFunction("tmp");
+    cleanupFunction("uploads");
+    res.download("compress/" + timeStamp + ".pdf");
+    cleanupFunction("compress");
+    return;
+  });
+};
+
+const cleanupFunction = (folder) => {
+  fs.readdir(folder, (err, files) => {
+    if (err) throw err;
+    for (const file of files) {
+      fs.unlink(path.join(folder, file), (err) => {
+        if (err) console.log(err);
+      });
+    }
+  });
+};
 
 export default controller;
