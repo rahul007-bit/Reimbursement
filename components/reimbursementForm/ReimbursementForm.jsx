@@ -186,7 +186,6 @@ const ReimbursementForm = ({ user: userDetails }) => {
                       onChange={(e, v) =>
                         handleChange("certificate_name", v ? v.label : "")
                       }
-                      // onInputChange={getCertification}
                       sx={{ width: "100%" }}
                       renderInput={(params) => (
                         <TextField {...params} label="Select Certificate" />

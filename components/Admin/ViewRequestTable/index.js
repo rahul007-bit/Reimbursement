@@ -79,6 +79,7 @@ const ViewRequestTable = () => {
     reload,
   ]);
   const [page, setPage] = React.useState(0);
+  const [count, setCount] = useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [row, setRow] = React.useState([]);
   const [openModal, setOpenModal] = useState(false);
@@ -104,13 +105,15 @@ const ViewRequestTable = () => {
       );
     }
   }, [loading, data]);
-
+  useEffect(() => {
+    setCount(userData.length);
+  }, [userData]);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
+    setRowsPerPage(event.target.value);
     setPage(0);
   };
 
@@ -273,7 +276,7 @@ const ViewRequestTable = () => {
                 <TablePagination
                   rowsPerPageOptions={[10, 25, 100]}
                   component="div"
-                  count={0}
+                  count={count}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   onPageChange={handleChangePage}

@@ -27,10 +27,10 @@ export default function AddUser() {
 
   return (
     <Layout userData={userData}>
-      <Container sx={{ my: 4 }}>
+      <Container sx={{ mt: 10 }}>
         <Card>
           <CardContent>
-            <Typography variant="h6">Users</Typography>
+            <Typography variant={"h5"}>Users</Typography>
             <Divider />
             <UserTable />
           </CardContent>

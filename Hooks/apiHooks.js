@@ -17,7 +17,12 @@ function apiReducer(state, action) {
     case "DATA_FETCH_FAILURE":
       return { ...state, loading: false, error: action.payload };
     case "DATA_FETCH_SUCCESS":
-      return { ...state, loading: false, data: action.payload };
+      return {
+        ...state,
+        loading: false,
+        data: action.payload,
+        error: undefined,
+      };
     default:
       return state;
   }
@@ -46,7 +51,7 @@ export function useFetch(endpoint, initialData = [], fullUrl = false) {
       })
         .then(async (response) => {
           if (!response.ok) {
-            const error = await response.text();
+            const error = await response.json();
             throw {
               status: response.status,
               error: parseError(error),

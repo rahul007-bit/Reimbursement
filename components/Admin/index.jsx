@@ -1,20 +1,10 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import TotalRecord from "./TotalRecord";
+import { useState } from "react";
 import Dashboard from "./Dashboard";
-import {
-  AppBar,
-  Box,
-  CircularProgress,
-  Divider,
-  Tab,
-  Tabs,
-} from "@mui/material";
+import { AppBar, Box, CircularProgress, Tab, Tabs } from "@mui/material";
 import AdminTable from "./Dashboard/AdminTable";
 import { _ } from "gridjs-react";
-import Link from "next/link";
 import { useFetch } from "../../Hooks/apiHooks";
-import Layout from "../Layout";
 import TabPanel, { a11yProps } from "../Util/TabPanel";
 
 const AdminDashboard = () => {
@@ -24,20 +14,15 @@ const AdminDashboard = () => {
     { name: "Requested on" },
     { name: "Action" },
   ];
-  const { loading, data } = useFetch("getReimburse?status=PENDING", []);
+
   const [value, setValue] = useState(0);
   const [charts, setCharts] = useState([
-    "status",
-    "department",
-    "certificate_name",
+    { key: "status", name: "Requests" },
+    { key: "department", name: "Department" },
+    { key: "certificate_name", name: "Certificate" },
   ]);
-  if (loading)
-    return (
-      <Box sx={{ display: "flex", w: 1 }}>
-        <CircularProgress />
-      </Box>
-    );
-  const handleChange = (event, newValue) => {
+
+  const handleChange = (_, newValue) => {
     setValue(newValue);
   };
 
@@ -60,7 +45,7 @@ const AdminDashboard = () => {
         <Dashboard charts={charts} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <AdminTable columns={tableColumn} data={data} />
+        <AdminTable columns={tableColumn} />
       </TabPanel>
     </>
   );

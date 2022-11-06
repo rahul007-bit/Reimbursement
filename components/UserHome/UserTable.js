@@ -54,6 +54,8 @@ const columns = [
 export default function UserTable({ data, user: usedIn = "User" }) {
   const router = useRouter();
   const [page, setPage] = React.useState(0);
+  const [count, setCount] = useState(0);
+
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [row, setRow] = React.useState([]);
   const [openModal, setOpenModal] = useState(false);
@@ -61,20 +63,17 @@ export default function UserTable({ data, user: usedIn = "User" }) {
   useEffect(() => {
     if (data?.data) {
       setRow(data.data);
+      setCount(data.data.length);
+    } else {
+      setRow([]);
     }
   }, [data]);
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (_, newPage) => {
     setPage(newPage);
   };
 
-  const handleClick = () => {
-    if (usedIn === "admin") {
-      router.replace("/admin/view_request");
-    }
-  };
-
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
+    setRowsPerPage(event.target.value);
     setPage(0);
   };
 
@@ -90,16 +89,6 @@ export default function UserTable({ data, user: usedIn = "User" }) {
 
   return (
     <Paper sx={{ width: "90%", overflow: "hidden", my: { md: 3 } }}>
-      {usedIn === "admin" ? (
-        <>
-          <Typography variant="h5" margin={1}>
-            Reimbursement Request
-          </Typography>
-          <Button onClick={handleClick} sx={{ m: 1.5 }} variant="contained">
-            Open Request Page
-          </Button>
-        </>
-      ) : null}
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -161,7 +150,7 @@ export default function UserTable({ data, user: usedIn = "User" }) {
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={0}
+        count={count}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

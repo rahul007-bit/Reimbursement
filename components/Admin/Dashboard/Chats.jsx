@@ -1,26 +1,22 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  CircularProgress,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import EChartsReact from "echarts-for-react";
 import React, { useEffect, useState } from "react";
 import { useFetch } from "../../../Hooks/apiHooks";
 
 export default function Chats({ chart }) {
   const [data, setData] = useState([]);
-  const { loading, fetchData = [] } = useFetch(
+  const { loading, data: fetchData } = useFetch(
     `reimburseCount?get=${chart}`,
     []
   );
   useEffect(() => {
-    console.log(fetchData);
-    if (!loading && fetchData.data) {
+    if (!loading && fetchData) {
       if (fetchData.status !== 404 || fetchData.status === 200) {
-        setData(...fetchData.data);
+        const data = fetchData.data.map((d) => ({
+          name: d._id,
+          value: d.Total,
+        }));
+        setData(data);
       }
     }
   }, [loading, fetchData]);
@@ -70,7 +66,16 @@ export default function Chats({ chart }) {
       {!loading ? (
         <EChartsReact style={{ height: "350px" }} option={option} />
       ) : (
-        <CircularProgress />
+        <Box
+          sx={{
+            width: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress />
+        </Box>
       )}
     </>
   );

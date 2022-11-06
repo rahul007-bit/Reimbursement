@@ -61,7 +61,7 @@ const CustomModal = ({
       <DialogActions>
         {selected &&
           (selected.certificateUrl ? (
-            <Link href={selected.certificateUrl.url} download>
+            <Link href={selected.certificateUrl.url} target={"_blank"}>
               <Button
                 color={"warning"}
                 variant={"contained"}

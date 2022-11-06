@@ -1,6 +1,12 @@
-import React, { useState } from "react";
-import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
-import EChartsReact from "echarts-for-react";
+import React from "react";
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Typography,
+} from "@mui/material";
 import Chats from "./Dashboard/Chats";
 const Dashboard = ({ charts }) => {
   return (
@@ -22,8 +28,9 @@ const Dashboard = ({ charts }) => {
           {charts.map((chart, idx) => (
             <Grid key={idx} item xs={2} sm={3} md={3}>
               <Card>
+                <CardHeader title={chart.name} />
                 <CardContent>
-                  <Chats chart={chart} />
+                  <Chats chart={chart.key} />
                 </CardContent>
               </Card>
             </Grid>

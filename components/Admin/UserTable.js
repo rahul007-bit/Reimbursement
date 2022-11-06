@@ -139,7 +139,7 @@ const UserTable = () => {
       <LoadingButton
         loading={loadingButton}
         variant={"contained"}
-        sx={{ m: 3 }}
+        sx={{ my: 2 }}
         onClick={handleClick}
       >
         <Typography variant={"button"}>Add User </Typography>
@@ -152,7 +152,14 @@ const UserTable = () => {
         accept={".csv"}
         onChange={getFile}
       />
-      <Box sx={{ my: 4 }}>
+      <Box
+        sx={{
+          my: 4,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         {!loading ? (
           <TableContainer sx={{ maxHeight: 440 }}>
             <Table stickyHeader aria-label="sticky table">
