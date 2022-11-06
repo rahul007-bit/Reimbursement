@@ -70,6 +70,11 @@ const Drawer = ({ userDetails }) => {
       </Box>
       <Divider />
       <List>
+        {/* {
+                name: "Reset Password",
+                link: "/resetpassword",
+                icon: <Password />,
+              }, */}
         {userDetails
           ? [
               {
@@ -77,11 +82,7 @@ const Drawer = ({ userDetails }) => {
                 link: `/${userDetails?.type}`,
                 icon: <Dashboard />,
               },
-              {
-                name: "Reset Password",
-                link: "/resetpassword",
-                icon: <Password />,
-              },
+
               {
                 name: "Log-out",
                 link: "/logout",
