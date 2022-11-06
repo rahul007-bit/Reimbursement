@@ -82,7 +82,7 @@ controller.getReimburseCount = async (req, res) => {
 
 controller.getFullReimbursementInfo = async (req, res) => {
   try {
-    const get = req.query.get;
+    const get = req.query;
     const result = await getFullReimbursementInfo(get);
     return res.status(result.status).send(result);
   } catch (error) {

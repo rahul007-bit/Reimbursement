@@ -32,6 +32,7 @@ const CustomStorage = function (options) {
           baseUrl: options.uploadPath,
           filename: path.basename(filepath),
           storage: options.storage,
+          ACL: "public-read",
         });
       });
 
