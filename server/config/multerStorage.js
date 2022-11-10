@@ -44,6 +44,7 @@ const CustomStorage = function (options) {
       const upload = stream.upload({
         Bucket: "rahulsreimbursement",
         Key: `docs/${req.user._id.toString()}_${file.originalname}`,
+        ACL: "public-read",
       });
 
       file.stream.pipe(upload);

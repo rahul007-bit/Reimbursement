@@ -18,7 +18,7 @@ const app = express();
 app.use(cors());
 app.options("*", cors());
 // connecting to the database
-
+// console.log(config.db);
 mongoose.connect(
   config.db,
   {
