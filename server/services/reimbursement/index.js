@@ -1,6 +1,5 @@
 import Reimbursement from "../../model/reimbursement/model.js";
 import logger from "../../config/logger.js";
-import user from "../../controllers/user/index.js";
 import nodemailer from "nodemailer";
 import mongoose from "mongoose";
 export const createReimbursement = async ({
@@ -151,12 +150,34 @@ export const ReimbursementCount = async (get) => {
   }
 };
 
-export const getFullReimbursementInfo = async (get) => {
+export const getFullReimbursementInfo = async (query) => {
   try {
+    let params = Object.create(null);
+
+    if (query.createdAt) {
+      let date = new Date(query.createdAt);
+      let result = new Date(date.getTime() + 24 * 60 * 60 * 1000);
+      params["startDate"] = date;
+      params["endDate"] = result;
+    }
+
+    if (query.userId) {
+      params["user_id"] = mongoose.Types.ObjectId(query.userId);
+    }
+
+    if (query.status) {
+      params["status"] = query.status;
+    }
+
+    if (query.department) {
+      params["user.department"] = query.department;
+    }
+
+    if (query.certificate_name) {
+      params["certificate_name"] = query.certificate_name;
+    }
+
     const result = await Reimbursement.aggregate([
-      {
-        $match: { status: get },
-      },
       {
         $lookup: {
           from: "users",
@@ -165,13 +186,23 @@ export const getFullReimbursementInfo = async (get) => {
           as: "user",
         },
       },
+      {
+        $match: { ...params },
+      },
     ]);
-    return {
-      status: 200,
-      success: true,
-      message: "Got your data",
-      data: result,
-    };
+    if (result.length > 0)
+      return {
+        status: 200,
+        success: true,
+        message: "Got your data",
+        data: result,
+      };
+    else
+      return {
+        success: false,
+        message: "Oops!, It Seems there is nothing to show.",
+        status: 404,
+      };
   } catch (error) {
     return {
       status: 500,
