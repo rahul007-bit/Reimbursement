@@ -83,7 +83,7 @@ const ReimbursementForm = ({ user: userDetails }) => {
       certificateUrl: imageUrl1,
     };
     body.additionalDetails.first_name = user.user.first_name;
-    // body.additionalDetails.email = user.user.email;
+    body.additionalDetails.email = user.user.email;
     body.department = user.user.department;
     submit("user/requestReimburse", body).then((response) => {
       if (response.status === 200 || response.success) {
