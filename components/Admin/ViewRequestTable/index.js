@@ -157,17 +157,6 @@ const ViewRequestTable = () => {
     }
   };
 
-  const Header = [
-    "Certificate Name",
-    "Applied At",
-    "Applied By",
-    "Moodle Id",
-    "Amount",
-    "Status",
-    "Account Number",
-    "IFSCode",
-  ];
-
   return (
     <>
       <Box
@@ -184,107 +173,98 @@ const ViewRequestTable = () => {
                 Reimbursement Requests
               </Typography>
               <Divider variant={"middle"} />
-              <Box sx={{ m: 3 }}>
-                <CSVLink
-                  data={userData}
-                  headers={Header}
-                  filename={`${Date()}-student`}
-                >
-                  <Button variant={"contained"}>
-                    <Typography variant={"button"}>Export </Typography>
-                  </Button>
-                </CSVLink>
 
-                <Box sx={{ my: 4 }}>
-                  {!loading ? (
-                    <TableContainer sx={{ maxHeight: 440 }}>
-                      <Table stickyHeader aria-label="sticky table">
-                        <TableHead>
-                          <TableRow>
-                            {columns.map((column) => (
-                              <TableCell
-                                key={column.id}
-                                align={column.align}
-                                style={{ minWidth: column.minWidth }}
+              <Box sx={{ my: 4 }}>
+                {!loading ? (
+                  <TableContainer sx={{ maxHeight: 440 }}>
+                    <Table stickyHeader aria-label="sticky table">
+                      <TableHead>
+                        <TableRow>
+                          {columns.map((column) => (
+                            <TableCell
+                              key={column.id}
+                              align={column.align}
+                              style={{ minWidth: column.minWidth }}
+                            >
+                              {column.label}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {row
+                          .slice(
+                            page * rowsPerPage,
+                            page * rowsPerPage + rowsPerPage
+                          )
+                          .map((row1) => {
+                            return (
+                              <TableRow
+                                hover
+                                role="checkbox"
+                                tabIndex={-1}
+                                key={row1._id}
                               >
-                                {column.label}
-                              </TableCell>
-                            ))}
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {row
-                            .slice(
-                              page * rowsPerPage,
-                              page * rowsPerPage + rowsPerPage
-                            )
-                            .map((row1) => {
-                              return (
-                                <TableRow
-                                  hover
-                                  role="checkbox"
-                                  tabIndex={-1}
-                                  key={row1._id}
-                                >
-                                  <TableCell align="center">
-                                    {row1.certificate_name}
-                                  </TableCell>
-                                  <TableCell align="center">
-                                    {new Date(
-                                      row1.created_at
-                                    ).toLocaleDateString()}
-                                  </TableCell>
-                                  <TableCell align="center">
-                                    {row1.user[0]?.first_name}
-                                  </TableCell>
-                                  <TableCell align="center">
-                                    {row1.user[0]?.moodleId}
-                                  </TableCell>
-                                  <TableCell align="center">
-                                    {row1.amountToReimbursement}
-                                  </TableCell>
-                                  <TableCell align="center">
-                                    {row1.status}
-                                  </TableCell>
-                                  <TableCell align="center">
-                                    {row1.bankDetails.accountNumber}
-                                  </TableCell>
-                                  <TableCell align="center">
-                                    {row1.bankDetails.IFSCode}
-                                  </TableCell>
-                                  <TableCell align="center">
-                                    <Button
-                                      variant={"contained"}
-                                      onClick={showModal(row1)}
-                                      size={"small"}
-                                    >
-                                      <Typography variant={"button"}>
-                                        View Request
-                                      </Typography>
-                                    </Button>
-                                  </TableCell>
-                                </TableRow>
-                              );
-                            })}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  ) : (
+                                <TableCell align="center">
+                                  {row1.certificate_name}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {new Date(
+                                    row1.created_at
+                                  ).toLocaleDateString()}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row1.user[0]?.first_name}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row1.user[0]?.moodleId}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row1.amountToReimbursement}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row1.status}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row1.bankDetails.accountNumber}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row1.bankDetails.IFSCode}
+                                </TableCell>
+                                <TableCell align="center">
+                                  <Button
+                                    variant={"contained"}
+                                    onClick={showModal(row1)}
+                                    size={"small"}
+                                  >
+                                    <Typography variant={"button"}>
+                                      View Request
+                                    </Typography>
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                ) : (
+                  <Box
+                    sx={{ display: "flex", width: 1, justifyContent: "center" }}
+                  >
                     <CircularProgress />
-                  )}
-                </Box>
-                <TablePagination
-                  rowsPerPageOptions={[10, 25, 100]}
-                  component="div"
-                  count={count}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />
+                  </Box>
+                )}
               </Box>
-              {/*<TablePastRecords reload={reload} Header={Header} />*/}
-              {/*<AllRecords reload={reload} Header={Header} />*/}
+              <TablePagination
+                rowsPerPageOptions={[10, 25, 100]}
+                component="div"
+                count={count}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
             </CardContent>
           </Card>
         </Box>

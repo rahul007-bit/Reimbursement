@@ -16,7 +16,7 @@ const Snack = () => {
     <>
       {open && (
         <Snackbar
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
           open={open}
           autoHideDuration={6000}
           onClose={handleClose}

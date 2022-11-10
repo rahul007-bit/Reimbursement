@@ -52,25 +52,24 @@ const CompressPdf = () => {
 
   if (loading)
     return (
-      <Box sx={{ display: "flex", width: 1 }}>
+      <Box sx={{ display: "flex", width: 1, justifyContent: "center" }}>
         <CircularProgress />
       </Box>
     );
 
   return (
     <Layout userData={userData} title="Compress PDF">
-      <div className="flex h-full w-full mt-10">
-        <div className="shadow-xl h-fit m-auto sm:w-3/4 lg:w-2/5 md:3/5 w-full flex justify-evenly items-center rounded-md py-8">
+      <div className="flex h-full w-full mt-10 items-center justify-center">
+        <div className="shadow-xl h-fit m-auto sm:w-3/4 lg:w-2/5 md:3/5 w-full flex justify-evenly items-center rounded-md py-8 mt-10 mx-3">
           <Box
             sx={{
               width: "90%",
-              mt: 3,
             }}
           >
             <Typography variant="h4" mb={2}>
               Compress Your PDF
             </Typography>
-            <Divider variant="middle" className="mb-4" />
+            <Divider variant="fullWidth" className="mb-4" />
             <form onSubmit={handleSubmit}>
               <Stack direction={"column"} spacing={2}>
                 <Typography variant="h8" gutterBottom>

@@ -18,6 +18,7 @@ const Dashboard = ({ charts }) => {
         <Typography variant={"h4"} margin={6}>
           Summary
         </Typography>
+
         <Grid
           container
           spacing={{ xs: 2, md: 4 }}

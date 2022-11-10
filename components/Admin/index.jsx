@@ -1,10 +1,9 @@
 import React from "react";
 import { useState } from "react";
 import Dashboard from "./Dashboard";
-import { AppBar, Box, CircularProgress, Tab, Tabs } from "@mui/material";
+import { AppBar, Tab, Tabs } from "@mui/material";
 import AdminTable from "./Dashboard/AdminTable";
 import { _ } from "gridjs-react";
-import { useFetch } from "../../Hooks/apiHooks";
 import TabPanel, { a11yProps } from "../Util/TabPanel";
 
 const AdminDashboard = () => {

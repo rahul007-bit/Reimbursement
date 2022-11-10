@@ -126,8 +126,8 @@ const ReimbursementForm = ({ user: userDetails }) => {
 
   return (
     <>
-      <div className="flex h-full w-full mt-10">
-        <div className="shadow-xl h-fit m-auto sm:w-3/4 lg:w-2/5 md:3/5 w-full flex justify-evenly items-center rounded-md py-8">
+      <div className="flex h-full w-full mt-10 items-center justify-center">
+        <div className="shadow-xl h-fit m-auto sm:w-3/4 md:w-3/4 lg:w-3/5 w-full flex justify-evenly items-center rounded-md py-8 mt-10 mx-3 max-w-xl">
           <Box
             sx={{
               width: "90%",
@@ -136,7 +136,7 @@ const ReimbursementForm = ({ user: userDetails }) => {
             <Typography variant="h4" mb={2}>
               Apply for Reimbursement
             </Typography>
-            <Divider variant="middle" className="mb-4" />
+            <Divider variant="fullWidth" className="mb-4" />
             <form
               className="w-full flex flex-col justify-center items-center"
               onSubmit={handleSubmit}
