@@ -30,8 +30,8 @@ export default function SignIn({ usedIn: usedFor = "user" }) {
             open: true,
           });
           const token = response.auth_token;
-          setCookies("auth_token", token);
-          setCookies("loginType", response.type);
+          setCookies("auth_token", token, { path: "/" });
+          setCookies("loginType", response.type, { path: "/" });
           setTimeout(async () => {
             await router.push("/");
           }, 800);
@@ -40,7 +40,6 @@ export default function SignIn({ usedIn: usedFor = "user" }) {
         }
       })
       .catch((err) => {
-        console.log(err);
         setSnackBar({ type: "error", message: err.message, open: true });
       })
       .finally(() => setLoading(false));

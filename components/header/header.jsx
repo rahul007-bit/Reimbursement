@@ -56,8 +56,8 @@ const HeaderBar = ({ children, userDetails, window }) => {
           sx={{
             width: { sm: `calc(100% - ${drawerWidth}px)` },
             ml: { sm: `${drawerWidth}px` },
-            backgroundColor: "rgb(38 40 112 / 87%)",
-            backdropFilter: "blur(10px)",
+            // backgroundColor: "rgb(38 40 112 / 87%)",
+            // backdropFilter: "blur(10px)",
           }}
         >
           <Container maxWidth="xl">

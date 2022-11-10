@@ -11,7 +11,7 @@ const AdminHome = () => {
   const { error, loading, userData } = useUserProfile();
   if (loading)
     return (
-      <Box sx={{ display: "flex", width: 1 }}>
+      <Box sx={{ display: "flex", width: 1, justifyContent: "center" }}>
         <CircularProgress />
       </Box>
     );
