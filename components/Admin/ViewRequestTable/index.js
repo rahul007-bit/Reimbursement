@@ -75,7 +75,7 @@ const columns = [
 
 const ViewRequestTable = () => {
   const [reload, setReload] = useState(false);
-  const { loading, data } = useFetch("reimbursement/fullInfo?get=PENDING", [
+  const { loading, data } = useFetch("reimbursement/fullInfo?status=PENDING", [
     reload,
   ]);
   const [page, setPage] = React.useState(0);

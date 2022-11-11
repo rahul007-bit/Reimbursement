@@ -89,11 +89,11 @@ export default function AdminTable() {
         justifyContent: "center",
         alignItems: "center",
         mx: {
-          sm: 2,
+          xs: 2,
           md: 4,
           lg: 8,
         },
-        my: 8,
+        my: 4,
         flexDirection: "column",
       }}
     >
@@ -105,13 +105,6 @@ export default function AdminTable() {
           <Button onClick={handleClick} variant="contained">
             Open Request Page
           </Button>
-          {/* <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => setOpenModal(true)}
-            >
-              Customize result
-            </Button> */}
 
           <CSVLink
             data={userData}
@@ -123,57 +116,66 @@ export default function AdminTable() {
             </Button>
           </CSVLink>
         </Stack>
-        <Box sx={{ maxWidth: "550px", m: 3, width: 1 }}>
-          <Stack gap={3} direction={"row"} width={1}>
-            <Autocomplete
-              name="certificate"
-              // value={modalState.certificate}
-              options={[
-                { label: "All", value: null },
-                { label: "NPTEL", value: "NPTEL" },
-                {
-                  label: "Global Certification",
-                  value: "Global Certification",
-                },
-                { label: "Paper Publication", value: "Paper Publication" },
-                { label: "FTTP / STP", value: "FTTP / STP" },
-              ]}
-              onChange={(_, v) => handleChange("certificate", v)}
-              sx={{ width: "100%" }}
-              renderInput={(params) => (
-                <TextField {...params} label="Select Certificate" />
-              )}
-            />
-            <Autocomplete
-              name="department"
-              // value={modalState.department}
-              options={[
-                { label: "All", value: null },
-                { value: "IT", label: "IT" },
-                { value: "CS", label: "CS" },
-                { value: "MACH", label: "MACH" },
-                { value: "CIVIL", label: "CIVIL" },
-              ]}
-              onChange={(_, v) => handleChange("department", v)}
-              sx={{ width: "100%" }}
-              renderInput={(params) => (
-                <TextField {...params} label="Select Department" />
-              )}
-            />
-            <Autocomplete
-              name="status"
-              // value={{ label: modalState.status }}
-              options={[
-                { label: "All", value: null },
-                { label: "PENDING", value: "PENDING" },
-                { label: "Approved", value: "Approved" },
-              ]}
-              onChange={(_, v) => handleChange("status", v)}
-              sx={{ width: "100%" }}
-              renderInput={(params) => <TextField {...params} label="Status" />}
-            />
-          </Stack>
-        </Box>
+        {/* <Box sx={{ m: 3, width: 1 }}> */}
+        <Stack
+          gap={3}
+          direction={{ md: "row", sm: "column" }}
+          width={1}
+          margin={3}
+          maxWidth={600}
+        >
+          <Autocomplete
+            name="certificate"
+            // value={modalState.certificate}
+            options={[
+              { label: "All", value: null },
+              { label: "NPTEL", value: "NPTEL" },
+              {
+                label: "Global Certification",
+                value: "Global Certification",
+              },
+              { label: "Paper Publication", value: "Paper Publication" },
+              { label: "FTTP / STP", value: "FTTP / STP" },
+            ]}
+            onChange={(_, v) => handleChange("certificate", v)}
+            defaultValue={{ label: "All", value: null }}
+            fullWidth
+            renderInput={(params) => (
+              <TextField {...params} label="Select Certificate" />
+            )}
+          />
+          <Autocomplete
+            name="department"
+            // value={modalState.department}
+            options={[
+              { label: "All", value: null },
+              { value: "IT", label: "IT" },
+              { value: "CS", label: "CS" },
+              { value: "MACH", label: "MACH" },
+              { value: "CIVIL", label: "CIVIL" },
+            ]}
+            onChange={(_, v) => handleChange("department", v)}
+            fullWidth
+            defaultValue={{ label: "All", value: null }}
+            renderInput={(params) => (
+              <TextField {...params} label="Select Department" />
+            )}
+          />
+          <Autocomplete
+            name="status"
+            // value={{ label: modalState.status }}
+            options={[
+              { label: "All", value: null },
+              { label: "PENDING", value: "PENDING" },
+              { label: "Approved", value: "Approved" },
+            ]}
+            defaultValue={{ label: "All", value: null }}
+            fullWidth
+            onChange={(_, v) => handleChange("status", v)}
+            renderInput={(params) => <TextField {...params} label="Status" />}
+          />
+        </Stack>
+        {/* </Box> */}
         {!loading ? (
           <UserTable data={data} user={"admin"} />
         ) : (
