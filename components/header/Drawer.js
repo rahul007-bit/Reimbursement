@@ -13,6 +13,7 @@ import {
 import {
   Compress,
   Dashboard,
+  FeedOutlined,
   HowToReg,
   Login,
   Logout,
@@ -125,15 +126,27 @@ const Drawer = ({ userDetails }) => {
               </ListItemButton>
             </Link>
           </ListItem>
-          <Link href={"/admin/add_users"}>
-            <ListItemButton>
-              <ListItemIcon>
-                <PersonAdd />
-              </ListItemIcon>
+          <ListItem disablePadding>
+            <Link href={"/admin/add_users"}>
+              <ListItemButton>
+                <ListItemIcon>
+                  <PersonAdd />
+                </ListItemIcon>
 
-              <ListItemText primary={"Add Users"} />
-            </ListItemButton>
-          </Link>
+                <ListItemText primary={"Add Users"} />
+              </ListItemButton>
+            </Link>
+          </ListItem>
+          <ListItem disablePadding>
+            <Link href={"/admin/view-forms"}>
+              <ListItemButton>
+                <ListItemIcon>
+                  <FeedOutlined />
+                </ListItemIcon>
+                <ListItemText primary={"View Forms"} />
+              </ListItemButton>
+            </Link>
+          </ListItem>
         </List>
       )}
       {userDetails && userDetails.type === "user" && (
