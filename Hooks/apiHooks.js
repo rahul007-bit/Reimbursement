@@ -98,7 +98,6 @@ export const useUserProfile = () => {
   useEffect(() => {
     const controller = new AbortController();
     const session = sessionStorage.getItem("user");
-    console.log(!!session);
     const user = !!session ? JSON.parse(session) : session;
     if (user) {
       setUserData(user);
@@ -107,7 +106,6 @@ export const useUserProfile = () => {
       fetch("/api/details", { signal: controller.signal })
         .then((response) => response.json())
         .then((result) => {
-          console.log(result);
           setError(result.status === 200 ? false : result.status);
           sessionStorage.setItem("user", JSON.stringify(result.data));
           setUserData(result.data);
