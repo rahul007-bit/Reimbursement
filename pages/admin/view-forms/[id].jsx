@@ -37,21 +37,6 @@ const ViewForm = () => {
         setForm([]);
       } else {
         setForm(data.data[0]);
-        setQuestions(() => {
-          const q = data.data[0].questions.map((q) => {
-            if (q.type === "50") {
-              return {
-                ...q,
-                answer: [],
-              };
-            }
-            return {
-              ...q,
-              answer: "",
-            };
-          });
-          return q;
-        });
       }
     }
   }, [loading, data, error]);

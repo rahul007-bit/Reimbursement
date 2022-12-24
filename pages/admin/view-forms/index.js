@@ -17,13 +17,23 @@ import {
 import React, { useEffect } from "react";
 import Link from "next/link";
 import Layout from "../../../components/Layout";
-import { useFetch } from "../../../Hooks/apiHooks";
+import { submit, useFetch } from "../../../Hooks/apiHooks";
 import { useRouter } from "next/router";
+import Confirmation from "../../../components/Util/Confirmation";
+import { snackBarAtom } from "../../../store";
+import { useAtom } from "jotai";
 
 const ViewForms = () => {
   const [forms, setForms] = React.useState([]);
+  const [selectedForm, setSelectedForm] = React.useState(null);
+  const [openModal, setOpenModal] = React.useState(false);
+
+  const [loadingRemove, setLoadingRemove] = React.useState(false);
+
   const router = useRouter();
   const { data, loading, error } = useFetch("certificate/get");
+  const [, setSnackBar] = useAtom(snackBarAtom);
+
   useEffect(() => {
     if (!loading) {
       if (error) {
@@ -33,6 +43,50 @@ const ViewForms = () => {
       }
     }
   }, [loading, data, error]);
+
+  const deleteForm = (id) => {
+    setSelectedForm(id);
+    setOpenModal(true);
+  };
+
+  const handleClose = () => {
+    setOpenModal(false);
+    setLoadingRemove(false);
+    setSelectedForm(null);
+  };
+
+  const removeForm = () => {
+    setLoadingRemove(true);
+    submit("certificate/delete", { certificate_id: selectedForm }, "DELETE")
+      .then((data) => {
+        if (data.success) {
+          setForms(forms.filter((form) => form._id !== selectedForm));
+          setSnackBar({
+            open: true,
+            message: "Form deleted successfully",
+            type: "success",
+          });
+          setOpenModal(false);
+        } else {
+          setSnackBar({
+            open: true,
+            message: data.message,
+            type: "error",
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setSnackBar({
+          open: true,
+          message: err.message,
+          type: "error",
+        });
+      })
+      .finally(() => {
+        setLoadingRemove(false);
+      });
+  };
 
   return (
     <Layout title="View Form">
@@ -98,7 +152,10 @@ const ViewForms = () => {
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="Delete">
-                    <IconButton color="primary">
+                    <IconButton
+                      color="primary"
+                      onClick={() => deleteForm(form._id)}
+                    >
                       <DeleteForever />
                     </IconButton>
                   </Tooltip>
@@ -111,6 +168,12 @@ const ViewForms = () => {
             </Box>
           )}
         </Paper>
+        <Confirmation
+          openModal={openModal}
+          handleClose={handleClose}
+          remove={removeForm}
+          loadingRemove={loadingRemove}
+        />
       </Container>
     </Layout>
   );

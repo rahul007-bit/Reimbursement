@@ -8,9 +8,9 @@ const Studentform = ({ handleChange, user }) => {
       <Stack direction={{ sm: "column", md: "row" }} gap={2}>
         <TextField
           fullWidth
-          label="Student Name"
+          label="Name"
           required
-          name={"student_name"}
+          name={"name"}
           onChange={(e) =>
             handleChange("additionalDetails", {
               [e.target.name]: e.target.value,

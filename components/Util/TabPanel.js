@@ -12,11 +12,7 @@ function TabPanel(props) {
       id={`full-width-tabpanel-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: { md: 3 } }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: { md: 3 } }}>{children}</Box>}
     </div>
   );
 }

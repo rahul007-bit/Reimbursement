@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Chip,
   Paper,
   Table,
   TableBody,
@@ -117,15 +118,26 @@ export default function UserTable({ data, user: usedIn = "User" }) {
                     className={`${usedIn === "admin" ? "cursor-pointer" : ""}`}
                   >
                     <TableCell align="center">
-                      {row1.certificate_name}
+                      {row1.reimbursementDetails.certificate_name}
                     </TableCell>
                     <TableCell align="center">
                       {new Date(row1.created_at).toLocaleDateString()}
                     </TableCell>
                     <TableCell align="center">
-                      {row1.amountToReimbursement}
+                      {row1.amountToReimburse}
                     </TableCell>
-                    <TableCell align="center">{row1.status}</TableCell>
+                    <TableCell align="center">
+                      <Chip
+                        label={row1.status}
+                        color={
+                          row1.status === "PENDING"
+                            ? "warning"
+                            : row1.status === "Approved"
+                            ? "success"
+                            : "error"
+                        }
+                      />
+                    </TableCell>
                     <TableCell align="center">
                       {row1.bankDetails.accountNumber}
                     </TableCell>

@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { LoadingButton } from "@mui/lab";
+import InputField from "../Forms/InputFields";
 
 const CustomModal = ({
   openModal,
@@ -33,21 +34,21 @@ const CustomModal = ({
       <DialogTitle>Reimbursement details</DialogTitle>
       {selected && (
         <DialogContent dividers>
-          <Divider variant={"fullWidth"} sx={{ mb: 3 }} />
+          {/* <Divider variant={"fullWidth"} sx={{ mb: 3 }} /> */}
           <Stack spacing={2}>
             <TextField
               label={"certificate Name"}
-              value={selected.certificate_name}
+              value={selected.reimbursementDetails.certificate_name}
             />
             <TextField
               label={"Reimbursement Amount"}
-              value={selected.amountToReimbursement}
+              value={selected.amountToReimburse}
             />
-            {Object.entries(selected.additionalDetails).map((data, i) => (
-              <TextField
-                label={data[0]}
-                key={i}
-                value={selected.additionalDetails[data[0]]}
+            {selected.reimbursementDetails.questions.map((question) => (
+              <InputField
+                key={question.id}
+                question={question}
+                usedFor={"preview"}
               />
             ))}
             <TextField
