@@ -6,12 +6,14 @@ import config from "../../config/index.js";
 
 const Admin_Schema = new mongoose.Schema(
   {
-    firstName: String,
-    lastName: String,
+    first_name: String,
+    last_name: String,
     email: String,
     moodleId: String,
     password: String,
     profile_pic: String,
+    department: String,
+    role: String,
   },
 
   {
