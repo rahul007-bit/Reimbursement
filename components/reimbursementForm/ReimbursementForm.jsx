@@ -1,9 +1,5 @@
 import React, { createRef, useEffect, useState } from "react";
 import StudentForm from "./CretificationForm/studentform";
-import NptelForm from "./CretificationForm/nptelform";
-import GlobalCertification from "./CretificationForm/globalcertification";
-import PaperPublication from "./CretificationForm/paperpublication";
-import Fdpform from "./CretificationForm/fdpform";
 
 import {
   Autocomplete,
@@ -14,29 +10,72 @@ import {
   Typography,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { submit, url } from "../../Hooks/apiHooks";
+import { submit, url, useFetch } from "../../Hooks/apiHooks";
 import PaymentDetails from "./paymentDetails";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { useAtom } from "jotai";
 import { snackBarAtom } from "../../store";
 import { useCookies } from "react-cookie";
+import InputField from "../Forms/InputFields";
 
 const ReimbursementForm = ({ user: userDetails }) => {
   const [, setSnackBar] = useAtom(snackBarAtom);
   const [cookie] = useCookies();
   const [certificationDetails, setCertificationDetails] = useState({});
+  const [certificates, setCertificates] = useState([]);
+  const [selectedCertificate, setSelectedCertificate] = useState({});
+  const [questions, setQuestions] = useState([]);
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
 
   const input1Ref = createRef();
-  const input2Ref = createRef();
-
   const router = useRouter();
+
+  const {
+    data: certificatesData,
+    loading: loadingCertificates,
+    error,
+  } = useFetch(`user/certificate`);
+
+  useEffect(() => {
+    if (!loadingCertificates) {
+      if (error) {
+        setCertificates([]);
+      } else {
+        setCertificates(
+          certificatesData.data.map((c) => ({
+            label: c.certificate_name,
+            value: c._id,
+          }))
+        );
+      }
+    }
+  }, [certificatesData, loadingCertificates, error]);
 
   useEffect(() => {
     setUser(userDetails);
   }, [userDetails]);
+
+  useEffect(() => {
+    if (selectedCertificate._id) {
+      setQuestions(() => {
+        const q = selectedCertificate.questions.map((q) => {
+          if (q.type === "50") {
+            return {
+              ...q,
+              answer: [],
+            };
+          }
+          return {
+            ...q,
+            answer: "",
+          };
+        });
+        return q;
+      });
+    }
+  }, [selectedCertificate, certificatesData]);
 
   async function uploadImage(file) {
     const form = new FormData();
@@ -68,7 +107,6 @@ const ReimbursementForm = ({ user: userDetails }) => {
       if (!result1.success) {
         setSnackBar({ open: true, type: "error", message: result1.message });
         setLoading(false);
-
         return;
       }
       imageUrl1 = result1.data;
@@ -76,15 +114,19 @@ const ReimbursementForm = ({ user: userDetails }) => {
       setLoading(false);
       return;
     }
-    console.log(imageUrl1);
     const body = {
-      ...certificationDetails,
-      // recipientUrl: imageUrl2,
+      certificate_id: selectedCertificate._id,
       certificateUrl: imageUrl1,
+      amountToReimburse: certificationDetails.amountToReimbursement,
+      reimbursementDetails: {
+        certificate_name: selectedCertificate.certificate_name,
+        questions: [...questions],
+      },
+      bankDetails: {
+        accountNumber: certificationDetails.bankDetails.accountNumber,
+        IFSCode: certificationDetails.bankDetails.IFSCode,
+      },
     };
-    body.additionalDetails.first_name = user.user.first_name;
-    body.additionalDetails.email = user.user.email;
-    body.department = user.user.department;
     submit("user/requestReimburse", body).then((response) => {
       if (response.status === 200 || response.success) {
         setSnackBar({
@@ -136,81 +178,70 @@ const ReimbursementForm = ({ user: userDetails }) => {
             <Typography variant="h4" mb={2}>
               Apply for Reimbursement
             </Typography>
-            <Divider variant="fullWidth" className="mb-4" />
+            <Divider
+              variant="fullWidth"
+              sx={{
+                mb: 2,
+              }}
+            />
             <form
               className="w-full flex flex-col justify-center items-center"
               onSubmit={handleSubmit}
             >
               <Box className="w-full">
                 <Stack spacing={3}>
-                  <Autocomplete
-                    name="user"
-                    disablePortal
-                    id="combo-box-demo"
-                    required
-                    onChange={(e, v) =>
-                      handleChange("additionalDetails", {
-                        ["name"]: v ? v.label : "",
-                      })
-                    }
-                    value={{ label: "Student" }}
-                    options={[{ label: "Student" }, { label: "Teacher" }]}
-                    renderInput={(params) => (
-                      <TextField name="user" {...params} label="Select Role" />
-                    )}
-                    // onInputChange={getUserDetails}
-                  />
-                  {/* render when user is student */}
-                  {/*{certificationDetails.additionalDetails?.name ===*/}
-                  {/*  "Student" && */}
                   {user && (
                     <StudentForm handleChange={handleChange} user={user} />
                   )}
-                  {/*}*/}
-                  {/* render when user is stuff */}
-
-                  {/*{certificationDetails.additionalDetails?.name ===*/}
-                  {/*  "Teacher" && <StaffForm handleChange={handleChange} />}*/}
-
-                  {/*{certificationDetails.additionalDetails?.name && (*/}
                   <Stack direction={{ sm: "column", md: "row" }} spacing={3}>
                     <Autocomplete
                       name="certificate_name"
-                      id="combo-box-demo"
-                      options={[
-                        { label: "NPTEL" },
-                        { label: "Global Certification" },
-                        { label: "Paper Publication" },
-                        { label: "FTTP / STP" },
-                      ]}
-                      onChange={(e, v) =>
-                        handleChange("certificate_name", v ? v.label : "")
+                      options={certificates}
+                      value={
+                        selectedCertificate._id
+                          ? {
+                              label: selectedCertificate.certificate_name,
+                              value: selectedCertificate._id,
+                            }
+                          : null
                       }
+                      onChange={(e, v) => {
+                        if (v)
+                          setSelectedCertificate(() => {
+                            return certificatesData.data.filter(
+                              (certificate) => {
+                                return certificate._id === v.value;
+                              }
+                            )[0];
+                          });
+                        else setSelectedCertificate({});
+                      }}
                       sx={{ width: "100%" }}
                       renderInput={(params) => (
-                        <TextField {...params} label="Select Certificate" />
+                        <TextField
+                          {...params}
+                          label="Select Certificate"
+                          required
+                        />
                       )}
                     />
                   </Stack>
                   {/*)}*/}
-                  {certificationDetails.certificate_name === "NPTEL" && (
-                    <NptelForm handleChange={handleChange} />
-                  )}
-                  {certificationDetails.certificate_name ===
-                    "Global Certification" && (
-                    <GlobalCertification handleChange={handleChange} />
-                  )}
-                  {certificationDetails.certificate_name ===
-                    "Paper Publication" && (
-                    <PaperPublication handleChange={handleChange} />
-                  )}
-                  {certificationDetails.certificate_name === "FTTP / STP" && (
-                    <Fdpform handleChange={handleChange} />
-                  )}
-                  {certificationDetails.certificate_name && (
+
+                  {selectedCertificate._id &&
+                    questions.map((question) => (
+                      <InputField
+                        key={question._id}
+                        question={question}
+                        setQuestions={setQuestions}
+                        usedFor="reimbursement"
+                      />
+                    ))}
+
+                  {selectedCertificate.certificate_name && (
                     <PaymentDetails handleChange={handleChange} />
                   )}
-                  {certificationDetails.certificate_name && (
+                  {selectedCertificate.certificate_name && (
                     <Stack direction={"column"} gap={2}>
                       <Typography variant="h8" gutterBottom>
                         Upload your Certificate

@@ -4,6 +4,7 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import { useEffect } from "react";
 import { Provider as JotaiProvider } from "jotai";
 import Snack from "../components/Util/Snackbar";
+import Head from "next/head";
 
 const ProgressBar = dynamic(
   () => import("../components/ProgressBar/ProgressBar"),
@@ -42,11 +43,11 @@ export const theme = createTheme({
 });
 
 function MyApp({ Component, pageProps }) {
-  useEffect(() => {
-    document.title = "Reimbursement";
-  }, []);
   return (
     <>
+      <Head>
+        <title>Reimbursement</title>
+      </Head>
       <ThemeProvider theme={theme}>
         <JotaiProvider>
           <ProgressBar />

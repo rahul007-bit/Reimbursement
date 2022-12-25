@@ -43,6 +43,7 @@ export default function Home() {
         </AppBar>
         <TabPanel value={value} index={0}>
           <UserHome userData={userData} status={"PENDING"} />
+          <UserHome userData={userData} status={"In Process"} />
         </TabPanel>
         <TabPanel value={value} index={1}>
           <UserHome userData={userData} status={"Approved"} />

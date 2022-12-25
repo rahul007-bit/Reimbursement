@@ -4,14 +4,9 @@ import {
   Button,
   Card,
   CardContent,
+  Chip,
   CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Divider,
-  Modal,
-  Stack,
   Table,
   TableBody,
   TableCell,
@@ -19,15 +14,11 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  TextField,
   Typography,
 } from "@mui/material";
 import { v4 as uuid } from "uuid";
 import { submit, useFetch } from "../../../Hooks/apiHooks";
 import MuiAlert from "@mui/material/Alert";
-import { LoadingButton } from "@mui/lab";
-import { CSVLink } from "react-csv";
-import Link from "next/link";
 import { useAtom } from "jotai";
 import { snackBarAtom } from "../../../store";
 import CustomModal from "../../Util/CustomModal";
@@ -206,7 +197,7 @@ const ViewRequestTable = () => {
                                 key={row1._id}
                               >
                                 <TableCell align="center">
-                                  {row1.certificate_name}
+                                  {row1.reimbursementDetails.certificate_name}
                                 </TableCell>
                                 <TableCell align="center">
                                   {new Date(
@@ -220,10 +211,19 @@ const ViewRequestTable = () => {
                                   {row1.user[0]?.moodleId}
                                 </TableCell>
                                 <TableCell align="center">
-                                  {row1.amountToReimbursement}
+                                  {row1.amountToReimburse}
                                 </TableCell>
                                 <TableCell align="center">
-                                  {row1.status}
+                                  <Chip
+                                    label={row1.status}
+                                    color={
+                                      row1.status === "PENDING"
+                                        ? "warning"
+                                        : row1.status === "Approved"
+                                        ? "success"
+                                        : "error"
+                                    }
+                                  />
                                 </TableCell>
                                 <TableCell align="center">
                                   {row1.bankDetails.accountNumber}

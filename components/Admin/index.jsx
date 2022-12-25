@@ -34,7 +34,6 @@ const AdminDashboard = () => {
           indicatorColor="secondary"
           textColor="inherit"
           variant="fullWidth"
-          aria-label="full width tabs example"
         >
           <Tab label="Graphical View" {...a11yProps(0)} />
           <Tab label="Tabular View" {...a11yProps(1)} />
