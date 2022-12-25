@@ -1,10 +1,18 @@
 import React from "react";
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import HeaderBar from "../header/header";
 import Head from "next/head";
+import { useUserProfile } from "../../Hooks/apiHooks";
 export const drawerWidth = 280;
 
-const Layout = ({ children, userData, title: Header = "Reimbursement" }) => {
+const Layout = ({ children, title: Header = "Reimbursement" }) => {
+  const { error, loading, userData } = useUserProfile();
+  if (loading)
+    return (
+      <Box sx={{ display: "flex", width: 1, justifyContent: "center" }}>
+        <CircularProgress />
+      </Box>
+    );
   return (
     <>
       <Head>

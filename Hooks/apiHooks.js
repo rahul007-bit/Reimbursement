@@ -75,7 +75,6 @@ export function useFetch(endpoint, initialData = [], fullUrl = false) {
 
 //POST,PUT,
 export async function submit(endpoint, body, type = "POST", isFile = false) {
-  console.log(body);
   return fetch("/api/submit", {
     method: "POST",
     body: JSON.stringify({
@@ -106,7 +105,6 @@ export const useUserProfile = () => {
       fetch("/api/details", { signal: controller.signal })
         .then((response) => response.json())
         .then((result) => {
-          console.log(result);
           setError(result.status === 200 ? false : result.status);
           sessionStorage.setItem("user", JSON.stringify(result.data));
           setUserData(result.data);

@@ -1,12 +1,9 @@
 import React from "react";
 import MuiAlert from "@mui/material/Alert";
-import { Snackbar } from "@mui/material";
+import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import { useAtom } from "jotai";
 import { snackBarAtom } from "../../store";
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 const Snack = () => {
   const [{ open, type, message }, setSnackBar] = useAtom(snackBarAtom);
   const handleClose = () => {
@@ -16,12 +13,18 @@ const Snack = () => {
     <>
       {open && (
         <Snackbar
-          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
           open={open}
           autoHideDuration={6000}
           onClose={handleClose}
         >
-          <Alert onClose={handleClose} severity={type} sx={{ width: "100%" }}>
+          <Alert
+            variant={"filled"}
+            onClose={handleClose}
+            severity={type}
+            sx={{ width: "100%" }}
+          >
+            <AlertTitle>{type === "success" ? "Success" : "Error"}</AlertTitle>
             {message}
           </Alert>
         </Snackbar>
