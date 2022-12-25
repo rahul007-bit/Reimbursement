@@ -2,7 +2,7 @@ import { userAuth } from "./auth/userAuth.js";
 import rateLimit from "express-rate-limit";
 import { celebrate } from "celebrate";
 import config from "../../config/index.js";
-import controller, {compress, upload} from "../../controllers/user/index.js";
+import controller, { compress, upload } from "../../controllers/user/index.js";
 import requestValidator from "../../services/user/requestValidator.js";
 import { reimbursementValidator } from "../../services/reimbursement/requestValidation.js";
 
@@ -46,6 +46,8 @@ const router = async (router) => {
     controller.uploadFileResponse
   );
 
-  router.post("/file/compress",compress.single("file"),controller.compress)
+  router.post("/file/compress", compress.single("file"), controller.compress);
+
+  router.get("/user/certificate", limit, userAuth, controller.getCertificates);
 };
 export default router;
