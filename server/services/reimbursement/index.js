@@ -3,25 +3,24 @@ import logger from "../../config/logger.js";
 import nodemailer from "nodemailer";
 import mongoose from "mongoose";
 export const createReimbursement = async ({
-  certificate_name,
+  certificate_id,
   user_id,
   bankDetails,
-  amountToReimbursement,
-  department,
-  additionalDetails,
-  // recipientUrl,
+  amountToReimburse,
+  reimbursementDetails,
   certificateUrl,
+  department,
+  email,
 }) => {
   try {
     await Reimbursement.create({
-      certificate_name: certificate_name,
-      user_id: user_id,
-      bankDetails: bankDetails,
-      amountToReimbursement: amountToReimbursement,
-      department: department,
-      additionalDetails: additionalDetails,
-      certificateUrl: certificateUrl,
-      // recipientUrl: recipientUrl,
+      certificate: certificate_id,
+      user_id,
+      bankDetails,
+      amountToReimburse,
+      reimbursementDetails,
+      certificateUrl,
+      department,
     });
 
     let mailTransporter = nodemailer.createTransport({
@@ -34,15 +33,16 @@ export const createReimbursement = async ({
 
     let mailDetailsUser = {
       from: process.env.email,
-      to: additionalDetails.email,
-      subject: `You have Successfully applied ${certificate_name} reimbursement`,
-      text: `You have Successfully applied ${certificate_name} reimbursement`,
+      to: email,
+      subject: `You have Successfully applied ${reimbursementDetails.certificate_name} reimbursement`,
+      text: `You have Successfully applied ${reimbursementDetails.certificate_name} reimbursement`,
     };
+
     let mailDetailsAdmin = {
       from: process.env.email,
       to: "20104093@apsit.edu.in",
-      subject: `You have new ${certificate_name} reimbursement Request`,
-      text: `You have new ${certificate_name} reimbursement Request`,
+      subject: `You have new ${reimbursementDetails.certificate_name} reimbursement Request`,
+      text: `You have new ${reimbursementDetails.certificate_name} reimbursement Request`,
     };
 
     await mailTransporter.sendMail(mailDetailsUser, function (err, data) {
@@ -87,6 +87,22 @@ export const getReimbursement = async (query) => {
       params["endDate"] = result;
     }
 
+    if (query._id) {
+      params["_id"] = mongoose.Types.ObjectId(query._id);
+    }
+
+    if (query.certificate_id) {
+      params["certificate"] = mongoose.Types.ObjectId(query.certificate_id);
+    }
+
+    if ("approvedBySubAdmin" in query) {
+      params["approvedBySubAdmin"] = query.approvedBySubAdmin;
+    }
+
+    if ("approvedByAdmin" in query) {
+      params["approvedByAdmin"] = query.approvedByAdmin;
+    }
+
     if (query.userId) {
       params["user_id"] = mongoose.Types.ObjectId(query.userId);
     }
@@ -100,7 +116,7 @@ export const getReimbursement = async (query) => {
     }
 
     if (query.certificate_name) {
-      params["certificate_name"] = query.certificate_name;
+      params["certificate_name"] = query.reimbursementDetails.certificate_name;
     }
 
     const sortOptions = {
@@ -174,7 +190,7 @@ export const getFullReimbursementInfo = async (query) => {
     }
 
     if (query.certificate_name) {
-      params["certificate_name"] = query.certificate_name;
+      params["reimbursementDetails.certificate_name"] = query.certificate_name;
     }
 
     const result = await Reimbursement.aggregate([
@@ -255,9 +271,9 @@ export const approveReimbursement = async (id) => {
 
     let mailDetails = {
       from: process.env.email,
-      to: result.additionalDetails.email,
-      subject: `Congratulation your ${result.certificate_name} reimbursement has been approved`,
-      text: `Congratulation your ${result.certificate_name} reimbursement has been approved`,
+      to: result.reimbursementDetails.email,
+      subject: `Congratulation your ${result.reimbursementDetails.certificate_name} reimbursement has been approved`,
+      text: `Congratulation your ${result.reimbursementDetails.certificate_name} reimbursement has been approved`,
     };
 
     mailTransporter.sendMail(mailDetails, function (err, data) {
@@ -274,6 +290,55 @@ export const approveReimbursement = async (id) => {
       success: true,
       message: "Record has been updated",
     };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const approveReimbursementReceptionist = async (id) => {
+  try {
+    const result = await Reimbursement.findOne({
+      _id: id,
+    });
+    result.status = "Approved";
+    result.approvedByReceptionist = true;
+    await result.save();
+
+    let mailTransporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.email,
+        pass: process.env.pass,
+      },
+    });
+
+    let mailDetails = {
+      from: process.env.email,
+      to: result.reimbursementDetails.email,
+      subject: `Congratulation your ${result.reimbursementDetails.certificate_name} reimbursement has been approved by receptionist`,
+      text: `Congratulation your ${result.reimbursementDetails.certificate_name} reimbursement has been approved by receptionist`,
+    };
+
+    mailTransporter.sendMail(mailDetails, function (err, data) {
+      if (err) {
+        return {
+          status: 500,
+          success: false,
+          message: err.message,
+        };
+      } else {
+        return {
+          status: 200,
+          success: true,
+          message: "Record has been updated",
+        };
+      }
+    });
   } catch (error) {
     console.log(error);
     return {

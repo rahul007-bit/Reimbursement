@@ -1,25 +1,53 @@
 import logger from "../../config/logger.js";
 import User from "../../model/user/model.js";
 
-export const createUser = async (users) => {
+export const createUser = async (users, user) => {
   try {
-    for (const user of users) {
-      const hashPass = new User();
-      user.password = hashPass.generate_hash(user.password);
-      await User.create({
-        first_name: user.first_name,
-        password: user.password,
-        last_name: user.last_name,
-        department: user.department,
-        moodleId: user.moodleId,
-        email: user.email,
-      });
+    if (users) {
+      if (users.length < 0) {
+        return {
+          status: 400,
+          success: false,
+          message: "Please provide a valid user",
+        };
+      }
+      let isValid = true;
+      let message = {};
+
+      for (const [index, user] of users.entries()) {
+        const { first_name, last_name, moodleId, email, password, department } =
+          user;
+
+        const userExist = await User.findOne({ moodleId: moodleId });
+        if (userExist) {
+          isValid = false;
+          message = {
+            status: 400,
+            success: false,
+            message: `User with moodleId ${moodleId} already exist. We have added ${index} users`,
+          };
+          break;
+        }
+        const newUser = new User();
+        const hashPassword = await newUser.generate_hash(password);
+        await User.create({
+          first_name,
+          last_name,
+          moodleId,
+          email,
+          password: hashPassword,
+          department,
+        });
+      }
+      if (isValid) {
+        return {
+          status: 200,
+          success: true,
+          message: "User Created Successfully!",
+        };
+      }
+      return message;
     }
-    return {
-      status: 200,
-      message: "User Added Successfully!",
-      success: true,
-    };
   } catch (error) {
     logger.error(error);
     return {
@@ -51,7 +79,14 @@ export const getUser = async () => {
 
 export const removeUser = async (id) => {
   try {
-    await User.deleteOne({ _id: id });
+    const result = await User.deleteOne({ _id: id });
+    if (result.deletedCount === 0) {
+      return {
+        status: 400,
+        success: false,
+        message: "User not found!",
+      };
+    }
     return {
       status: 200,
       success: true,

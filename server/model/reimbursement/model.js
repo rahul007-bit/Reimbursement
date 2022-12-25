@@ -2,23 +2,34 @@ import mongoose from "mongoose";
 
 const Reimbursement_Schema = new mongoose.Schema(
   {
-    certificate_name: String,
-    // certificate: { type: mongoose.Schema.Types.ObjectId, ref: "Certificate" },
+    certificate: { type: mongoose.Schema.Types.ObjectId, ref: "Certificate" },
     user_id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     bankDetails: {
       accountNumber: String,
       IFSCode: String,
     },
     certificateUrl: Object,
-    // recipientUrl: String,
-    amountToReimbursement: String,
+    amountToReimburse: String,
     status: {
       type: String,
       enum: ["PENDING", "In Process", "Approved"],
       default: "PENDING",
     },
-    additionalDetails: { type: Object, default: {} },
+    reimbursementDetails: Object,
     department: String,
+    assignToReimburse: { type: mongoose.Schema.Types.ObjectId, ref: "Admin" },
+    approvedBySubAdmin: {
+      type: Boolean,
+      default: false,
+    },
+    approvedByAdmin: {
+      type: Boolean,
+      default: false,
+    },
+    approvedByReceptionist: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: {

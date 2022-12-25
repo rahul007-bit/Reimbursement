@@ -14,6 +14,7 @@ async function createAdmin() {
     let admin = new Admin();
     admin.moodleId = adminCredentials.id;
     admin.password = admin.generate_hash(adminCredentials.password);
+    admin.role = "admin";
     await admin.save();
     logger.info("Admin created.");
   } catch (error) {
