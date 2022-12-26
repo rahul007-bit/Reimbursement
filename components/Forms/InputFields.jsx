@@ -21,9 +21,9 @@ const InputField = ({ question, usedFor, setQuestions }) => {
           if (newQuestion._id === question._id) {
             if (newQuestion.type === "50") {
               if (event.target.checked)
-                newQuestion.answer.push(event.target.value);
+                newQuestion.answer?.push(event.target.value);
               else {
-                newQuestion.answer = newQuestion.answer.filter(
+                newQuestion.answer = newQuestion.answer?.filter(
                   (ans) => ans !== event.target.value
                 );
               }
@@ -101,7 +101,7 @@ const InputField = ({ question, usedFor, setQuestions }) => {
                 control={
                   <Checkbox
                     name={option.value}
-                    checked={question.answer.includes(option.value)}
+                    checked={question.answer?.includes(option.value)}
                   />
                 }
               />

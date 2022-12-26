@@ -22,23 +22,6 @@ const settings = [
 ];
 
 const HeaderBar = ({ children, userDetails, window }) => {
-  const [anchorElUser, setAnchorElUser] = useState(null);
-  const [user, setUser] = useState(null);
-
-  const router = useRouter();
-  useEffect(() => {
-    // const token = localStorage.getItem("auth-token");
-    setUser(userDetails);
-  }, [userDetails]);
-
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-  const [open, setOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const container =
     window !== undefined ? () => window().document.body : undefined;

@@ -32,7 +32,7 @@ export default function Home() {
           <Tabs
             value={value}
             onChange={handleChange}
-            indicatorColor="secondary"
+            TabIndicatorProps={{ style: { background: "#fff" } }}
             textColor="inherit"
             variant="fullWidth"
           >

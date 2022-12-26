@@ -62,24 +62,11 @@ export default function Chats({ chart }) {
 
   return (
     <>
-      {/* {!loading ? ( */}
       <EChartsReact
         style={{ height: "350px" }}
         option={option}
         showLoading={loading}
       />
-      {/* ) : ( */}
-      {/* <Box
-        sx={{
-          width: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <CircularProgress />
-      </Box> */}
-      {/* )} */}
     </>
   );
 }
