@@ -6,7 +6,12 @@ import AdminTable from "./Dashboard/AdminTable";
 import { _ } from "gridjs-react";
 import TabPanel, { a11yProps } from "../Util/TabPanel";
 
-const AdminDashboard = () => {
+const AdminDashboard = ({
+  statusCount,
+  status,
+  departmentCount,
+  department,
+}) => {
   const tableColumn = [
     { name: "Student Name" },
     { name: "Status" },
@@ -16,8 +21,8 @@ const AdminDashboard = () => {
 
   const [value, setValue] = useState(0);
   const [charts, setCharts] = useState([
-    { key: "status", name: "Requests" },
-    { key: "department", name: "Department" },
+    // { key: "status", name: "Requests" },
+    // { key: "department", name: "Department" },
     { key: "certificate_name", name: "Certificate" },
   ]);
 
@@ -27,11 +32,11 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <AppBar position={"relative"}>
+      <AppBar position={"relative"} elevation={0}>
         <Tabs
           value={value}
           onChange={handleChange}
-          indicatorColor="secondary"
+          TabIndicatorProps={{ style: { background: "#fff" } }}
           textColor="inherit"
           variant="fullWidth"
         >
@@ -40,7 +45,13 @@ const AdminDashboard = () => {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <Dashboard charts={charts} />
+        <Dashboard
+          charts={charts}
+          statusCount={statusCount}
+          status={status}
+          departmentCount={departmentCount}
+          department={department}
+        />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <AdminTable columns={tableColumn} />

@@ -36,11 +36,11 @@ export default function AddUser() {
   return (
     <Layout userData={userData}>
       {/* <Container sx={{ mt: 10 }}> */}
-      <AppBar position={"relative"}>
+      <AppBar position={"relative"} variant={"outlined"}>
         <Tabs
           value={value}
           onChange={handleChange}
-          indicatorColor="secondary"
+          TabIndicatorProps={{ style: { background: "#fff" } }}
           textColor="inherit"
           variant="fullWidth"
         >

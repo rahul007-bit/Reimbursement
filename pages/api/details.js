@@ -29,7 +29,8 @@ export default async function details(req, res) {
       }
     } catch (e) {
       return res.status(500).json({
-        error: "Server is not live",
+        status: 500,
+        message: "Server is not live",
       });
     }
   }

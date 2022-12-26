@@ -97,7 +97,10 @@ export const useUserProfile = () => {
   useEffect(() => {
     const controller = new AbortController();
     const session = sessionStorage.getItem("user");
-    const user = !!session ? JSON.parse(session) : session;
+    let user = null;
+    if (!!session && session !== "undefined") {
+      user = JSON.parse(session);
+    }
     if (user) {
       setUserData(user);
       setLoading(false);
@@ -105,14 +108,26 @@ export const useUserProfile = () => {
       fetch("/api/details", { signal: controller.signal })
         .then((response) => response.json())
         .then((result) => {
-          setError(result.status === 200 ? false : result.status);
+          setError(
+            result.status === 200
+              ? false
+              : {
+                  status: result.status,
+                  message: result.message,
+                }
+          );
           sessionStorage.setItem("user", JSON.stringify(result.data));
           setUserData(result.data);
         })
-        .catch(() => {
-          setError(500);
+        .catch((err) => {
+          console.error(err);
+          setError({
+            status: 400,
+            message: "Oops! Something went wrong",
+          });
         })
         .finally(() => setLoading(false));
+
     return () => controller.abort();
   }, []);
   return {
