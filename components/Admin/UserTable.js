@@ -17,7 +17,7 @@ const columns = [
   { label: "Action", align: "center", minWidth: 200 },
 ];
 
-const UserTable = ({ usedFor }) => {
+const UserTable = ({ usedFor, userData }) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [, setSnackBar] = useAtom(snackBarAtom);
@@ -35,7 +35,12 @@ const UserTable = ({ usedFor }) => {
       ? "get/sub_admin"
       : usedFor === "receptionist"
       ? "get/receptionist"
-      : "getUser",
+      : "getUser" +
+        `${
+          usedFor === "sub_admin"
+            ? `?department=${userData.user.department}`
+            : ""
+        }`,
     [reload]
   );
 
@@ -226,7 +231,7 @@ const UserTable = ({ usedFor }) => {
   };
 
   return (
-    <div>
+    <Box>
       <Stack direction={"row"} gap={1} alignItems={"center"} marginTop={1}>
         {/* <Button variant={"contained"} sx={{ my: 2 }}>
           <Typography variant={"button"}>
@@ -293,7 +298,7 @@ const UserTable = ({ usedFor }) => {
           tableFor={usedFor}
         />
       )}
-    </div>
+    </Box>
   );
 };
 

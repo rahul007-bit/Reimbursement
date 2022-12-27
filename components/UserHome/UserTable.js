@@ -16,6 +16,10 @@ import React, { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 import { useRouter } from "next/router";
 import CustomModal from "../Util/CustomModal";
+import { useCookies } from "react-cookie";
+import { useAtom } from "jotai";
+import { snackBarAtom } from "../../store";
+import { submit } from "../../Hooks/apiHooks";
 const columns = [
   { id: uuid(), label: "Certificate Name", align: "center", minWidth: 170 },
   { id: uuid(), label: "Apply At", align: "center", minWidth: 100 },
@@ -52,7 +56,7 @@ const columns = [
   },
 ];
 
-export default function UserTable({ data, user: usedIn = "User" }) {
+export default function UserTable({ data, user: usedIn = "User", userData }) {
   const router = useRouter();
   const [page, setPage] = React.useState(0);
   const [count, setCount] = useState(0);
@@ -61,6 +65,10 @@ export default function UserTable({ data, user: usedIn = "User" }) {
   const [row, setRow] = React.useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [selected, setSelected] = useState(null);
+  const [loadingButton, setLoadingButton] = useState(false);
+
+  const [_, setSnackBar] = useAtom(snackBarAtom);
+
   useEffect(() => {
     if (data?.data) {
       setRow(data.data);
@@ -86,6 +94,42 @@ export default function UserTable({ data, user: usedIn = "User" }) {
         ...details,
       };
     });
+  };
+  const handleApprove = (isApproved) => {
+    try {
+      setLoadingButton(true);
+      const body = {
+        reimburse_id: selected._id,
+        isApproved,
+        remarks: selected.remarks,
+      };
+
+      body.approvedByReceptionist = true;
+
+      submit("receptionist/reimbursements", body)
+        .then((response) => {
+          if (response.status === 200 || response.success) {
+            setOpenModal(false);
+            setSnackBar({
+              type: "success",
+              open: true,
+              message: response.message,
+            });
+            client.resetStore();
+            router.reload();
+          } else {
+            setSnackBar({
+              type: "error",
+              open: true,
+              message: response.message,
+            });
+          }
+        })
+        .finally(() => setLoadingButton(false));
+    } catch (error) {
+      setSnackBar({ type: "error", open: true, message: error.message });
+      setLoadingButton(false);
+    }
   };
 
   return (
@@ -134,6 +178,8 @@ export default function UserTable({ data, user: usedIn = "User" }) {
                             ? "warning"
                             : row1.status === "Approved"
                             ? "success"
+                            : row1.status === "In Progress"
+                            ? "info"
                             : "error"
                         }
                       />
@@ -172,7 +218,10 @@ export default function UserTable({ data, user: usedIn = "User" }) {
         setOpenModal={setOpenModal}
         openModal={openModal}
         selected={selected}
-        usedIn={"user"}
+        setSelected={setSelected}
+        handleApprove={handleApprove}
+        usedIn={userData.type}
+        loadingButton={loadingButton}
       />
     </Paper>
   );

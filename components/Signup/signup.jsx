@@ -33,8 +33,28 @@ export default function SignUp() {
       password: data.get("password"),
       firstName: data.get("firstName"),
       lastName: data.get("lastName"),
+      email: data.get("email"),
       type: data.get("type"),
     };
+
+    // validation here
+    if (
+      body.moodleId === "" ||
+      body.password === "" ||
+      body.firstName === "" ||
+      body.lastName === "" ||
+      body.email === "" ||
+      body.type === ""
+    ) {
+      setSnackBar({
+        type: "error",
+        message: "Please fill all the required fields",
+        open: true,
+      });
+      setLoading(false);
+      return;
+    }
+
     submit("user/sign_up", body)
       .then((response) => {
         if (response.success || response.status === 200) {
@@ -44,6 +64,18 @@ export default function SignUp() {
             message: response.message,
           });
           router.push("/login");
+        } else if (response.validation) {
+          setSnackBar({
+            open: true,
+            type: "error",
+            message: response.validation.body.message,
+          });
+        } else {
+          setSnackBar({
+            open: true,
+            type: "error",
+            message: response.message,
+          });
         }
       })
       .catch((error) => {
@@ -98,6 +130,16 @@ export default function SignUp() {
                       fullWidth
                       label="Moodle ID"
                       name="moodleId"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      label="Email ID"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
                     />
                   </Grid>
                   <Grid item xs={12}>

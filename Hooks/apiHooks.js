@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useReducer, useState } from "react";
 import { useRouter } from "next/router";
 import { Cookies, useCookies } from "react-cookie";
-export const url = "https://server.reimbursements.live/api/"; //https://reimbursementserver.herokuapp.com/"http://localhost:8080/api/";
-// export const url = "http://localhost:8000/api/"; //https://reimbursementserver.herokuapp.com/"http://localhost:8080/api/";
+import { snackBarAtom } from "../store";
+import { useAtom } from "jotai";
+
+export const url = process.env.NEXT_PUBLIC_API_URL;
 
 const initialState = {
   loading: true,
@@ -35,6 +37,10 @@ export function useFetch(endpoint, initialData = [], fullUrl = false) {
 
   const [data, dispatch] = useReducer(apiReducer, initialState);
   const [cookies] = useCookies();
+
+  const [_, setSnackBar] = useAtom(snackBarAtom);
+  const router = useRouter();
+
   useEffect(() => {
     const token = cookies.auth_token;
     const controller = new AbortController();
@@ -52,6 +58,19 @@ export function useFetch(endpoint, initialData = [], fullUrl = false) {
         .then(async (response) => {
           if (!response.ok) {
             const error = await response.json();
+            if (
+              error.status === 401 &&
+              router.pathname !== "/login" &&
+              router.pathname !== "/signup"
+            ) {
+              router.push("/logout");
+              setSnackBar({
+                open: true,
+                type: "error",
+                message: error.message ? error.message : "Unauthorized",
+              });
+            }
+
             throw {
               status: response.status,
               error: parseError(error),
@@ -94,6 +113,9 @@ export const useUserProfile = () => {
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
+  const router = useRouter();
+  const [, setSnackBar] = useAtom(snackBarAtom);
+
   useEffect(() => {
     const controller = new AbortController();
     const session = sessionStorage.getItem("user");
@@ -116,6 +138,19 @@ export const useUserProfile = () => {
                   message: result.message,
                 }
           );
+          if (
+            result.status === 401 &&
+            (router.pathname !== "/login" || router.pathname !== "/signup")
+          ) {
+            setSnackBar({
+              open: true,
+              message: result.message,
+              type: "error",
+            });
+
+            router.push("/logout");
+            return;
+          }
           sessionStorage.setItem("user", JSON.stringify(result.data));
           setUserData(result.data);
         })

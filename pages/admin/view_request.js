@@ -20,7 +20,7 @@ const ViewRequest = () => {
 
   return (
     <Layout userData={userData}>
-      <ViewRequestTable />
+      <ViewRequestTable userData={userData} />
     </Layout>
   );
 };

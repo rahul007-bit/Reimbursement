@@ -8,8 +8,14 @@ import Paper from "@mui/material/Paper";
 import Popper from "@mui/material/Popper";
 import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
+import { LoadingButton } from "@mui/lab";
 
-export default function SplitButton({ options, handleClickArray }) {
+export default function SplitButton({
+  options,
+  handleClickArray,
+  loadingButton = false,
+  loading,
+}) {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
@@ -43,7 +49,19 @@ export default function SplitButton({ options, handleClickArray }) {
           height: "fit-content",
         }}
       >
-        <Button onClick={handleClick}>{options[selectedIndex]}</Button>
+        {!loadingButton && (
+          <Button onClick={handleClick}>{options[selectedIndex]}</Button>
+        )}
+        {loadingButton && (
+          <LoadingButton
+            onClick={handleClick}
+            loading={loading}
+            variant={"contained"}
+          >
+            {options[selectedIndex]}
+          </LoadingButton>
+        )}
+
         <Button
           size="small"
           ref={anchorRef}

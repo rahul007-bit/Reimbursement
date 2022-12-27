@@ -6,8 +6,19 @@ const Index = () => {
   const router = useRouter();
   const cookies = useCookies(["auth_token", "loginType"]);
   useEffect(() => {
-    if (cookies[0].auth_token) router.push(`/${cookies[0].loginType}`);
-    else router.push("/login");
+    if (cookies[0].auth_token) {
+      if (
+        cookies[0].loginType === "admin" ||
+        cookies[0].loginType === "sub_admin"
+      ) {
+        router.push("/admin");
+      } else if (
+        cookies[0].loginType === "user" ||
+        cookies[0].loginType === "receptionist"
+      ) {
+        router.push("/user");
+      }
+    } else router.push("/login");
   }, [cookies, router]);
   return <></>;
 };

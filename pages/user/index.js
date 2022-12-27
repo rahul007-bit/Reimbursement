@@ -28,7 +28,7 @@ export default function Home() {
     <>
       <Layout userData={userData} title={"Reimbursement"}>
         {/*<UserHome userData={userData} />*/}
-        <AppBar position={"relative"}>
+        <AppBar position={"relative"} elevation={0}>
           <Tabs
             value={value}
             onChange={handleChange}
@@ -37,20 +37,30 @@ export default function Home() {
             variant="fullWidth"
           >
             <Tab label="Pending Request" {...a11yProps(0)} />
-            <Tab label="Approved Request" {...a11yProps(1)} />
-            <Tab label="All Request" {...a11yProps(2)} />
+            {userData?.type === "user" && (
+              <Tab label="Approved Request" {...a11yProps(1)} />
+            )}
+            {userData?.type === "user" && (
+              <Tab label="All Request" {...a11yProps(2)} />
+            )}
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
           <UserHome userData={userData} status={"PENDING"} />
-          <UserHome userData={userData} status={"In Process"} />
+          {userData?.type === "user" && (
+            <UserHome userData={userData} status={"In Process"} />
+          )}
         </TabPanel>
-        <TabPanel value={value} index={1}>
-          <UserHome userData={userData} status={"Approved"} />
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          <UserHome userData={userData} />
-        </TabPanel>
+        {userData?.type === "user" && (
+          <>
+            <TabPanel value={value} index={1}>
+              <UserHome userData={userData} status={"Approved"} />
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+              <UserHome userData={userData} />
+            </TabPanel>
+          </>
+        )}
       </Layout>
     </>
   );

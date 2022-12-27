@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import {
   AppBar,
@@ -10,7 +10,6 @@ import {
   Typography,
 } from "@mui/material";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { Menu as MenuIcon } from "@mui/icons-material";
 import { drawerWidth } from "../Layout";
 import { default as DrawerItem } from "./Drawer";
@@ -77,7 +76,7 @@ const HeaderBar = ({ children, userDetails, window }) => {
                       sx={{
                         mr: 2,
                         display: { xs: "none", md: "flex" },
-                        fontFamily: "Fira Mono",
+                        fontFamily: "Poppins",
                         fontWeight: 700,
                         letterSpacing: ".1rem",
                         color: "inherit",
@@ -97,7 +96,7 @@ const HeaderBar = ({ children, userDetails, window }) => {
                         mr: 2,
                         display: { xs: "flex", md: "none" },
                         flexGrow: 1,
-                        fontFamily: "Fira Mono",
+                        fontFamily: "Poppins",
                         fontWeight: 700,
                         letterSpacing: ".1rem",
                         color: "inherit",

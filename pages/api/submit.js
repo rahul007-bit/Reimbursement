@@ -12,12 +12,16 @@ export default async function submit(req, res) {
     const requestOptions = {
       method: type,
       headers: header,
-      body: JSON.stringify(body),
     };
+    if (type !== "GET") {
+      requestOptions.body = JSON.stringify(body);
+    }
+
     const response = await (await fetch(u, requestOptions)).json();
 
     return res.json(response);
   } catch (error) {
+    console.log(error);
     return res
       .status(500)
       .json({ message: "Something went wrong, please try again later" });

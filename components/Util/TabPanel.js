@@ -10,6 +10,11 @@ function TabPanel(props) {
       role="tabpanel"
       hidden={value !== index}
       id={`full-width-tabpanel-${index}`}
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
       {...other}
     >
       {value === index && <Box sx={{ p: { md: 3 } }}>{children}</Box>}

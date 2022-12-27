@@ -18,18 +18,15 @@ import {
 } from "@mui/material";
 import { v4 as uuid } from "uuid";
 import { submit, useFetch } from "../../../Hooks/apiHooks";
-import MuiAlert from "@mui/material/Alert";
 import { useAtom } from "jotai";
 import { snackBarAtom } from "../../../store";
 import CustomModal from "../../Util/CustomModal";
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import client from "../../../apolloClient";
+import { useCookies } from "react-cookie";
 
 const columns = [
   { id: uuid(), label: "Certificate Name", align: "center", minWidth: 170 },
-  { id: uuid(), label: "Apply At", align: "center", minWidth: 100 },
+  { id: uuid(), label: "Applied At", align: "center", minWidth: 100 },
   { id: uuid(), label: "Applied by", align: "center", minWidth: 200 },
   { id: uuid(), label: "Moodle Id", align: "center", minWidth: 200 },
   {
@@ -64,11 +61,19 @@ const columns = [
   },
 ];
 
-const ViewRequestTable = () => {
+const ViewRequestTable = ({ userData: currentUserData }) => {
   const [reload, setReload] = useState(false);
-  const { loading, data } = useFetch("reimbursement/fullInfo?status=PENDING", [
-    reload,
-  ]);
+
+  const { loading, data, error } = useFetch(
+    "reimbursement/fullInfo?not_status=Approved" +
+      `${
+        currentUserData.type === "sub_admin"
+          ? `&department=${currentUserData.user.department}`
+          : ""
+      }`,
+    [reload]
+  );
+
   const [page, setPage] = React.useState(0);
   const [count, setCount] = useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -77,28 +82,68 @@ const ViewRequestTable = () => {
   const [selected, setSelected] = useState(null);
   const [loadingButton, setLoadingButton] = useState(false);
   const [userData, setUserData] = useState([]);
+
+  const [receptionistList, setReceptionistList] = useState([]);
+
   const [, setSnackBar] = useAtom(snackBarAtom);
+  const [cookies] = useCookies(["loginType"]);
   useEffect(() => {
-    if (!loading && data) {
-      const reimburseData = data.data;
-      setRow(reimburseData);
-      setUserData(
-        reimburseData.map((d) => [
-          d.certificate_name,
-          new Date(d.created_at).toLocaleDateString(),
-          d.user[0]?.first_name,
-          d.user[0]?.moodleId,
-          d.amountToReimbursement,
-          d.status,
-          d.bankDetails.accountNumber,
-          d.bankDetails.IFSCode,
-        ])
-      );
+    if (!loading) {
+      if (error) {
+        setRow([]);
+        setUserData([]);
+      } else {
+        const reimburseData = data.data;
+        setRow(reimburseData);
+        setUserData(
+          reimburseData.map((d) => [
+            d.certificate_name,
+            new Date(d.created_at).toLocaleDateString(),
+            d.user[0]?.first_name,
+            d.user[0]?.moodleId,
+            d.amountToReimbursement,
+            d.status,
+            d.bankDetails.accountNumber,
+            d.bankDetails.IFSCode,
+          ])
+        );
+      }
     }
-  }, [loading, data]);
+  }, [loading, data, error]);
+
   useEffect(() => {
     setCount(userData.length);
   }, [userData]);
+
+  useEffect(() => {
+    const loginType = cookies.loginType;
+    if (loginType === "admin") {
+      submit("get/receptionist", {}, "GET")
+        .then((response) => {
+          if (response.success) {
+            setReceptionistList(
+              response.data.map((d) => ({ label: d.first_name, value: d._id }))
+            );
+          } else {
+            setSnackBar({
+              type: "error",
+              open: true,
+              message: response.message,
+            });
+            setReceptionistList([]);
+          }
+        })
+        .catch((error) => {
+          setSnackBar({
+            type: "error",
+            open: true,
+            message: error.message,
+          });
+          setReceptionistList([]);
+        });
+    }
+  }, [cookies.loginType, setSnackBar]);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -112,18 +157,43 @@ const ViewRequestTable = () => {
     setOpenModal(true);
     setSelected(() => {
       // delete values.additionalDetails;
-      return {
-        ...details,
-      };
+      if (!details.assignToReimburse) {
+        details.assignedTo = { value: "", label: "" };
+      }
+      return details;
     });
   };
 
-  const handleApprove = () => {
+  const handleApprove = (isApproved) => {
     try {
       setLoadingButton(true);
-      submit("reimbursement/approve", {
+      const body = {
         reimburse_id: selected._id,
-      })
+        isApproved,
+        remarks: selected.remarks,
+      };
+
+      if (cookies.loginType === "admin" && selected.assignedTo.value === "") {
+        setSnackBar({
+          type: "error",
+          open: true,
+          message: "Please select a receptionist",
+        });
+        setLoadingButton(false);
+
+        return;
+      }
+
+      if (cookies.loginType === "admin") {
+        body.assignedTo = selected.assignedTo.value;
+        body.approvedByAdmin = true;
+      }
+
+      if (cookies.loginType === "sub_admin") {
+        body.approvedBySubAdmin = true;
+      }
+
+      submit("reimbursement/approve", body)
         .then((response) => {
           if (response.status === 200 || response.success) {
             setReload((prevState) => !prevState);
@@ -131,8 +201,9 @@ const ViewRequestTable = () => {
             setSnackBar({
               type: "success",
               open: true,
-              message: "Successfully Approved",
+              message: response.message,
             });
+            client.resetStore();
           } else {
             setSnackBar({
               type: "error",
@@ -157,15 +228,20 @@ const ViewRequestTable = () => {
           alignItems: "center",
         }}
       >
-        <Box sx={{ maxWidth: "1200px", my: 5, width: 1 }}>
-          <Card>
+        <Box sx={{ maxWidth: "1200px", width: 1 }}>
+          <Card
+            variant={"outlined"}
+            sx={{
+              m: 1,
+            }}
+          >
             <CardContent>
-              <Typography variant={"body1"} fontWeight={"bold"} marginTop={4}>
+              <Typography variant={"h6"} fontWeight={"bold"}>
                 Reimbursement Requests
               </Typography>
               <Divider variant={"middle"} />
 
-              <Box sx={{ my: 4 }}>
+              <Box sx={{ my: 2 }}>
                 {!loading ? (
                   <TableContainer sx={{ maxHeight: 440 }}>
                     <Table stickyHeader aria-label="sticky table">
@@ -221,6 +297,8 @@ const ViewRequestTable = () => {
                                         ? "warning"
                                         : row1.status === "Approved"
                                         ? "success"
+                                        : row1.status === "In Progress"
+                                        ? "info"
                                         : "error"
                                     }
                                   />
@@ -274,7 +352,9 @@ const ViewRequestTable = () => {
           selected={selected}
           handleApprove={handleApprove}
           loadingButton={loadingButton}
-          usedIn={"admin"}
+          receptionistList={receptionistList}
+          usedIn={cookies.loginType}
+          setSelected={setSelected}
         />
       </Box>
     </>

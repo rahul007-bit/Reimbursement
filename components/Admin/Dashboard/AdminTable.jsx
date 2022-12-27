@@ -4,10 +4,6 @@ import {
   Box,
   Button,
   CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Stack,
   TextField,
   Typography,
@@ -15,7 +11,6 @@ import {
 import React from "react";
 import UserTable from "../../UserHome/UserTable";
 import { useFetch } from "../../../Hooks/apiHooks";
-import { LoadingButton } from "@mui/lab";
 import { CSVLink } from "react-csv";
 import { useRouter } from "next/router";
 
@@ -168,6 +163,7 @@ export default function AdminTable() {
               { label: "All", value: null },
               { label: "PENDING", value: "PENDING" },
               { label: "Approved", value: "Approved" },
+              { label: "Rejected", value: "Rejected" },
             ]}
             defaultValue={{ label: "All", value: null }}
             fullWidth
