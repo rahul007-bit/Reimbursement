@@ -58,12 +58,13 @@ router.get("/details", limit, async (req, res) => {
           .status(401)
           .json({ message: "User Not found", success: false, status: 401 });
       }
+
       const id = payload.message.id;
       if (id) {
         const admin = await Admin.findOne({ _id: payload.message.id });
         if (admin) {
           return res.status(200).json({
-            data: { user: admin, type: "admin" },
+            data: { user: admin, type: admin.role },
             status: 200,
             success: true,
             message: "success",

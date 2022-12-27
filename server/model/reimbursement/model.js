@@ -12,7 +12,7 @@ const Reimbursement_Schema = new mongoose.Schema(
     amountToReimburse: String,
     status: {
       type: String,
-      enum: ["PENDING", "In Process", "Approved"],
+      enum: ["PENDING", "In Progress", "Approved", "Rejected"],
       default: "PENDING",
     },
     reimbursementDetails: Object,
@@ -29,6 +29,11 @@ const Reimbursement_Schema = new mongoose.Schema(
     approvedByReceptionist: {
       type: Boolean,
       default: false,
+    },
+    remarks: {
+      bySubAdmin: String,
+      byAdmin: String,
+      byReceptionist: String,
     },
   },
   {

@@ -62,6 +62,14 @@ const adminRoutes = async (router) => {
     subAdminAuth,
     controller.getReimburseCount
   );
+
+  router.get(
+    "/reimburseCertificateCountStatusWise",
+    limiter,
+    subAdminAuth,
+    controller.getReimbursementsCertificateStatusCount
+  );
+
   router.get(
     "/reimbursement/fullInfo",
     limiter,

@@ -58,9 +58,30 @@ export const createUser = async (users, user) => {
   }
 };
 
-export const getUser = async () => {
+export const getUser = async (query) => {
   try {
-    const user = await User.find();
+    const params = {};
+    if (query.moodleId) {
+      params.moodleId = query.moodleId;
+    }
+    if (query.email) {
+      params.email = query.email;
+    }
+    if (query.department) {
+      params.department = query.department;
+    }
+    if (query.type) {
+      params.type = query.type;
+    }
+    if (query.first_name) {
+      params.first_name = query.first_name;
+    }
+    if (query.last_name) {
+      params.last_name = query.last_name;
+    }
+
+    const user = await User.find(params);
+
     return {
       user: user,
       status: 200,

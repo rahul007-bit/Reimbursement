@@ -14,6 +14,13 @@ const typeDefs = gql`
     approvedByAdmin: Boolean!
     approvedBySubAdmin: Boolean!
     approvedByReceptionist: Boolean!
+    remarks: Remarks
+  }
+
+  type Remarks {
+    bySubAdmin: String!
+    byAdmin: String!
+    byReceptionist: String!
   }
 
   type BankDetails {
@@ -79,10 +86,27 @@ const typeDefs = gql`
 
   type ResponseStatusCountDepartmentWise {
     status: String!
-
     message: String!
     success: Boolean!
     data: [ResponseStatusCountDepartmentWise_Result]
+  }
+
+  type ObjectCertificate {
+    status: String!
+    id: String!
+  }
+
+  type StatusCertificateCount_data {
+    count: String!
+    status: [ObjectCertificate]
+    certificate_name: String!
+  }
+
+  type StatusCertificateCount_response {
+    status: String!
+    message: String!
+    success: Boolean!
+    data: [StatusCertificateCount_data]
   }
 
   type Query {
@@ -94,6 +118,7 @@ const typeDefs = gql`
     getReimbursementsStatusCount: ResponseStatusCount
     getReimbursementsDepartmentWiseStatus: ResponseStatusCountDepartmentWise
     getReimbursementsDepartmentWise: ResponseStatusCountDepartmentWise
+    getReimbursementsCertificateStatusCount: StatusCertificateCount_response
   }
 `;
 

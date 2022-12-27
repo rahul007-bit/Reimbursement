@@ -10,11 +10,14 @@ async function createAdmin() {
       logger.info("Admin already exist");
       return;
     }
-    logger.debug(`Creating Admin with email ${adminCredentials.id}`);
+    logger.debug(`Creating Admin with email ${adminCredentials.email}`);
     let admin = new Admin();
     admin.moodleId = adminCredentials.id;
     admin.password = admin.generate_hash(adminCredentials.password);
     admin.role = "admin";
+    admin.email = adminCredentials.email;
+    admin.first_name = adminCredentials.firstName;
+
     await admin.save();
     logger.info("Admin created.");
   } catch (error) {

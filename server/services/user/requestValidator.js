@@ -13,6 +13,7 @@ const requestValidator = {
       firstName: Joi.string(),
       lastName: Joi.string(),
       moodleId: Joi.string().required(),
+      email: Joi.string().email().required(),
       password: Joi.string().required(),
       type: Joi.string().required(),
     }),
