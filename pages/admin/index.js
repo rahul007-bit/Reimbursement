@@ -18,59 +18,61 @@ const AdminHome = ({
   const [department, setDepartment] = React.useState([]);
 
   useEffect(() => {
-    const sortByStatus = getReimbursementsStatusCount.map((item) => {
-      const count = item.certificate_name.reduce((acc, curr) => {
-        // each certificate name has a key name
+    if (getReimbursementsStatusCount) {
+      const sortByStatus = getReimbursementsStatusCount.map((item) => {
+        const count = item.certificate_name.reduce((acc, curr) => {
+          // each certificate name has a key name
 
-        if (typeof acc[curr.name] == "undefined") {
-          acc[curr.name] = 1;
-        } else {
-          acc[curr.name] += 1;
-        }
-        return acc;
-      }, {});
+          if (typeof acc[curr.name] == "undefined") {
+            acc[curr.name] = 1;
+          } else {
+            acc[curr.name] += 1;
+          }
+          return acc;
+        }, {});
 
-      const data = Object.keys(count).map((key) => {
+        const data = Object.keys(count).map((key) => {
+          return {
+            name: key,
+            data: [count[key]],
+          };
+        });
         return {
-          name: key,
-          data: [count[key]],
+          name: item.status,
+          data,
         };
       });
-      return {
-        name: item.status,
-        data,
-      };
-    });
-    let series = [];
-    sortByStatus.forEach((item, pass) => {
-      item.data.forEach((item) => {
-        if (series.length === 0) {
-          series.push(item);
-        } else {
-          const index = series.findIndex((i) => i.name === item.name);
-          if (index === -1) {
-            if (pass === 0) {
-              series.push({
-                name: item.name,
-                data: [item.data.reduce((a, b) => a + b, 0)],
-              });
-            } else {
-              series.push({
-                name: item.name,
-                data: [
-                  ...Array.from({ length: pass }, () => 0),
-                  item.data.reduce((a, b) => a + b, 0),
-                ],
-              });
-            }
+      let series = [];
+      sortByStatus.forEach((item, pass) => {
+        item.data.forEach((item) => {
+          if (series.length === 0) {
+            series.push(item);
           } else {
-            series[index].data.push(item.data.reduce((a, b) => a + b, 0));
+            const index = series.findIndex((i) => i.name === item.name);
+            if (index === -1) {
+              if (pass === 0) {
+                series.push({
+                  name: item.name,
+                  data: [item.data.reduce((a, b) => a + b, 0)],
+                });
+              } else {
+                series.push({
+                  name: item.name,
+                  data: [
+                    ...Array.from({ length: pass }, () => 0),
+                    item.data.reduce((a, b) => a + b, 0),
+                  ],
+                });
+              }
+            } else {
+              series[index].data.push(item.data.reduce((a, b) => a + b, 0));
+            }
           }
-        }
+        });
       });
-    });
-    setStatus(sortByStatus);
-    setStatusData(series);
+      setStatus(sortByStatus);
+      setStatusData(series);
+    }
   }, [getReimbursementsStatusCount]);
 
   useEffect(() => {
@@ -152,7 +154,81 @@ const AdminHome = ({
   );
 };
 
-export async function getServerSideProps() {
+// export async function getServerSideProps() {
+//   try {
+//     const {
+//       data: {
+//         getReimbursementsStatusCount: { data: getReimbursementsStatusCount },
+//       },
+//     } = await client.query({
+//       query: gql`
+//         query GetReimbursementsStatusCount {
+//           getReimbursementsStatusCount {
+//             status
+//             message
+//             success
+//             data {
+//               count
+//               status
+//               certificate_name {
+//                 name
+//                 id
+//               }
+//             }
+//           }
+//         }
+//       `,
+//     });
+
+//     const {
+//       data: {
+//         getReimbursementsDepartmentWise: { data: departmentWiseData },
+//       },
+//     } = await client.query({
+//       query: gql`
+//         query GetReimbursementsDepartmentWise {
+//           getReimbursementsDepartmentWise {
+//             status
+//             message
+//             success
+//             data {
+//               count
+//               department
+//               certificate_name {
+//                 name
+//                 id
+//               }
+//             }
+//           }
+//         }
+//       `,
+//     });
+//     const props = {};
+//     console.log(departmentWiseData);
+//     if (departmentWiseData) {
+//       props.getReimbursementsDepartmentWise = departmentWiseData;
+//     } else {
+//       props.getReimbursementsDepartmentWise = [];
+//     }
+
+//     return {
+//       props: {
+//         getReimbursementsStatusCount,
+//         ...props,
+//       },
+//     };
+//   } catch (error) {
+//     console.log(error);
+//     return {
+//       props: {
+//         getReimbursementsStatusCount: [],
+//         getReimbursementsDepartmentWise: [],
+//       },
+//     };
+//   }
+// }
+
+AdminHome.getInitialProps = async () => {
   try {
     const {
       data: {
@@ -210,20 +286,20 @@ export async function getServerSideProps() {
     }
 
     return {
-      props: {
-        getReimbursementsStatusCount,
-        ...props,
-      },
+      // props: {
+      getReimbursementsStatusCount,
+      ...props,
+      // },
     };
   } catch (error) {
     console.log(error);
     return {
-      props: {
-        getReimbursementsStatusCount: [],
-        getReimbursementsDepartmentWise: [],
-      },
+      // props: {
+      getReimbursementsStatusCount: [],
+      getReimbursementsDepartmentWise: [],
+      // },
     };
   }
-}
+};
 
 export default AdminHome;

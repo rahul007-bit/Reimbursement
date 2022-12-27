@@ -18,6 +18,7 @@ import { useAtom } from "jotai";
 import { snackBarAtom } from "../../store";
 import { useCookies } from "react-cookie";
 import InputField from "../Forms/InputFields";
+import client from "../../apolloClient";
 
 const ReimbursementForm = ({ user: userDetails }) => {
   const [, setSnackBar] = useAtom(snackBarAtom);
@@ -103,9 +104,24 @@ const ReimbursementForm = ({ user: userDetails }) => {
     let imageUrl1 = "";
 
     if (input1Ref.current.files[0]) {
+      // check file size less than 1mb
+      if (input1Ref.current.files[0].size > 1000000) {
+        setSnackBar({
+          open: true,
+          type: "error",
+          message: "File size should be less than 1mb",
+        });
+        setLoading(false);
+        return;
+      }
+
       const result1 = await uploadImage(input1Ref.current.files[0]);
-      if (!result1.success) {
-        setSnackBar({ open: true, type: "error", message: result1.message });
+      if (!result1?.success) {
+        setSnackBar({
+          open: true,
+          type: "error",
+          message: result1 ? result1?.message : "Something went wrong",
+        });
         setLoading(false);
         return;
       }
@@ -134,6 +150,7 @@ const ReimbursementForm = ({ user: userDetails }) => {
           message: "Successfully Applied",
           open: true,
         });
+        client.resetStore();
         router.push("/");
       } else if (response.status === 400 || response.validation?.body) {
         setSnackBar({

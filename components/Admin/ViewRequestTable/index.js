@@ -22,6 +22,7 @@ import MuiAlert from "@mui/material/Alert";
 import { useAtom } from "jotai";
 import { snackBarAtom } from "../../../store";
 import CustomModal from "../../Util/CustomModal";
+import client from "../../../apolloClient";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -133,6 +134,7 @@ const ViewRequestTable = () => {
               open: true,
               message: "Successfully Approved",
             });
+            client.resetStore();
           } else {
             setSnackBar({
               type: "error",

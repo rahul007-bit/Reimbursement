@@ -36,7 +36,7 @@ export default function AddUser() {
   return (
     <Layout userData={userData}>
       {/* <Container sx={{ mt: 10 }}> */}
-      <AppBar position={"relative"} variant={"outlined"}>
+      <AppBar position={"relative"} elevation={0}>
         <Tabs
           value={value}
           onChange={handleChange}

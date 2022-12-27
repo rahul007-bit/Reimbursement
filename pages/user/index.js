@@ -28,7 +28,7 @@ export default function Home() {
     <>
       <Layout userData={userData} title={"Reimbursement"}>
         {/*<UserHome userData={userData} />*/}
-        <AppBar position={"relative"}>
+        <AppBar position={"relative"} elevation={0}>
           <Tabs
             value={value}
             onChange={handleChange}
