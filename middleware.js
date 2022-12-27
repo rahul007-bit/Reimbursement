@@ -5,10 +5,16 @@ export function middleware(req) {
   const url = req.nextUrl.pathname;
   if (token) {
     const userType = req.cookies.get("loginType");
-    if (userType === "admin" && url.startsWith("/user")) {
+    if (
+      (userType === "admin" || userType === "sub_admin") &&
+      url.startsWith("/user")
+    ) {
       return NextResponse.redirect(new URL("/admin", req.url));
     }
-    if (userType === "user" && url.startsWith("/admin")) {
+    if (
+      (userType === "user" || userType === "receptionist") &&
+      url.startsWith("/admin")
+    ) {
       return NextResponse.redirect(new URL("/user", req.url));
     }
     if (url.startsWith("/login") || url.startsWith("/signup")) {

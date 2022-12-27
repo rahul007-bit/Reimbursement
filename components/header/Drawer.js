@@ -80,7 +80,11 @@ const Drawer = ({ userDetails }) => {
           ? [
               {
                 name: "Dashboard",
-                link: `/${userDetails?.type}`,
+                link:
+                  userDetails.type === "admin" ||
+                  userDetails.type === "sub_admin"
+                    ? "/admin"
+                    : "/user",
                 icon: <Dashboard />,
               },
 
@@ -114,41 +118,42 @@ const Drawer = ({ userDetails }) => {
             ))}
       </List>
       <Divider />
-      {userDetails && userDetails.type === "admin" && (
-        <List>
-          <ListItem disablePadding>
-            <Link href={"/admin/view_request"}>
-              <ListItemButton>
-                <ListItemIcon>
-                  <RequestQuote />
-                </ListItemIcon>
-                <ListItemText primary={"View Request"} />
-              </ListItemButton>
-            </Link>
-          </ListItem>
-          <ListItem disablePadding>
-            <Link href={"/admin/add_users"}>
-              <ListItemButton>
-                <ListItemIcon>
-                  <PersonAdd />
-                </ListItemIcon>
+      {userDetails &&
+        (userDetails.type === "admin" || userDetails.type === "sub_admin") && (
+          <List>
+            <ListItem disablePadding>
+              <Link href={"/admin/view_request"}>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <RequestQuote />
+                  </ListItemIcon>
+                  <ListItemText primary={"View Request"} />
+                </ListItemButton>
+              </Link>
+            </ListItem>
+            <ListItem disablePadding>
+              <Link href={"/admin/add_users"}>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <PersonAdd />
+                  </ListItemIcon>
 
-                <ListItemText primary={"Add Users"} />
-              </ListItemButton>
-            </Link>
-          </ListItem>
-          <ListItem disablePadding>
-            <Link href={"/admin/view-forms"}>
-              <ListItemButton>
-                <ListItemIcon>
-                  <FeedOutlined />
-                </ListItemIcon>
-                <ListItemText primary={"View Forms"} />
-              </ListItemButton>
-            </Link>
-          </ListItem>
-        </List>
-      )}
+                  <ListItemText primary={"Add Users"} />
+                </ListItemButton>
+              </Link>
+            </ListItem>
+            <ListItem disablePadding>
+              <Link href={"/admin/view-forms"}>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <FeedOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary={"View Forms"} />
+                </ListItemButton>
+              </Link>
+            </ListItem>
+          </List>
+        )}
       {userDetails && userDetails.type === "user" && (
         <List>
           <ListItem disablePadding>

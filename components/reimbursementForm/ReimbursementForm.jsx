@@ -167,7 +167,51 @@ const ReimbursementForm = ({ user: userDetails }) => {
       }
       setLoading(false);
     });
-    // console.log(certificationDetails);
+  };
+
+  const validateForm = () => {
+    if (!certificationDetails.amountToReimbursement) {
+      setSnackBar({
+        open: true,
+        type: "error",
+        message: "Please enter amount to be reimbursed",
+      });
+      return false;
+    }
+    if (
+      !certificationDetails.bankDetails.accountNumber ||
+      !certificationDetails.bankDetails.IFSCode
+    ) {
+      setSnackBar({
+        open: true,
+        type: "error",
+        message: "Please enter bank details",
+      });
+      return false;
+    }
+
+    return questions.every((q, idx) => {
+      if (q.required) {
+        if (q.type === "50") {
+          if (q.answer.length === 0)
+            setSnackBar({
+              open: true,
+              type: "error",
+              message: `Please select at least one option for question ${
+                idx + 1
+              }`,
+            });
+          return q.answer.length > 0;
+        }
+        if (q.answer === "")
+          setSnackBar({
+            open: true,
+            type: "error",
+            message: `Please enter answer for question ${idx + 1}`,
+          });
+        return q.answer;
+      } else return true;
+    });
   };
 
   const handleChange = (name, value) => {

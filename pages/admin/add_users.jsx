@@ -14,9 +14,11 @@ import UserTable from "../../components/Admin/UserTable";
 import { useUserProfile } from "../../Hooks/apiHooks";
 import Layout from "../../components/Layout";
 import TabPanel, { a11yProps } from "../../components/Util/TabPanel";
+import { useCookies } from "react-cookie";
 
 export default function AddUser() {
   const { loading, userData } = useUserProfile();
+  const [cookies] = useCookies(["loginType"]);
 
   const [value, setValue] = React.useState(0);
 
@@ -45,37 +47,45 @@ export default function AddUser() {
           variant="fullWidth"
         >
           <Tab label="Students" {...a11yProps(0)} />
-          <Tab label="Sub Admins" {...a11yProps(1)} />
-          <Tab label="Receptionist" {...a11yProps(2)} />
+          {cookies && cookies.loginType === "admin" && (
+            <Tab label="Sub Admins" {...a11yProps(1)} />
+          )}
+          {cookies && cookies.loginType === "admin" && (
+            <Tab label="Receptionist" {...a11yProps(2)} />
+          )}
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <Card>
+        <Card variant="outlined">
           <CardContent>
             <Typography variant={"h5"}>Students</Typography>
             <Divider />
-            <UserTable usedFor={"students"} />
+            <UserTable usedFor={"students"} userData={userData} />
           </CardContent>
         </Card>
       </TabPanel>
-      <TabPanel value={value} index={1}>
-        <Card>
-          <CardContent>
-            <Typography variant={"h5"}>Sub Admins</Typography>
-            <Divider />
-            <UserTable usedFor={"sub_admin"} />
-          </CardContent>
-        </Card>
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <Card>
-          <CardContent>
-            <Typography variant={"h5"}>Receptionist</Typography>
-            <Divider />
-            <UserTable usedFor={"receptionist"} />
-          </CardContent>
-        </Card>
-      </TabPanel>
+      {cookies && cookies.loginType === "admin" && (
+        <>
+          <TabPanel value={value} index={1}>
+            <Card variant="outlined">
+              <CardContent>
+                <Typography variant={"h5"}>Sub Admins</Typography>
+                <Divider />
+                <UserTable usedFor={"sub_admin"} userData={userData} />
+              </CardContent>
+            </Card>
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <Card variant="outlined">
+              <CardContent>
+                <Typography variant={"h5"}>Receptionist</Typography>
+                <Divider />
+                <UserTable usedFor={"receptionist"} userData={userData} />
+              </CardContent>
+            </Card>
+          </TabPanel>
+        </>
+      )}
       {/* </Container> */}
     </Layout>
   );

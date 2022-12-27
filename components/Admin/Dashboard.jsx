@@ -6,13 +6,7 @@ import dynamic from "next/dynamic";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const Dashboard = ({
-  charts,
-  statusCount,
-  status,
-  departmentCount,
-  department,
-}) => {
+const Dashboard = ({ statusCount, status, departmentCount, department }) => {
   const chartColumnColors = getChartColorsArray(
     '["#0B84A5","#F6C85F","#6F4E7C","#9ED867","#CA472F","#FFA056","#FFA056","#8DDDD0"]'
   );
@@ -78,7 +72,7 @@ const Dashboard = ({
     plotOptions: {
       bar: {
         horizontal: !1,
-        borderRadius: 10,
+        // borderRadius: 10,
       },
     },
     stroke: {
@@ -89,9 +83,6 @@ const Dashboard = ({
     colors: chartColumnColors,
     xaxis: {
       categories: department.map((s) => s.name),
-      title: {
-        text: "Departments",
-      },
     },
     yaxis: {
       title: {

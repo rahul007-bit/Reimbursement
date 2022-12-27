@@ -1,4 +1,3 @@
-import { Box, CircularProgress } from "@mui/material";
 import EChartsReact from "echarts-for-react";
 import React, { useEffect, useState } from "react";
 import { useFetch } from "../../../Hooks/apiHooks";
@@ -25,41 +24,33 @@ export default function Chats({ chart }) {
       trigger: "item",
     },
     legend: {
-      top: "5%",
+      orient: "horizontal",
       left: "center",
+      bottom: "0",
       textStyle: {
-        //The style of the legend text
         color: "#858d98",
       },
     },
+    // color: chartPieColors,
     series: [
       {
-        name: "Access From",
+        name: "Requests",
         type: "pie",
-        radius: ["40%", "70%"],
-        avoidLabelOverlap: false,
-        label: {
-          show: false,
-          position: "center",
-        },
+        radius: ["30%", "60%"],
+        data: data,
         emphasis: {
-          label: {
-            show: true,
-            fontSize: "16",
-            fontWeight: "bold",
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: "rgba(0, 0, 0, 0.5)",
           },
         },
-        labelLine: {
-          show: false,
-        },
-        data: data,
       },
     ],
     textStyle: {
       fontFamily: "Poppins, sans-serif",
     },
   };
-
   return (
     <>
       <EChartsReact
