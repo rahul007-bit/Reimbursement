@@ -1,10 +1,10 @@
 import Admin from "../../model/admin/model.js";
 import {
   approveReimbursement,
-  approveReimbursementReceptionist,
   getFullReimbursement,
   getFullReimbursementInfo,
   getReimbursement,
+  getReimbursementsCertificateStatusCount,
   ReimbursementCount,
 } from "../../services/reimbursement/index.js";
 import { createUser, getUser, removeUser } from "../../services/user/index.js";
@@ -258,8 +258,15 @@ controller.getFullReimbursement = async (req, res) => {
 
 controller.approveReimburse = async (req, res) => {
   try {
-    const { reimburse_id } = req.body;
-    const result = await approveReimbursement(reimburse_id);
+    const { reimburse_id, assignedTo, isApproved, remarks } = req.body;
+    const admin = req.user;
+    const result = await approveReimbursement({
+      reimburse_id,
+      admin,
+      assignedTo,
+      isApproved,
+      remarks,
+    });
     return res.status(result.status).send(result);
   } catch (error) {
     console.log(error);
@@ -273,7 +280,8 @@ controller.approveReimburse = async (req, res) => {
 
 controller.getUsers = async (req, res) => {
   try {
-    const result = await getUser();
+    const query = req.query;
+    const result = await getUser(query);
     return res.status(result.status).send(result);
   } catch (error) {
     logger.error(error);
@@ -301,7 +309,7 @@ controller.getReceptionist = async (req, res) => {
       return res.status(200).send({
         status: 200,
         message: "No Receptionist found",
-        success: true,
+        success: false,
         data: [],
       });
     }
@@ -415,6 +423,17 @@ controller.viewReimbursement = async (req, res) => {
   }
 };
 
+controller.getReimbursementsCertificateStatusCount = async (req, res) => {
+  try {
+    const result = await getReimbursementsCertificateStatusCount();
+    return res.status(result.status).json(result);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: error.message, status: 500 });
+  }
+};
+
 controller.createCertificate = async (req, res) => {
   try {
     const { certificate_name, questions } = req.body;
@@ -459,6 +478,8 @@ controller.getCertificatesReceptionist = async (req, res) => {
     const query = req.query;
     query.approvedBySubAdmin = true;
     query.approvedByAdmin = true;
+    query.assignedToReimburse = req.userId;
+
     const result = await getReimbursement(query);
     return res.status(result.status).json(result);
   } catch (error) {
@@ -470,8 +491,14 @@ controller.getCertificatesReceptionist = async (req, res) => {
 
 controller.approveReimburseReceptionist = async (req, res) => {
   try {
-    const { reimburse_id } = req.body;
-    const result = await approveReimbursementReceptionist(reimburse_id);
+    const { reimburse_id, remarks, isApproved } = req.body;
+    const admin = req.user;
+    const result = await approveReimbursement({
+      reimburse_id,
+      admin,
+      remarks,
+      isApproved,
+    });
     return res.status(result.status).send(result);
   } catch (error) {
     console.log(error);

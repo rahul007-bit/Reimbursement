@@ -80,6 +80,49 @@ const resolvers = {
       };
     },
 
+    getReimbursementsCertificateStatusCount: async () => {
+      const data = await Reimbursement.aggregate([
+        // sum of all the status and push certificate name in array with same status
+        {
+          $group: {
+            _id: {
+              status: "$status",
+              certificate: "$reimbursementDetails",
+              id: "$_id",
+            },
+            count: { $sum: 1 },
+          },
+        },
+        // sum of all the as status of certificate name
+        {
+          $group: {
+            _id: "$_id.certificate.certificate_name",
+            count: { $sum: "$count" },
+            status: {
+              $push: {
+                status: "$_id.status",
+                id: "$_id.id",
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            certificate_name: "$_id",
+            count: 1,
+            status: 1,
+          },
+        },
+      ]);
+      return {
+        status: "200",
+        message: "Success",
+        success: true,
+        data,
+      };
+    },
+
     getReimbursementsDepartmentWiseStatus: async () => {
       // sum of all the status and push certificate name in array with same status and department wise
       const data = await Reimbursement.aggregate([
