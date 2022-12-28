@@ -48,6 +48,48 @@ export const createUser = async (users, user) => {
       }
       return message;
     }
+    if (user) {
+      const {
+        firstName,
+        lastName,
+        moodleId,
+        password,
+        email,
+        type,
+        department,
+      } = user;
+      const isUserExist = await User.find({ moodleId: moodleId });
+      console.log(isUserExist);
+      if (isUserExist.length) {
+        return {
+          status: 400,
+          success: false,
+          message: `User already with moodleId ${moodleId}`,
+        };
+      }
+
+      const newUser = new User();
+      const hashedPassword = newUser.generate_hash(password);
+      newUser.moodleId = moodleId;
+      newUser.first_name = firstName;
+      newUser.last_name = lastName;
+      newUser.email = email;
+      newUser.password = hashedPassword;
+      newUser.type = type;
+      newUser.department = department;
+      await newUser.save();
+
+      return {
+        status: 200,
+        success: true,
+        message: `User ${firstName} is successfully enrolled!`,
+      };
+    }
+    return {
+      status: 400,
+      success: false,
+      message: "Please provide required user details",
+    };
   } catch (error) {
     logger.error(error);
     return {

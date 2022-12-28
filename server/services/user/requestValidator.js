@@ -10,12 +10,24 @@ const requestValidator = {
   // create new account
   signUp: {
     body: Joi.object().keys({
-      firstName: Joi.string(),
-      lastName: Joi.string(),
-      moodleId: Joi.string().required(),
-      email: Joi.string().email().required(),
-      password: Joi.string().required(),
-      type: Joi.string().required(),
+      user: Joi.object().keys({
+        firstName: Joi.string(),
+        lastName: Joi.string(),
+        moodleId: Joi.string().required(),
+        email: Joi.string().email().required(),
+        password: Joi.string().required(),
+        type: Joi.string().required(),
+        department: Joi.string().required(),
+      }),
+      users: Joi.array().items({
+        firstName: Joi.string(),
+        lastName: Joi.string(),
+        moodleId: Joi.string().required(),
+        email: Joi.string().email().required(),
+        password: Joi.string().required(),
+        type: Joi.string().required(),
+        department: Joi.string().required(),
+      }),
     }),
   },
 };

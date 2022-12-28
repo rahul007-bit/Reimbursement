@@ -383,8 +383,8 @@ controller.deleteAdmin = async (req, res) => {
 
 controller.addUsers = async (req, res) => {
   try {
-    const { users } = req.body;
-    const result = await createUser(users);
+    const { users, user } = req.body;
+    const result = await createUser(users, user);
     return res.status(result.status).send(result);
   } catch (error) {
     logger.error(error);
