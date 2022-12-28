@@ -38,10 +38,9 @@ const DialogBoxShowTable = ({
       <DialogTitle>CSV Table</DialogTitle>
       <DialogContent dividers>
         <CustomTable
-          columns={tableHeaders.filter((header) =>
-            tableFor === "receptionist" && header === "Department"
-              ? false
-              : true
+          columns={tableHeaders.filter(
+            (header) =>
+              !(tableFor === "receptionist" && header === "Department")
           )}
           row={tableData}
           count={count}

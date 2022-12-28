@@ -89,7 +89,7 @@ const ViewForms = () => {
   };
 
   return (
-    <Layout title="View Form">
+    <Layout title="Forms">
       <Container
         sx={{
           display: "flex",

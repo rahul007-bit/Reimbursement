@@ -14,6 +14,7 @@ import { v4 as uuid } from "uuid";
 
 const CustomTable = ({
   handleRemove,
+  handleEdit,
   showAction = false,
   count,
   rowsPerPage = 10,
@@ -84,6 +85,16 @@ const CustomTable = ({
                       <TableCell align="center">
                         <Button
                           variant={"contained"}
+                          size={"small"}
+                          sx={{
+                            mx: 1,
+                          }}
+                          onClick={() => handleEdit(row1)}
+                        >
+                          <Typography variant={"button"}>Edit</Typography>
+                        </Button>
+                        <Button
+                          // variant={"contained"}
                           onClick={handleRemove(row1._id)}
                           size={"small"}
                         >

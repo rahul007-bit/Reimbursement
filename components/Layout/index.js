@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, LinearProgress } from "@mui/material";
 import HeaderBar from "../header/header";
 import Head from "next/head";
 import { useUserProfile } from "../../Hooks/apiHooks";
@@ -26,8 +26,22 @@ const Layout = ({ children, title: Header = "Reimbursement" }) => {
 
   if (loading)
     return (
-      <Box sx={{ display: "flex", width: 1, justifyContent: "center" }}>
-        <CircularProgress />
+      <Box
+        sx={{
+          display: "flex",
+          width: 1,
+          justifyContent: "center",
+          height: 1,
+          alignItems: "center",
+        }}
+      >
+        {/*<CircularProgress />*/}
+        <LinearProgress
+          sx={{
+            width: "40%",
+          }}
+          variant={"indeterminate"}
+        />
       </Box>
     );
   return (
