@@ -57,7 +57,9 @@ export default function SignUp() {
       return;
     }
 
-    submit("user/sign_up", body)
+    submit("user/sign_up", {
+      user: body,
+    })
       .then((response) => {
         if (response.success || response.status === 200) {
           setSnackBar({
@@ -65,7 +67,7 @@ export default function SignUp() {
             type: "success",
             message: response.message,
           });
-          router.push("/login");
+          return router.push("/login");
         } else if (response.validation) {
           setSnackBar({
             open: true,
@@ -161,6 +163,7 @@ export default function SignUp() {
                         label="You are? *"
                         name="type"
                         // onChange={handleChange}
+                        defaultValue={"student"}
                       >
                         <MenuItem value={"student"}>Student</MenuItem>
                         <MenuItem value={"teacher"}>Teacher</MenuItem>
