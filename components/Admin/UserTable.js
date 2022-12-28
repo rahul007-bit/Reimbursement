@@ -1,5 +1,11 @@
 import React, { createRef, useEffect, useState } from "react";
-import { Box, CircularProgress, Stack } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { submit, useFetch } from "../../Hooks/apiHooks";
 import CSVFileValidator from "csv-file-validator";
 import { useAtom } from "jotai";
@@ -8,6 +14,7 @@ import SplitButton from "../Util/SplitButton";
 import CustomTable from "../Util/CustomTable";
 import DialogBoxShowTable from "./Dashboard/DialogBox";
 import Confirmation from "../Util/Confirmation";
+import AddUserModal from "./AddUserModal";
 
 const columns = [
   { label: "User Name", align: "center", minWidth: 170 },
@@ -24,11 +31,21 @@ const UserTable = ({ usedFor, userData }) => {
   const [count, setCount] = useState(0);
   const [openModal, setOpenModal] = useState(false);
   const [removeUser, setRemoveUser] = useState(null);
+
+  const [openAddUserModal, setOpenAddUserModal] = useState(false);
+  const [addUserFormData, setAddUserFormData] = useState({
+    firstName: "",
+    lastName: "",
+    moodleId: "",
+    email: "",
+    department: "",
+  });
+  const [addUserLoadingButton, setAddUserLoadingButton] = useState(false);
+
   const fileRef = createRef();
 
   const [row, setRow] = useState([]);
   const [reload, setReload] = useState(false);
-  const [loadingButton, setLoadingButton] = useState(false);
   const [loadingRemove, setLoadingRemove] = useState(false);
   const { loading, data } = useFetch(
     usedFor === "sub_admin"
@@ -69,18 +86,15 @@ const UserTable = ({ usedFor, userData }) => {
   const getFile = (event) => {
     const file = event.target.files && event.target.files[0];
     if (file) {
-      setLoadingButton(true);
       console.log(file);
       const newConfig = {
         headers: config.headers.filter((item) =>
           usedFor === "receptionist" && item.name === "Department"
             ? false
-            : usedFor === "students" && item.name === "Role"
-            ? false
-            : true
+            : !(usedFor === "students" && item.name === "Role")
         ),
       };
-      console.log(newConfig);
+
       CSVFileValidator(file, newConfig)
         .then((csvData) => {
           console.log(csvData);
@@ -106,7 +120,6 @@ const UserTable = ({ usedFor, userData }) => {
         })
         .finally(() => {
           event.target.value = "";
-          setLoadingButton(false);
         });
     }
   };
@@ -154,9 +167,7 @@ const UserTable = ({ usedFor, userData }) => {
           open: true,
         });
       })
-      .finally(() => {
-        setLoadingButton(false);
-      });
+      .finally(() => {});
   };
 
   const cancelTable = () => {
@@ -182,9 +193,7 @@ const UserTable = ({ usedFor, userData }) => {
         .filter((column) =>
           usedFor === "receptionist" && column === "Department"
             ? false
-            : usedFor === "students" && column === "Role"
-            ? false
-            : true
+            : !(usedFor === "students" && column === "Role")
         )
         .join(",") + "\n";
 
@@ -230,14 +239,128 @@ const UserTable = ({ usedFor, userData }) => {
     });
   };
 
+  const onSubmitAddUser = (event) => {
+    event.preventDefault();
+    setAddUserLoadingButton(true);
+    console.log(addUserFormData);
+    //   check operationMode
+    if (addUserFormData._id) {
+      //   update/receptionist update/admin update/user
+
+      const url =
+        usedFor === "receptionist"
+          ? "update/receptionist"
+          : usedFor === "sub_admin"
+          ? "update/admin"
+          : "update/user";
+
+      return submit(url, addUserFormData, "PUT")
+        .then((res) => {
+          if (res.status === 200 || res.success) {
+            setSnackBar({ type: "success", open: true, message: res.message });
+            handleCloseAddUserModal();
+            setReload((prevState) => !prevState);
+          } else {
+            setAddUserLoadingButton(false);
+            setSnackBar({
+              type: "error",
+              open: true,
+              message: res.validation
+                ? res.validation.body.message
+                : res.message,
+            });
+          }
+        })
+        .catch((err) => {
+          setSnackBar({
+            type: "error",
+            open: true,
+            message: err.message,
+          });
+        })
+        .finally(() => {
+          setAddUserLoadingButton(false);
+        });
+    } else {
+      //   add/receptionist  add/sub_admin addUsers
+      const url =
+        usedFor === "receptionist"
+          ? "add/receptionist"
+          : usedFor === "sub_admin"
+          ? "add/sub_admin"
+          : "addUsers";
+      let body = {};
+      if (usedFor === "students") {
+        body.user = addUserFormData;
+      } else if (usedFor === "receptionist") {
+        body = {
+          ...addUserFormData,
+        };
+        delete body.department;
+      } else {
+        body = {
+          ...addUserFormData,
+        };
+      }
+      return submit(url, body)
+        .then((res) => {
+          if (res.status === 200 || res.success) {
+            setSnackBar({ type: "success", open: true, message: res.message });
+            setReload((prevState) => !prevState);
+            handleCloseAddUserModal();
+          } else {
+            setSnackBar({
+              type: "error",
+              open: true,
+              message: res.validation
+                ? res.validation.body.message
+                : res.message,
+            });
+          }
+        })
+        .catch((err) => {
+          setSnackBar({
+            type: "error",
+            open: true,
+            message: err.message,
+          });
+        })
+        .finally(() => {
+          setAddUserLoadingButton(false);
+        });
+    }
+  };
+
+  const handleCloseAddUserModal = () => {
+    setOpenAddUserModal(false);
+    setAddUserFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      moodleId: "",
+      department: "",
+      password: "",
+    });
+    setAddUserLoadingButton(false);
+  };
+
+  const handleEditUser = (user) => {
+    setAddUserFormData((prevState) => ({ ...prevState, ...user }));
+    setOpenAddUserModal(true);
+  };
+
   return (
     <Box>
       <Stack direction={"row"} gap={1} alignItems={"center"} marginTop={1}>
-        {/* <Button variant={"contained"} sx={{ my: 2 }}>
+        <Button
+          variant={"contained"}
+          sx={{ my: 2 }}
+          onClick={() => setOpenAddUserModal(true)}
+        >
           <Typography variant={"button"}>
             Add {usedFor.replace("_", " ")}
           </Typography>
-        </Button> */}
+        </Button>
         <SplitButton
           handleClickArray={[handleClick, downloadCSV]}
           options={["Upload CSV", "Download Sample CSV"]}
@@ -274,6 +397,7 @@ const UserTable = ({ usedFor, userData }) => {
             setRowsPerPage={setRowsPerPage}
             setPage={setPage}
             handleRemove={handleRemove}
+            handleEdit={handleEditUser}
             showAction={true}
             tableFor={usedFor}
           />
@@ -298,6 +422,16 @@ const UserTable = ({ usedFor, userData }) => {
           tableFor={usedFor}
         />
       )}
+      <AddUserModal
+        usedFor={usedFor}
+        addUserLoadingButton={addUserLoadingButton}
+        handleCloseAddUserModal={handleCloseAddUserModal}
+        addUserFormData={addUserFormData}
+        onSubmitAddUser={onSubmitAddUser}
+        openAddUserModal={openAddUserModal}
+        setAddUserFormData={setAddUserFormData}
+        operationMode={addUserFormData._id ? "edit" : "add"}
+      />
     </Box>
   );
 };

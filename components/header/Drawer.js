@@ -148,7 +148,7 @@ const Drawer = ({ userDetails }) => {
                   <ListItemIcon>
                     <FeedOutlined />
                   </ListItemIcon>
-                  <ListItemText primary={"View Forms"} />
+                  <ListItemText primary={"Forms"} />
                 </ListItemButton>
               </Link>
             </ListItem>
