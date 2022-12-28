@@ -17,6 +17,7 @@ export const upload = multer({ storage: storage });
 export const compress = multer({ dest: "tmp/" });
 
 const controller = Object.create(null); // {}
+
 controller.signUp = async (req, res) => {
   try {
     const { user } = req.body;
@@ -60,8 +61,6 @@ controller.signIn = async (req, res) => {
 };
 
 controller.updateProfile = async (req, res) => {};
-
-controller.viewProfile = async (req, res) => {};
 
 controller.applyReimbursement = async (req, res) => {
   try {
@@ -196,7 +195,6 @@ controller.compress = async (req, res) => {
     cleanupFunction("compress");
     cleanupFunction("tmp");
     cleanupFunction("uploads");
-    return;
   });
 };
 

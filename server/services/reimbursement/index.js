@@ -556,6 +556,17 @@ export const updateReimbursement = async (id, details) => {
   }
 };
 
+export const deleteReimbursement = async (id) => {
+  try {
+    await Reimbursement.findOne({ _id: id }).remove();
+    return {
+      status: 200,
+      success: true,
+      message: "Record has been deleted successfully",
+    };
+  } catch (error) {}
+};
+
 export const getReimbursementsCertificateStatusCount = async () => {
   const data = await Reimbursement.aggregate([
     // sum of all the status and push certificate name in array with same status
