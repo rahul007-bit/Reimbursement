@@ -24,8 +24,6 @@ export default function SignUp() {
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
-    const data = new FormData(event.currentTarget);
-
     // validation here
     if (
       form.moodleId === "" ||
@@ -46,7 +44,7 @@ export default function SignUp() {
     }
 
     submit("user/sign_up", {
-      user: body,
+      user: form,
     })
       .then((response) => {
         if (response.success || response.status === 200) {
