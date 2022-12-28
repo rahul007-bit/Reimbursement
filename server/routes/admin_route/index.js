@@ -52,7 +52,28 @@ const adminRoutes = async (router) => {
     controller.getReceptionist
   );
 
+  router.put(
+    "/update/admin",
+    limiter,
+    subAdminAuth,
+    controller.updateProfileAdmin
+  );
+
+  router.put(
+    "/update/receptionist",
+    limiter,
+    receptionistAuth,
+    controller.updateProfileAdmin
+  );
+
   router.get("/get/sub_admin", limiter, adminAuth, controller.getSubAdmin);
+
+  router.put(
+    "/update/user",
+    limiter,
+    subAdminAuth,
+    controller.updateProfileUser
+  );
 
   router.delete("/delete/admin", limiter, adminAuth, controller.deleteAdmin);
 

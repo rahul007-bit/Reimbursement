@@ -7,7 +7,13 @@ import {
   getReimbursementsCertificateStatusCount,
   ReimbursementCount,
 } from "../../services/reimbursement/index.js";
-import { createUser, getUser, removeUser } from "../../services/user/index.js";
+import {
+  createUser,
+  getUser,
+  removeUser,
+  updateUser,
+  updateUserPassword,
+} from "../../services/user/index.js";
 import logger from "../../config/logger.js";
 
 import {
@@ -15,8 +21,10 @@ import {
   getCertificates,
   deleteCertificate,
 } from "../../services/certification/index.js";
+import { updateProfileAdmin } from "../../services/admin/index.js";
 
 const controller = Object.create(null); // {}
+
 controller.signUp = async (req, res) => {
   try {
     const { subAdmins, receptionists } = req.body;
@@ -129,8 +137,8 @@ controller.signUp = async (req, res) => {
         moodleId,
         email,
         password,
-        first_name,
-        last_name,
+        firstName,
+        lastName,
         role,
         department,
       } = req.body;
@@ -143,13 +151,13 @@ controller.signUp = async (req, res) => {
         });
       }
 
-      if (moodleId && password && first_name && last_name && role && email) {
+      if (moodleId && password && firstName && lastName && role && email) {
         const admin = await Admin.findOne({ moodleId: moodleId });
 
         if (admin) {
           return res.send({
             success: false,
-            message: "User Already Exist with provided Moodle Id",
+            message: `User Already Exist with provided Moodle Id ${moodleId}`,
           });
         } else {
           const newAdmin = new Admin();
@@ -157,14 +165,17 @@ controller.signUp = async (req, res) => {
           await Admin.create({
             moodleId: moodleId,
             password: hashPassword,
-            first_name: first_name,
-            last_name: last_name,
+            first_name: firstName,
+            last_name: lastName,
             role: role,
             department: department,
             email,
           });
 
-          return res.send({ message: "Creating", success: true });
+          return res.send({
+            message: "User Enrolled Successfully",
+            success: true,
+          });
         }
       } else {
         return res.send({
@@ -383,8 +394,8 @@ controller.deleteAdmin = async (req, res) => {
 
 controller.addUsers = async (req, res) => {
   try {
-    const { users } = req.body;
-    const result = await createUser(users);
+    const { users, user } = req.body;
+    const result = await createUser(users, user);
     return res.status(result.status).send(result);
   } catch (error) {
     logger.error(error);
@@ -510,8 +521,64 @@ controller.approveReimburseReceptionist = async (req, res) => {
   }
 };
 
-controller.updateProfile = async (req, res) => {};
-controller.viewProfile = async (req, res) => {};
+controller.updateProfileAdmin = async (req, res) => {
+  try {
+    const { firstName, lastName, email, department, _id } = req.body;
+    const admin = req.user;
+    const result = await updateProfileAdmin({
+      firstName,
+      lastName,
+      email,
+      department,
+      admin,
+      _id,
+    });
+    return res.status(result.status).send(result);
+  } catch (error) {
+    return res.status(500).send({
+      status: 500,
+      message: error.message,
+      success: false,
+    });
+  }
+};
+
+controller.updateProfileUser = async (req, res) => {
+  try {
+    const { firstName, lastName, email, department, _id } = req.body;
+    const admin = req.user;
+    const result = await updateUser(admin, {
+      firstName,
+      lastName,
+      email,
+      department,
+      _id,
+    });
+    return res.status(result.status).send(result);
+  } catch (error) {
+    return res.status(500).send({
+      status: 500,
+      message: error.message,
+      success: false,
+    });
+  }
+};
+
+controller.updateUserPassword = async (req, res) => {
+  try {
+    const { password, id } = req.body;
+    const loggedInUser = req.user;
+    const result = await updateUserPassword(loggedInUser, { id, password });
+    return res.status(result.status).send(result);
+  } catch (error) {
+    return res.status(500).send({
+      status: 500,
+      message: error.message,
+      success: false,
+    });
+  }
+};
+
 controller.deleteReimbursement = async (req, res) => {};
 
 export default controller;
