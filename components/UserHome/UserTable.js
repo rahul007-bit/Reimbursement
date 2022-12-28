@@ -220,7 +220,7 @@ export default function UserTable({ data, user: usedIn = "User", userData }) {
         selected={selected}
         setSelected={setSelected}
         handleApprove={handleApprove}
-        usedIn={userData.type}
+        usedIn={userData?.type}
         loadingButton={loadingButton}
       />
     </Paper>

@@ -35,6 +35,7 @@ export default function SignUp() {
       lastName: data.get("lastName"),
       email: data.get("email"),
       type: data.get("type"),
+      department: data.get("department"),
     };
 
     // validation here
@@ -44,7 +45,8 @@ export default function SignUp() {
       body.firstName === "" ||
       body.lastName === "" ||
       body.email === "" ||
-      body.type === ""
+      body.type === "" ||
+      body.department === ""
     ) {
       setSnackBar({
         type: "error",
@@ -90,7 +92,7 @@ export default function SignUp() {
 
   return (
     <div className="flex h-full w-full items-center justify-center">
-      <Paper sx={{ p: 3, py: 6, mt: 8 }} elevation={3}>
+      <Paper sx={{ p: 3, py: 4, mt: 8, mx: 1 }} variant={"outlined"}>
         <Box>
           <Container component="main" maxWidth="xs">
             <Box
@@ -152,20 +154,34 @@ export default function SignUp() {
                       autoComplete="new-password"
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={12} sm={6}>
                     <FormControl required sx={{ width: 1 }}>
-                      <InputLabel id="demo-simple-select-required-label">
-                        You are?
-                      </InputLabel>
+                      <InputLabel>You are?</InputLabel>
                       <Select
-                        labelId="demo-simple-select-required-label"
-                        id="demo-simple-select-required"
                         label="You are? *"
                         name="type"
                         // onChange={handleChange}
                       >
                         <MenuItem value={"student"}>Student</MenuItem>
                         <MenuItem value={"teacher"}>Teacher</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <FormControl required sx={{ width: 1 }}>
+                      <InputLabel>Department</InputLabel>
+                      <Select
+                        label="Department"
+                        name="department"
+                        // onChange={handleChange}
+                      >
+                        <MenuItem value={"IT"}>IT</MenuItem>
+                        <MenuItem value={"CS"}>CS</MenuItem>
+                        <MenuItem value={"EXTC"}>EXTC</MenuItem>
+                        <MenuItem value={"CIVIL"}>CIVIL</MenuItem>
+                        <MenuItem value={"MECH"}>MECH</MenuItem>
+                        <MenuItem value={"AI/ML"}>AI/ML</MenuItem>
+                        <MenuItem value={"DS"}>DS</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
