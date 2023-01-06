@@ -3,7 +3,7 @@ name: Deploy Next.js to Server
 on:
   [pull_request, push]:
     branches:
-      - master
+      - main
 env:
   SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
   SSH_USER: ${{ secrets.SSH_USER }}
