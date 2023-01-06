@@ -95,26 +95,26 @@ const QuestionCard = ({
                       }}
                       value={question.type}
                     >
-                      <MenuItem value={10}>Single Line Text</MenuItem>
-                      <MenuItem value={20}>Multi Line Text</MenuItem>
-                      <MenuItem value={30}>Date</MenuItem>
-                      <MenuItem value={40}>Options</MenuItem>
-                      <MenuItem value={50}>Checkbox</MenuItem>
-                      <MenuItem value={60}>Drop Down Menu</MenuItem>
+                      <MenuItem value={"10"}>Single Line Text</MenuItem>
+                      <MenuItem value={"20"}>Multi Line Text</MenuItem>
+                      <MenuItem value={"30"}>Date</MenuItem>
+                      <MenuItem value={"40"}>Options</MenuItem>
+                      <MenuItem value={"50"}>Checkbox</MenuItem>
+                      <MenuItem value={"60"}>Drop Down Menu</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
               </Grid>
               <Grid container spacing={2} marginY={1}>
                 <Grid item xs={7}>
-                  {question.type === 10 && (
+                  {question.type === "10" && (
                     <TextField
                       fullWidth
                       disabled
                       placeholder={"Single Line Text"}
                     />
                   )}
-                  {question.type === 20 && (
+                  {question.type === "20" && (
                     <TextField
                       fullWidth
                       disabled
@@ -124,10 +124,10 @@ const QuestionCard = ({
                       placeholder={"Multi Line Text"}
                     />
                   )}
-                  {question.type === 30 && (
+                  {question.type === "30" && (
                     <TextField fullWidth disabled type={"date"} />
                   )}
-                  {question.type === 40 && (
+                  {question.type === "40" && (
                     <Stack gap={1}>
                       {question.options.map((option, index) => (
                         <Stack direction={"row"} gap={1} key={option.id}>

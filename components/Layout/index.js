@@ -5,6 +5,7 @@ import Head from "next/head";
 import { useUserProfile } from "../../Hooks/apiHooks";
 import { useAtom } from "jotai";
 import { snackBarAtom } from "../../store";
+import Loader from "../Util/Loader";
 
 export const drawerWidth = 280;
 
@@ -24,26 +25,8 @@ const Layout = ({ children, title: Header = "Reimbursement" }) => {
     }
   }, [userData, error, loading, setSnackBar]);
 
-  if (loading)
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          width: 1,
-          justifyContent: "center",
-          height: 1,
-          alignItems: "center",
-        }}
-      >
-        {/*<CircularProgress />*/}
-        <LinearProgress
-          sx={{
-            width: "40%",
-          }}
-          variant={"indeterminate"}
-        />
-      </Box>
-    );
+  if (loading) return <Loader />;
+
   return (
     <>
       <Head>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Layout from "../../components/Layout";
 import {
   Button,
@@ -21,6 +21,7 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { submit } from "../../Hooks/apiHooks";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/router";
+
 function AddForm() {
   const [formName, setFormName] = React.useState("Default Form Name");
   const [loading, setLoading] = React.useState(false);
@@ -28,7 +29,7 @@ function AddForm() {
     {
       id: uuid(),
       question: "Question?",
-      type: 10,
+      type: "10",
       options: [],
       checkbox: [],
       dropDown: [],
@@ -39,6 +40,32 @@ function AddForm() {
   const [, setSnackBar] = useAtom(snackBarAtom);
 
   const router = useRouter();
+
+  const { mode, id } = router.query;
+
+  useEffect(() => {
+    if (mode === "edit") {
+      const fetchForm = async () => {
+        const { data, error } = await submit(
+          "certificate/get?certificate_id=" + id,
+          {},
+          "GET"
+        );
+        if (error) {
+          setSnackBar({
+            open: true,
+            message: error,
+            severity: "error",
+          });
+        } else {
+          const certificate = data[0];
+          setFormName(certificate.certificate_name);
+          setQuestions(certificate.questions);
+        }
+      };
+      fetchForm();
+    }
+  }, [mode, id, setSnackBar]);
 
   const addQuestion = (isDuplicate) => {
     if (isDuplicate.question) {
@@ -75,7 +102,7 @@ function AddForm() {
         {
           id: uuid(),
           question: "Question?",
-          type: 10,
+          type: "10",
           options: [],
           checkbox: [],
           dropDown: [],
@@ -130,7 +157,7 @@ function AddForm() {
         });
         return isValid;
       }
-      if (question.type === 40) {
+      if (question.type === "40") {
         if (question.options.length < 2) {
           isValid = false;
           setSnackBar({
@@ -143,7 +170,7 @@ function AddForm() {
           return isValid;
         }
       }
-      if (question.type === 50) {
+      if (question.type === "50") {
         if (question.checkbox.length < 2) {
           isValid = false;
           setSnackBar({
@@ -155,7 +182,7 @@ function AddForm() {
           return isValid;
         }
       }
-      if (question.type === 60) {
+      if (question.type === "60") {
         if (question.dropDown.length < 2) {
           isValid = false;
           setSnackBar({
@@ -182,27 +209,58 @@ function AddForm() {
       });
       //   sanitize form data
       let sanitizedQuestions = questions.map((question) => {
-        if (question.type === 40) {
+        if (question.type === "40") {
           question.checkbox = [];
           question.dropDown = [];
         }
-        if (question.type === 50) {
+        if (question.type === "50") {
           question.options = [];
           question.dropDown = [];
         }
-        if (question.type === 60) {
+        if (question.type === "60") {
           question.options = [];
           question.checkbox = [];
         }
 
         return question;
       });
-
-      //   save form data
-      console.log({
-        certificate_name: formName,
-        questions: sanitizedQuestions,
-      });
+      if (mode === "edit") {
+        submit(
+          "certificate/update",
+          {
+            certificate_id: id,
+            certificate_name: formName,
+            questions: sanitizedQuestions,
+          },
+          "PUT"
+        )
+          .then((res) => {
+            console.log(res);
+            if (res.status === 200) {
+              setSnackBar({
+                open: true,
+                message: "Form Saved",
+                type: "success",
+              });
+              router.push("view-forms");
+            } else
+              setSnackBar({
+                open: true,
+                message: "Failed to Save Form",
+                type: "error",
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+            setSnackBar({
+              open: true,
+              message: "Failed to Save Form",
+              type: "error",
+            });
+          })
+          .finally(() => setLoading(false));
+        return;
+      }
 
       submit(
         "certificate/create",
@@ -259,7 +317,9 @@ function AddForm() {
         }}
       >
         <Paper sx={{ maxWidth: "1200px", my: 5, width: 1, p: 3 }} elevation={0}>
-          <Typography variant="h5">Create Form</Typography>
+          <Typography variant="h5">
+            {mode === "edit" ? "Edit Form" : "Add Form"}
+          </Typography>
 
           <Divider
             sx={{

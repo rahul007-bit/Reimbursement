@@ -22,6 +22,7 @@ import { useRouter } from "next/router";
 import Confirmation from "../../../components/Util/Confirmation";
 import { snackBarAtom } from "../../../store";
 import { useAtom } from "jotai";
+import Loader from "../../../components/Util/Loader";
 
 const ViewForms = () => {
   const [forms, setForms] = React.useState([]);
@@ -151,6 +152,20 @@ const ViewForms = () => {
                       <Visibility />
                     </IconButton>
                   </Tooltip>
+
+                  <Tooltip title="Edit">
+                    <IconButton
+                      color="primary"
+                      onClick={() => {
+                        router.push(
+                          "/admin/add-form?id=" + form._id + "&mode=edit"
+                        );
+                      }}
+                    >
+                      <Edit />
+                    </IconButton>
+                  </Tooltip>
+
                   <Tooltip title="Delete">
                     <IconButton
                       color="primary"
@@ -163,9 +178,7 @@ const ViewForms = () => {
               </Card>
             ))
           ) : (
-            <Box sx={{ display: "flex", width: 1, justifyContent: "center" }}>
-              <CircularProgress />
-            </Box>
+            <Loader />
           )}
         </Paper>
         <Confirmation
