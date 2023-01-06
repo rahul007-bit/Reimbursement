@@ -14,29 +14,19 @@ env:
   NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
 jobs:
-  install_dependencies:
+  install_dependencies_build_and_deploy:
     runs-on: ubuntu-latest
     steps:
+      # use node 16
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
-          node-version: 16.x
-      - run: npm install -g yarn
-      - run: yarn install
-
-  build_and_deploy:
-    needs: install_dependencies
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 16.x
+          node-version: 16
       - run: npm install -g yarn
       - run: yarn install
       - run: yarn build
-      # Delete all files in the build folder except the .next folder
-      - run: find build -type f ! -name ".next" -delete
+      # Delete all files except the .next folder
+      - run: rm -rf !(.next)
       # save the build to a tar file
       - run: tar -czf build.tar.gz build
       # copy the tar file to the server
