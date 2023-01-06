@@ -15,7 +15,7 @@ import {
 const FormInput = ({ question }) => {
   return (
     <>
-      {question.type === 10 && (
+      {question.type === "10" && (
         <TextField
           variant={"filled"}
           required={question.required}
@@ -24,7 +24,7 @@ const FormInput = ({ question }) => {
           label={question.question}
         />
       )}
-      {question.type === 20 && (
+      {question.type === "20" && (
         <TextField
           variant={"filled"}
           required={question.required}
@@ -36,7 +36,7 @@ const FormInput = ({ question }) => {
           label={question.question}
         />
       )}
-      {question.type === 30 && (
+      {question.type === "30" && (
         <TextField
           variant={"filled"}
           required={question.required}
@@ -46,7 +46,7 @@ const FormInput = ({ question }) => {
           label={question.question}
         />
       )}
-      {question.type === 40 && (
+      {question.type === "40" && (
         <FormControl fullWidth required={question.required}>
           <FormLabel>{question.question}</FormLabel>
           <RadioGroup>
@@ -61,7 +61,7 @@ const FormInput = ({ question }) => {
           </RadioGroup>
         </FormControl>
       )}
-      {question.type === 50 && (
+      {question.type === "50" && (
         <FormControl fullWidth required={question.required}>
           <FormLabel>{question.question}</FormLabel>
           <FormGroup>
@@ -76,7 +76,7 @@ const FormInput = ({ question }) => {
           </FormGroup>
         </FormControl>
       )}
-      {question.type === 60 && (
+      {question.type === "60" && (
         <TextField
           variant={"filled"}
           required={question.required}

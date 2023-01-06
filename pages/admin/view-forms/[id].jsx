@@ -90,9 +90,17 @@ const ViewForm = () => {
                           Back
                         </Button>
                       </Tooltip>
-                      <Tooltip title="Delete">
-                        <Button fullWidth sx={{ m: 1 }} onClick={() => {}}>
-                          Delete
+                      <Tooltip title="Edit">
+                        <Button
+                          fullWidth
+                          sx={{ m: 1 }}
+                          onClick={() => {
+                            router.push(
+                              `/admin/add-form?id=${form._id}&mode=edit`
+                            );
+                          }}
+                        >
+                          Edit
                         </Button>
                       </Tooltip>
                     </CardActions>
