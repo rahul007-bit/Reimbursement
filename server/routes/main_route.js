@@ -41,7 +41,9 @@ router.get("/details", limit, async (req, res) => {
       const userId = payload.message.userId;
 
       if (userId) {
-        const user = await User.findOne({ _id: payload.message.userId });
+        const user = await User.findOne({ _id: payload.message.userId }).select(
+          "-password"
+        );
         if (user) {
           return res.status(200).send({
             status: 200,
@@ -58,12 +60,15 @@ router.get("/details", limit, async (req, res) => {
           .status(401)
           .json({ message: "User Not found", success: false, status: 401 });
       }
+
       const id = payload.message.id;
       if (id) {
-        const admin = await Admin.findOne({ _id: payload.message.id });
+        const admin = await Admin.findOne({ _id: payload.message.id }).select(
+          "-password"
+        );
         if (admin) {
           return res.status(200).json({
-            data: { user: admin, type: "admin" },
+            data: { user: admin, type: admin.role },
             status: 200,
             success: true,
             message: "success",

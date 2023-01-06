@@ -3,8 +3,6 @@ import { useRouter } from "next/router";
 import { Cookies, useCookies } from "react-cookie";
 import { snackBarAtom } from "../store";
 import { useAtom } from "jotai";
-// // export const url = "https://server.reimbursements.live/api/"; //https://reimbursementserver.herokuapp.com/"http://localhost:8080/api/";
-// export const url = "http://localhost:8000/api/"; //https://reimbursementserver.herokuapp.com/"http://localhost:8080/api/";
 
 export const url = process.env.NEXT_PUBLIC_API_URL;
 

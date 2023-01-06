@@ -1,8 +1,10 @@
+// This file is same as the adminAuth.js file except the role check is changed to "receptionist"
+
 import jwt from "jsonwebtoken";
 import config from "../../../config/index.js";
 import loggers from "../../../config/logger.js";
 import Admin from "../../../model/admin/model.js";
-export const adminAuth = async (req, res, next) => {
+export const receptionistAuth = async (req, res, next) => {
   const token = req.headers["x-auth-token"];
   try {
     if (token) {
@@ -26,8 +28,8 @@ export const adminAuth = async (req, res, next) => {
       req.userId = payload.message.id;
       const user = await Admin.findOne({ _id: payload.message.id });
       if (user) {
-        // check if role is admin
-        if (user.role !== "admin") {
+        // check if role is receptionist or admin
+        if (user.role !== "receptionist" && user.role !== "admin") {
           return res.status(401).json({
             success: false,
             message: "You are not authorized to access this route",
@@ -51,3 +53,4 @@ export const adminAuth = async (req, res, next) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
+//
