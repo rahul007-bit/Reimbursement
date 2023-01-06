@@ -1,6 +1,3 @@
-# write github actions here to deploy your app to a server
-# https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
-
 name: Deploy Next.js to Server
 
 on:
@@ -14,7 +11,7 @@ env:
   NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
 jobs:
-  install dependencies:
+  install_dependencies:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -24,8 +21,8 @@ jobs:
       - run: npm install -g yarn
       - run: yarn install
 
-  build and deploy:
-    needs: install dependencies
+  build_and_deploy:
+    needs: install_dependencies
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
