@@ -25,10 +25,8 @@ jobs:
       - run: npm install -g yarn
       - run: yarn install
       - run: yarn build
-      # Delete all files except the .next folder
-      - run: rm -rf !(.next)
       # save the build to a tar file
-      - run: tar -czf build.tar.gz build
+      - run: tar -czf build.tar.gz .next
       # copy the tar file to the server
       - uses: appleboy/scp-action@master
         with:
