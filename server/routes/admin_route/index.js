@@ -130,6 +130,14 @@ const adminRoutes = async (router) => {
     subAdminAuth,
     controller.getCertificates
   );
+
+  router.put(
+    "/certificate/update",
+    limiter,
+    subAdminAuth,
+    controller.updateCertificate
+  );
+
   router.delete(
     "/certificate/delete",
     limiter,
