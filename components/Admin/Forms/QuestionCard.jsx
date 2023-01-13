@@ -171,7 +171,7 @@ const QuestionCard = ({
                       </Button>
                     </Stack>
                   )}
-                  {question.type === 50 && (
+                  {question.type === "50" && (
                     <Stack gap={1}>
                       {question.checkbox.map((checkbox, index) => (
                         <Stack direction={"row"} gap={1} key={checkbox.id}>
@@ -215,7 +215,7 @@ const QuestionCard = ({
                       </Button>
                     </Stack>
                   )}
-                  {question.type === 60 && (
+                  {question.type === "60" && (
                     <Stack gap={1}>
                       {question.dropDown.map((dropdown, index) => (
                         <Stack direction={"row"} gap={1} key={dropdown.id}>

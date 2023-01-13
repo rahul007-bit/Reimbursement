@@ -87,6 +87,7 @@ const ViewRequestTable = ({ userData: currentUserData }) => {
 
   const [, setSnackBar] = useAtom(snackBarAtom);
   const [cookies] = useCookies(["loginType"]);
+
   useEffect(() => {
     if (!loading) {
       if (error) {

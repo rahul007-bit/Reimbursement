@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -7,6 +7,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
   MenuItem,
   Stack,
   TextField,
@@ -26,6 +27,14 @@ const CustomModal = ({
   handleApprove,
   receptionistList,
 }) => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    if (selected) {
+      setUser(selected.user[0]);
+    }
+  }, [receptionistList, selected]);
+
   return (
     <Dialog
       fullWidth={true}
@@ -72,7 +81,24 @@ const CustomModal = ({
       {selected && (
         <DialogContent dividers>
           {/* <Divider variant={"fullWidth"} sx={{ mb: 3 }} /> */}
+
           <Stack spacing={2}>
+            <Typography>User Details</Typography>
+            <TextField
+              label={"Name"}
+              value={user?.first_name + " " + user?.last_name}
+            />
+            <TextField label={"Email"} value={user?.email} />
+            <TextField label={"Department"} value={user?.department} />
+          </Stack>
+          <Divider
+            sx={{
+              my: 2,
+            }}
+            variant={"fullWidth"}
+          />
+          <Stack spacing={2}>
+            <Typography>Reimbursement Details</Typography>
             <TextField
               label={"certificate Name"}
               value={selected.reimbursementDetails.certificate_name}
@@ -88,6 +114,12 @@ const CustomModal = ({
                 usedFor={"preview"}
               />
             ))}
+
+            <Divider
+              sx={{
+                my: 2,
+              }}
+            />
             <TextField
               label={"Account Number"}
               value={selected.bankDetails.accountNumber}
