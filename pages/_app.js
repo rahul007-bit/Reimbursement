@@ -1,7 +1,7 @@
 import "../styles/globals.css";
+
 import dynamic from "next/dynamic";
 import { createTheme, ThemeProvider } from "@mui/material";
-import { useEffect } from "react";
 import { Provider as JotaiProvider } from "jotai";
 import Snack from "../components/Util/Snackbar";
 import Head from "next/head";

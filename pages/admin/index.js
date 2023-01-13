@@ -149,80 +149,6 @@ const AdminHome = ({
   );
 };
 
-// export async function getServerSideProps() {
-//   try {
-//     const {
-//       data: {
-//         getReimbursementsStatusCount: { data: getReimbursementsStatusCount },
-//       },
-//     } = await client.query({
-//       query: gql`
-//         query GetReimbursementsStatusCount {
-//           getReimbursementsStatusCount {
-//             status
-//             message
-//             success
-//             data {
-//               count
-//               status
-//               certificate_name {
-//                 name
-//                 id
-//               }
-//             }
-//           }
-//         }
-//       `,
-//     });
-
-//     const {
-//       data: {
-//         getReimbursementsDepartmentWise: { data: departmentWiseData },
-//       },
-//     } = await client.query({
-//       query: gql`
-//         query GetReimbursementsDepartmentWise {
-//           getReimbursementsDepartmentWise {
-//             status
-//             message
-//             success
-//             data {
-//               count
-//               department
-//               certificate_name {
-//                 name
-//                 id
-//               }
-//             }
-//           }
-//         }
-//       `,
-//     });
-//     const props = {};
-//     console.log(departmentWiseData);
-//     if (departmentWiseData) {
-//       props.getReimbursementsDepartmentWise = departmentWiseData;
-//     } else {
-//       props.getReimbursementsDepartmentWise = [];
-//     }
-
-//     return {
-//       props: {
-//         getReimbursementsStatusCount,
-//         ...props,
-//       },
-//     };
-//   } catch (error) {
-//     console.log(error);
-//     return {
-//       props: {
-//         getReimbursementsStatusCount: [],
-//         getReimbursementsDepartmentWise: [],
-//       },
-//     };
-//   }
-// }
-
 AdminHome.getInitialProps = async () => {
   try {
     // graphql query for getReimbursementsStatusCount
@@ -304,7 +230,6 @@ AdminHome.getInitialProps = async () => {
     });
 
     const props = {};
-    console.log(getReimbursementsStatusCount);
     if (departmentWiseData) {
       props.getReimbursementsDepartmentWise = departmentWiseData;
     } else {
