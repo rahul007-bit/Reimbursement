@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Chip,
   Paper,
   Table,
   TableBody,
@@ -15,6 +16,10 @@ import React, { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 import { useRouter } from "next/router";
 import CustomModal from "../Util/CustomModal";
+import { useCookies } from "react-cookie";
+import { useAtom } from "jotai";
+import { snackBarAtom } from "../../store";
+import { submit } from "../../Hooks/apiHooks";
 const columns = [
   { id: uuid(), label: "Certificate Name", align: "center", minWidth: 170 },
   { id: uuid(), label: "Apply At", align: "center", minWidth: 100 },
@@ -51,30 +56,33 @@ const columns = [
   },
 ];
 
-export default function UserTable({ data, user: usedIn = "User" }) {
+export default function UserTable({ data, user: usedIn = "User", userData }) {
   const router = useRouter();
   const [page, setPage] = React.useState(0);
+  const [count, setCount] = useState(0);
+
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [row, setRow] = React.useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [selected, setSelected] = useState(null);
+  const [loadingButton, setLoadingButton] = useState(false);
+
+  const [_, setSnackBar] = useAtom(snackBarAtom);
+
   useEffect(() => {
     if (data?.data) {
       setRow(data.data);
+      setCount(data.data.length);
+    } else {
+      setRow([]);
     }
   }, [data]);
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (_, newPage) => {
     setPage(newPage);
   };
 
-  const handleClick = () => {
-    if (usedIn === "admin") {
-      router.replace("/admin/view_request");
-    }
-  };
-
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
+    setRowsPerPage(event.target.value);
     setPage(0);
   };
 
@@ -87,15 +95,45 @@ export default function UserTable({ data, user: usedIn = "User" }) {
       };
     });
   };
+  const handleApprove = (isApproved) => {
+    try {
+      setLoadingButton(true);
+      const body = {
+        reimburse_id: selected._id,
+        isApproved,
+        remarks: selected.remarks,
+      };
+
+      body.approvedByReceptionist = true;
+
+      submit("receptionist/reimbursements", body)
+        .then((response) => {
+          if (response.status === 200 || response.success) {
+            setOpenModal(false);
+            setSnackBar({
+              type: "success",
+              open: true,
+              message: response.message,
+            });
+            client.resetStore();
+            router.reload();
+          } else {
+            setSnackBar({
+              type: "error",
+              open: true,
+              message: response.message,
+            });
+          }
+        })
+        .finally(() => setLoadingButton(false));
+    } catch (error) {
+      setSnackBar({ type: "error", open: true, message: error.message });
+      setLoadingButton(false);
+    }
+  };
 
   return (
-    <Paper sx={{ width: "90%", overflow: "hidden", my: 3 }}>
-      <Typography variant="h5" margin={1}>
-        Reimbursement Request
-      </Typography>
-      <Button onClick={handleClick} sx={{ m: 1.5 }} variant="contained">
-        Open Request Page
-      </Button>
+    <Paper sx={{ width: 1, overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -124,15 +162,28 @@ export default function UserTable({ data, user: usedIn = "User" }) {
                     className={`${usedIn === "admin" ? "cursor-pointer" : ""}`}
                   >
                     <TableCell align="center">
-                      {row1.certificate_name}
+                      {row1.reimbursementDetails.certificate_name}
                     </TableCell>
                     <TableCell align="center">
                       {new Date(row1.created_at).toLocaleDateString()}
                     </TableCell>
                     <TableCell align="center">
-                      {row1.amountToReimbursement}
+                      {row1.amountToReimburse}
                     </TableCell>
-                    <TableCell align="center">{row1.status}</TableCell>
+                    <TableCell align="center">
+                      <Chip
+                        label={row1.status}
+                        color={
+                          row1.status === "PENDING"
+                            ? "warning"
+                            : row1.status === "Approved"
+                            ? "success"
+                            : row1.status === "In Progress"
+                            ? "info"
+                            : "error"
+                        }
+                      />
+                    </TableCell>
                     <TableCell align="center">
                       {row1.bankDetails.accountNumber}
                     </TableCell>
@@ -157,7 +208,7 @@ export default function UserTable({ data, user: usedIn = "User" }) {
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={0}
+        count={count}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
@@ -167,7 +218,10 @@ export default function UserTable({ data, user: usedIn = "User" }) {
         setOpenModal={setOpenModal}
         openModal={openModal}
         selected={selected}
-        usedIn={"user"}
+        setSelected={setSelected}
+        handleApprove={handleApprove}
+        usedIn={userData?.type}
+        loadingButton={loadingButton}
       />
     </Paper>
   );

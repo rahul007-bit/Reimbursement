@@ -3,64 +3,81 @@ import {
   Box,
   Button,
   CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
+  Stack,
   Typography,
 } from "@mui/material";
 import { submit, useFetch } from "../../Hooks/apiHooks";
-import { v4 as uuid } from "uuid";
 import CSVFileValidator from "csv-file-validator";
 import { useAtom } from "jotai";
 import { snackBarAtom } from "../../store";
-import { LoadingButton } from "@mui/lab";
+import SplitButton from "../Util/SplitButton";
+import CustomTable from "../Util/CustomTable";
+import DialogBoxShowTable from "./Dashboard/DialogBox";
+import Confirmation from "../Util/Confirmation";
+import AddUserModal from "./AddUserModal";
 
 const columns = [
-  { id: uuid(), label: "User Name", align: "center", minWidth: 170 },
-  { id: uuid(), label: "Moodle Id", align: "center", minWidth: 100 },
-  { id: uuid(), label: "Email Id", align: "center", minWidth: 200 },
-  { id: uuid(), label: "Department", align: "center", minWidth: 200 },
-  { id: uuid(), label: "Action", align: "center", minWidth: 200 },
+  { label: "User Name", align: "center", minWidth: 170 },
+  { label: "Moodle Id", align: "center", minWidth: 100 },
+  { label: "Email Id", align: "center", minWidth: 200 },
+  { label: "Department", align: "center", minWidth: 200 },
+  { label: "Action", align: "center", minWidth: 200 },
 ];
 
-const UserTable = () => {
+const UserTable = ({ usedFor, userData }) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [, setSnackBar] = useAtom(snackBarAtom);
   const [count, setCount] = useState(0);
   const [openModal, setOpenModal] = useState(false);
   const [removeUser, setRemoveUser] = useState(null);
+
+  const [openAddUserModal, setOpenAddUserModal] = useState(false);
+  const [addUserFormData, setAddUserFormData] = useState({
+    firstName: "",
+    lastName: "",
+    moodleId: "",
+    email: "",
+    department: "",
+  });
+  const [addUserLoadingButton, setAddUserLoadingButton] = useState(false);
+
   const fileRef = createRef();
 
   const [row, setRow] = useState([]);
   const [reload, setReload] = useState(false);
-  const [loadingButton, setLoadingButton] = useState(false);
   const [loadingRemove, setLoadingRemove] = useState(false);
-  const { loading, data } = useFetch("getUser", [reload]);
-  //allReimbursement
+  const { loading, data } = useFetch(
+    usedFor === "sub_admin"
+      ? "get/sub_admin"
+      : usedFor === "receptionist"
+      ? "get/receptionist"
+      : "getUser" +
+        `${
+          usedFor === "sub_admin"
+            ? `?department=${userData.user.department}`
+            : ""
+        }`,
+    [reload]
+  );
+
+  const [dialogTableData, setDialogTableData] = useState([]);
+  const [dialogTableHeaders, setDialogTableHeaders] = useState([]);
+
+  const [openDialog, setOpenDialog] = useState(false);
+
   useEffect(() => {
     if (!loading && data) {
-      const reimburseData = data.user;
+      const reimburseData =
+        usedFor === "sub_admin"
+          ? data.data
+          : usedFor === "receptionist"
+          ? data.data
+          : data.user;
       setRow(reimburseData);
       setCount(reimburseData.length);
     }
-  }, [loading, data]);
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(event.target.value);
-    setPage(0);
-  };
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+  }, [loading, data, usedFor]);
 
   const handleClick = () => {
     fileRef.current.click();
@@ -69,43 +86,126 @@ const UserTable = () => {
   const getFile = (event) => {
     const file = event.target.files && event.target.files[0];
     if (file) {
-      setLoadingButton(true);
       console.log(file);
-      CSVFileValidator(file, config)
+      const newConfig = {
+        headers: config.headers.filter((item) =>
+          usedFor === "receptionist" && item.name === "Department"
+            ? false
+            : !(usedFor === "students" && item.name === "Role")
+        ),
+      };
+
+      CSVFileValidator(file, newConfig)
         .then((csvData) => {
-          if (!csvData.inValidMessages) {
-            submit("addUsers", { users: csvData.data })
-              .then((response) => {
-                if (response.success || response.status === 200) {
-                  // event.target.files.pop();
-                  setSnackBar({
-                    type: "success",
-                    message: "User added successfully",
-                    open: true,
-                  });
-                  setReload((prev) => !prev);
-                } else {
-                  setSnackBar({
-                    type: "error",
-                    message: response.message,
-                    open: true,
-                  });
-                }
-              })
-              .finally(() => setLoadingButton(false));
-            console.log(csvData.data);
-          } // Array of objects from file
+          console.log(csvData);
+          if (!csvData.inValidData.length > 0) {
+            const header = columns.map((column) => column.label);
+            setDialogTableHeaders(header.filter((item) => item !== "Action"));
+            setDialogTableData(csvData.data);
+            setOpenDialog(true);
+          } else {
+            setSnackBar({
+              type: "error",
+              message: csvData.inValidData[0].message,
+              open: true,
+            });
+          }
         })
         .catch((err) => {
-          setLoadingButton(false);
           setSnackBar({
             type: "error",
             message: err.message,
             open: true,
           });
+        })
+        .finally(() => {
+          event.target.value = "";
         });
     }
   };
+
+  const submitTable = () => {
+    submit(
+      usedFor === "sub_admin"
+        ? "add/sub_admins"
+        : usedFor === "receptionist"
+        ? "add/receptionists"
+        : "addUsers",
+      {
+        [usedFor === "sub_admin"
+          ? "subAdmins"
+          : usedFor === "receptionist"
+          ? "receptionists"
+          : "users"]: dialogTableData,
+      }
+    )
+      .then((response) => {
+        if (response.success || response.status === 200) {
+          setSnackBar({
+            type: "success",
+            message: "User added successfully",
+            open: true,
+          });
+          setReload((prev) => !prev);
+          setOpenDialog(false);
+          setDialogTableData([]);
+          setDialogTableHeaders([]);
+        } else {
+          setSnackBar({
+            type: "error",
+            message: response.validation
+              ? response.validation.body.message
+              : response.message,
+            open: true,
+          });
+        }
+      })
+      .catch((err) => {
+        setSnackBar({
+          type: "error",
+          message: err.message,
+          open: true,
+        });
+      })
+      .finally(() => {});
+  };
+
+  const cancelTable = () => {
+    setOpenDialog(false);
+    setDialogTableData([]);
+    setDialogTableHeaders([]);
+    fileRef.current.value = "";
+  };
+
+  const downloadCSV = () => {
+    // create a csv file with the headers
+    const columns = [
+      "First Name",
+      "Last Name",
+      "Email Id",
+      "Moodle Id",
+      "Department",
+      "Password",
+      "Role",
+    ];
+    const csv =
+      columns
+        .filter((column) =>
+          usedFor === "receptionist" && column === "Department"
+            ? false
+            : !(usedFor === "students" && column === "Role")
+        )
+        .join(",") + "\n";
+
+    console.log(csv);
+    const csvData = new Blob([csv], { type: "text/csv" });
+    const csvUrl = URL.createObjectURL(csvData);
+    const tempLink = document.createElement("a");
+    tempLink.setAttribute("href", csvUrl);
+    tempLink.setAttribute("download", "sample.csv");
+    tempLink.click();
+  };
+
   const handleRemove = (id) => () => {
     setOpenModal(true);
     setRemoveUser(id);
@@ -118,7 +218,12 @@ const UserTable = () => {
 
   const remove = () => {
     setLoadingRemove(true);
-    submit("user/remove", { user_id: removeUser }, "delete").then((res) => {
+    // delete/admin
+    submit(
+      usedFor === "students" ? "user/remove" : "delete/admin",
+      { [usedFor === "students" ? "user_id" : "admin_id"]: removeUser },
+      "delete"
+    ).then((res) => {
       if (res.status === 200 || res.success) {
         setSnackBar({ type: "success", open: true, message: res.message });
         handleClose();
@@ -134,16 +239,133 @@ const UserTable = () => {
     });
   };
 
+  const onSubmitAddUser = (event) => {
+    event.preventDefault();
+    setAddUserLoadingButton(true);
+    console.log(addUserFormData);
+    //   check operationMode
+    if (addUserFormData._id) {
+      //   update/receptionist update/admin update/user
+
+      const url =
+        usedFor === "receptionist"
+          ? "update/receptionist"
+          : usedFor === "sub_admin"
+          ? "update/admin"
+          : "update/user";
+
+      return submit(url, addUserFormData, "PUT")
+        .then((res) => {
+          if (res.status === 200 || res.success) {
+            setSnackBar({ type: "success", open: true, message: res.message });
+            handleCloseAddUserModal();
+            setReload((prevState) => !prevState);
+          } else {
+            setAddUserLoadingButton(false);
+            setSnackBar({
+              type: "error",
+              open: true,
+              message: res.validation
+                ? res.validation.body.message
+                : res.message,
+            });
+          }
+        })
+        .catch((err) => {
+          setSnackBar({
+            type: "error",
+            open: true,
+            message: err.message,
+          });
+        })
+        .finally(() => {
+          setAddUserLoadingButton(false);
+        });
+    } else {
+      //   add/receptionist  add/sub_admin addUsers
+      const url =
+        usedFor === "receptionist"
+          ? "add/receptionist"
+          : usedFor === "sub_admin"
+          ? "add/sub_admin"
+          : "addUsers";
+      let body = {};
+      if (usedFor === "students") {
+        body.user = addUserFormData;
+      } else if (usedFor === "receptionist") {
+        body = {
+          ...addUserFormData,
+        };
+        delete body.department;
+      } else {
+        body = {
+          ...addUserFormData,
+        };
+      }
+      return submit(url, body)
+        .then((res) => {
+          if (res.status === 200 || res.success) {
+            setSnackBar({ type: "success", open: true, message: res.message });
+            setReload((prevState) => !prevState);
+            handleCloseAddUserModal();
+          } else {
+            setSnackBar({
+              type: "error",
+              open: true,
+              message: res.validation
+                ? res.validation.body.message
+                : res.message,
+            });
+          }
+        })
+        .catch((err) => {
+          setSnackBar({
+            type: "error",
+            open: true,
+            message: err.message,
+          });
+        })
+        .finally(() => {
+          setAddUserLoadingButton(false);
+        });
+    }
+  };
+
+  const handleCloseAddUserModal = () => {
+    setOpenAddUserModal(false);
+    setAddUserFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      moodleId: "",
+      department: "",
+      password: "",
+    });
+    setAddUserLoadingButton(false);
+  };
+
+  const handleEditUser = (user) => {
+    setAddUserFormData((prevState) => ({ ...prevState, ...user }));
+    setOpenAddUserModal(true);
+  };
+
   return (
-    <div>
-      <LoadingButton
-        loading={loadingButton}
-        variant={"contained"}
-        sx={{ m: 3 }}
-        onClick={handleClick}
-      >
-        <Typography variant={"button"}>Add User </Typography>
-      </LoadingButton>
+    <Box>
+      <Stack direction={"row"} gap={1} alignItems={"center"} marginTop={1}>
+        <Button
+          variant={"contained"}
+          sx={{ my: 2 }}
+          onClick={() => setOpenAddUserModal(true)}
+        >
+          <Typography variant={"button"}>
+            Add {usedFor.replace("_", " ")}
+          </Typography>
+        </Button>
+        <SplitButton
+          handleClickArray={[handleClick, downloadCSV]}
+          options={["Upload CSV", "Download Sample CSV"]}
+        />
+      </Stack>
       <input
         type="file"
         className={"hidden"}
@@ -152,91 +374,65 @@ const UserTable = () => {
         accept={".csv"}
         onChange={getFile}
       />
-      <Box sx={{ my: 4 }}>
+      <Box
+        sx={{
+          mt: 2,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+        }}
+      >
         {!loading ? (
-          <TableContainer sx={{ maxHeight: 440 }}>
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead>
-                <TableRow>
-                  {columns.map((column) => (
-                    <TableCell
-                      key={column.id}
-                      align={column.align}
-                      style={{ minWidth: column.minWidth }}
-                    >
-                      {column.label}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {row
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row1) => {
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={row1._id}
-                      >
-                        <TableCell align="center">{row1.first_name}</TableCell>
-                        <TableCell align="center">{row1.moodleId}</TableCell>
-                        <TableCell align="center">{row1.email}</TableCell>
-                        <TableCell align="center">{row1.department}</TableCell>
-                        <TableCell align="center">
-                          <Button
-                            variant={"contained"}
-                            onClick={handleRemove(row1._id)}
-                            size={"small"}
-                          >
-                            <Typography variant={"button"}>Remove</Typography>
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <CustomTable
+            columns={
+              usedFor === "receptionist"
+                ? ["User Name", "Moodle Id", "Email Id", "Action"]
+                : ["User Name", "Moodle Id", "Email Id", "Department", "Action"]
+            }
+            row={row}
+            count={count}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            setRowsPerPage={setRowsPerPage}
+            setPage={setPage}
+            handleRemove={handleRemove}
+            handleEdit={handleEditUser}
+            showAction={true}
+            tableFor={usedFor}
+          />
         ) : (
           <CircularProgress />
         )}
       </Box>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={count}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+      <Confirmation
+        openModal={openModal}
+        handleClose={handleClose}
+        remove={remove}
+        loadingRemove={loadingRemove}
       />
-      <Dialog
-        open={openModal}
-        onClose={handleClose}
-        // fullWidth={true}
-        maxWidth={"sm"}
-      >
-        <DialogTitle>Confirmation</DialogTitle>
-        {openModal && (
-          <DialogContent dividers>
-            <Typography>Do Your really want to remove this user??</Typography>
-          </DialogContent>
-        )}
-        <DialogActions>
-          <Button onClick={handleClose}>No</Button>
-          <LoadingButton
-            variant={"contained"}
-            loading={loadingRemove}
-            color={"error"}
-            onClick={remove}
-          >
-            Yes
-          </LoadingButton>
-        </DialogActions>
-      </Dialog>
-    </div>
+      {openDialog && (
+        <DialogBoxShowTable
+          openModal={openDialog}
+          setOpenModal={setOpenDialog}
+          handleClick={submitTable}
+          tableData={dialogTableData}
+          tableHeaders={dialogTableHeaders}
+          cancelTable={cancelTable}
+          tableFor={usedFor}
+        />
+      )}
+      <AddUserModal
+        usedFor={usedFor}
+        addUserLoadingButton={addUserLoadingButton}
+        handleCloseAddUserModal={handleCloseAddUserModal}
+        addUserFormData={addUserFormData}
+        onSubmitAddUser={onSubmitAddUser}
+        openAddUserModal={openAddUserModal}
+        setAddUserFormData={setAddUserFormData}
+        operationMode={addUserFormData._id ? "edit" : "add"}
+      />
+    </Box>
   );
 };
 
@@ -283,11 +479,10 @@ const config = {
       inputName: "password",
       required: true,
     },
-
-    // {
-    //   name: 'Roles',
-    //   inputName: 'roles',
-    //   isArray: true
-    // },
+    {
+      name: "Role",
+      inputName: "role",
+      required: true,
+    },
   ],
 };

@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useReducer, useState } from "react";
 import { useRouter } from "next/router";
 import { Cookies, useCookies } from "react-cookie";
-export const url = "https://quiet-thicket-18761.herokuapp.com/api/"; //https://reimbursementserver.herokuapp.com/"http://localhost:8080/api/";
-// export const url = "http://localhost:8000/api/"; //https://reimbursementserver.herokuapp.com/"http://localhost:8080/api/";
+import { snackBarAtom } from "../store";
+import { useAtom } from "jotai";
+
+export const url = process.env.NEXT_PUBLIC_API_URL;
 
 const initialState = {
   loading: true,
@@ -17,7 +19,12 @@ function apiReducer(state, action) {
     case "DATA_FETCH_FAILURE":
       return { ...state, loading: false, error: action.payload };
     case "DATA_FETCH_SUCCESS":
-      return { ...state, loading: false, data: action.payload };
+      return {
+        ...state,
+        loading: false,
+        data: action.payload,
+        error: undefined,
+      };
     default:
       return state;
   }
@@ -30,6 +37,10 @@ export function useFetch(endpoint, initialData = [], fullUrl = false) {
 
   const [data, dispatch] = useReducer(apiReducer, initialState);
   const [cookies] = useCookies();
+
+  const [_, setSnackBar] = useAtom(snackBarAtom);
+  const router = useRouter();
+
   useEffect(() => {
     const token = cookies.auth_token;
     const controller = new AbortController();
@@ -46,7 +57,20 @@ export function useFetch(endpoint, initialData = [], fullUrl = false) {
       })
         .then(async (response) => {
           if (!response.ok) {
-            const error = await response.text();
+            const error = await response.json();
+            if (
+              error.status === 401 &&
+              router.pathname !== "/login" &&
+              router.pathname !== "/signup"
+            ) {
+              router.push("/logout");
+              setSnackBar({
+                open: true,
+                type: "error",
+                message: error.message ? error.message : "Unauthorized",
+              });
+            }
+
             throw {
               status: response.status,
               error: parseError(error),
@@ -70,7 +94,6 @@ export function useFetch(endpoint, initialData = [], fullUrl = false) {
 
 //POST,PUT,
 export async function submit(endpoint, body, type = "POST", isFile = false) {
-  console.log(body);
   return fetch("/api/submit", {
     method: "POST",
     body: JSON.stringify({
@@ -90,10 +113,16 @@ export const useUserProfile = () => {
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
+  const router = useRouter();
+  const [, setSnackBar] = useAtom(snackBarAtom);
+
   useEffect(() => {
     const controller = new AbortController();
     const session = sessionStorage.getItem("user");
-    const user = !!session ? JSON.parse(session) : session;
+    let user = null;
+    if (!!session && session !== "undefined") {
+      user = JSON.parse(session);
+    }
     if (user) {
       setUserData(user);
       setLoading(false);
@@ -101,15 +130,39 @@ export const useUserProfile = () => {
       fetch("/api/details", { signal: controller.signal })
         .then((response) => response.json())
         .then((result) => {
-          console.log(result);
-          setError(result.status === 200 ? false : result.status);
+          setError(
+            result.status === 200
+              ? false
+              : {
+                  status: result.status,
+                  message: result.message,
+                }
+          );
+          if (
+            result.status === 401 &&
+            (router.pathname !== "/login" || router.pathname !== "/signup")
+          ) {
+            setSnackBar({
+              open: true,
+              message: result.message,
+              type: "error",
+            });
+
+            router.push("/logout");
+            return;
+          }
           sessionStorage.setItem("user", JSON.stringify(result.data));
           setUserData(result.data);
         })
-        .catch(() => {
-          setError(500);
+        .catch((err) => {
+          console.error(err);
+          setError({
+            status: 400,
+            message: "Oops! Something went wrong",
+          });
         })
         .finally(() => setLoading(false));
+
     return () => controller.abort();
   }, []);
   return {

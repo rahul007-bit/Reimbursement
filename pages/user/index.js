@@ -1,26 +1,16 @@
 import React, { useState } from "react";
 import { UserHome } from "../../components/UserHome";
 import { useUserProfile } from "../../Hooks/apiHooks";
-import {
-  AppBar,
-  Box,
-  CircularProgress,
-  Tab,
-  Tabs,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { AppBar, Box, CircularProgress, Tab, Tabs } from "@mui/material";
 import Layout from "../../components/Layout";
-import PropTypes from "prop-types";
 import TabPanel, { a11yProps } from "../../components/Util/TabPanel";
 
 export default function Home() {
   const { error, loading, userData } = useUserProfile();
-  const theme = useTheme();
   const [value, setValue] = useState(0);
   if (loading)
     return (
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", width: 1, justifyContent: "center" }}>
         <CircularProgress />
       </Box>
     );
@@ -38,29 +28,39 @@ export default function Home() {
     <>
       <Layout userData={userData} title={"Reimbursement"}>
         {/*<UserHome userData={userData} />*/}
-        <AppBar position={"relative"}>
+        <AppBar position={"relative"} elevation={0}>
           <Tabs
             value={value}
             onChange={handleChange}
-            indicatorColor="secondary"
+            TabIndicatorProps={{ style: { background: "#fff" } }}
             textColor="inherit"
             variant="fullWidth"
-            aria-label="full width tabs example"
           >
             <Tab label="Pending Request" {...a11yProps(0)} />
-            <Tab label="Approved Request" {...a11yProps(1)} />
-            <Tab label="All Request" {...a11yProps(2)} />
+            {userData?.type === "user" && (
+              <Tab label="Approved Request" {...a11yProps(1)} />
+            )}
+            {userData?.type === "user" && (
+              <Tab label="All Request" {...a11yProps(2)} />
+            )}
           </Tabs>
         </AppBar>
-        <TabPanel value={value} index={0} dir={theme.direction}>
+        <TabPanel value={value} index={0}>
           <UserHome userData={userData} status={"PENDING"} />
+          {userData?.type === "user" && (
+            <UserHome userData={userData} status={"In Process"} />
+          )}
         </TabPanel>
-        <TabPanel value={value} index={1} dir={theme.direction}>
-          <UserHome userData={userData} status={"Approved"} />
-        </TabPanel>
-        <TabPanel value={value} index={2} dir={theme.direction}>
-          <UserHome userData={userData} />
-        </TabPanel>
+        {userData?.type === "user" && (
+          <>
+            <TabPanel value={value} index={1}>
+              <UserHome userData={userData} status={"Approved"} />
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+              <UserHome userData={userData} />
+            </TabPanel>
+          </>
+        )}
       </Layout>
     </>
   );

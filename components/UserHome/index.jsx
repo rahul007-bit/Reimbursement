@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import Link from "next/link";
+
 import UserTable from "./UserTable";
 import { useFetch } from "../../Hooks/apiHooks";
 import { useState } from "react";
@@ -18,8 +18,12 @@ export const UserHome = ({ userData, status }) => {
     setUser(userData);
   }, [userData]);
   const { loading, data } = useFetch(
-    `user/getReimburse${status ? `?status=${status}` : ""}`,
-    []
+    userData
+      ? userData.type === "user"
+        ? `user/getReimburse${status ? `?status=${status}` : ""}`
+        : `receptionist/reimbursements`
+      : "",
+    [userData]
   );
 
   return (
@@ -39,7 +43,7 @@ export const UserHome = ({ userData, status }) => {
       >
         {!loading ? (
           data ? (
-            <UserTable data={data} />
+            <UserTable data={data} userData={userData} />
           ) : (
             <Empty />
           )

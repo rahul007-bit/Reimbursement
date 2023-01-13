@@ -13,6 +13,7 @@ import {
 import {
   Compress,
   Dashboard,
+  FeedOutlined,
   HowToReg,
   Login,
   Logout,
@@ -23,7 +24,6 @@ import {
 import Link from "next/link";
 
 const Drawer = ({ userDetails }) => {
-  console.log(userDetails);
   return (
     <div>
       <Box>
@@ -71,18 +71,23 @@ const Drawer = ({ userDetails }) => {
       </Box>
       <Divider />
       <List>
+        {/* {
+                name: "Reset Password",
+                link: "/resetpassword",
+                icon: <Password />,
+              }, */}
         {userDetails
           ? [
               {
                 name: "Dashboard",
-                link: `/${userDetails?.type}`,
+                link:
+                  userDetails.type === "admin" ||
+                  userDetails.type === "sub_admin"
+                    ? "/admin"
+                    : "/user",
                 icon: <Dashboard />,
               },
-              {
-                name: "Reset Password",
-                link: "/resetpassword",
-                icon: <Password />,
-              },
+
               {
                 name: "Log-out",
                 link: "/logout",
@@ -113,29 +118,42 @@ const Drawer = ({ userDetails }) => {
             ))}
       </List>
       <Divider />
-      {userDetails && userDetails.type === "admin" && (
-        <List>
-          <ListItem disablePadding>
-            <Link href={"/admin/view_request"}>
-              <ListItemButton>
-                <ListItemIcon>
-                  <RequestQuote />
-                </ListItemIcon>
-                <ListItemText primary={"View Request"} />
-              </ListItemButton>
-            </Link>
-          </ListItem>
-          <Link href={"/admin/add_users"}>
-            <ListItemButton>
-              <ListItemIcon>
-                <PersonAdd />
-              </ListItemIcon>
+      {userDetails &&
+        (userDetails.type === "admin" || userDetails.type === "sub_admin") && (
+          <List>
+            <ListItem disablePadding>
+              <Link href={"/admin/view_request"}>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <RequestQuote />
+                  </ListItemIcon>
+                  <ListItemText primary={"View Request"} />
+                </ListItemButton>
+              </Link>
+            </ListItem>
+            <ListItem disablePadding>
+              <Link href={"/admin/add_users"}>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <PersonAdd />
+                  </ListItemIcon>
 
-              <ListItemText primary={"Add Users"} />
-            </ListItemButton>
-          </Link>
-        </List>
-      )}
+                  <ListItemText primary={"Add Users"} />
+                </ListItemButton>
+              </Link>
+            </ListItem>
+            <ListItem disablePadding>
+              <Link href={"/admin/view-forms"}>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <FeedOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary={"Forms"} />
+                </ListItemButton>
+              </Link>
+            </ListItem>
+          </List>
+        )}
       {userDetails && userDetails.type === "user" && (
         <List>
           <ListItem disablePadding>

@@ -1,14 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MuiAlert from "@mui/material/Alert";
-import { Snackbar } from "@mui/material";
+import { Alert, AlertTitle, Slide, Snackbar } from "@mui/material";
 import { useAtom } from "jotai";
 import { snackBarAtom } from "../../store";
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 const Snack = () => {
+  const [userOnline, setUserOnline] = useState(true);
   const [{ open, type, message }, setSnackBar] = useAtom(snackBarAtom);
+
+  useEffect(() => {
+    window.addEventListener("online", () => {
+      setUserOnline(true);
+    });
+    window.addEventListener("offline", () => setUserOnline(false));
+    return () => {
+      window.removeEventListener("online", () => setUserOnline(true));
+      window.removeEventListener("offline", () => setUserOnline(false));
+    };
+  }, []);
+
   const handleClose = () => {
     setSnackBar({ type: "", message: "", open: false });
   };
@@ -16,16 +26,32 @@ const Snack = () => {
     <>
       {open && (
         <Snackbar
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
           open={open}
           autoHideDuration={6000}
           onClose={handleClose}
         >
-          <Alert onClose={handleClose} severity={type} sx={{ width: "100%" }}>
+          <Alert
+            variant={"filled"}
+            onClose={handleClose}
+            severity={type}
+            sx={{ width: "100%" }}
+          >
+            {/*<AlertTitle>{type === "success" ? "Success" : "Error"}</AlertTitle>*/}
             {message}
           </Alert>
         </Snackbar>
       )}
+
+      <Snackbar
+        open={!userOnline}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        // onClose={}
+      >
+        <Alert variant={"filled"} severity={"error"} sx={{ width: "100%" }}>
+          You are offline
+        </Alert>
+      </Snackbar>
     </>
   );
 };

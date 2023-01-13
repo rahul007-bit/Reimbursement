@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import {
   AppBar,
@@ -10,7 +10,6 @@ import {
   Typography,
 } from "@mui/material";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { Menu as MenuIcon } from "@mui/icons-material";
 import { drawerWidth } from "../Layout";
 import { default as DrawerItem } from "./Drawer";
@@ -22,23 +21,6 @@ const settings = [
 ];
 
 const HeaderBar = ({ children, userDetails, window }) => {
-  const [anchorElUser, setAnchorElUser] = useState(null);
-  const [user, setUser] = useState(null);
-
-  const router = useRouter();
-  useEffect(() => {
-    // const token = localStorage.getItem("auth-token");
-    setUser(userDetails);
-  }, [userDetails]);
-
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-  const [open, setOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const container =
     window !== undefined ? () => window().document.body : undefined;
@@ -56,8 +38,8 @@ const HeaderBar = ({ children, userDetails, window }) => {
           sx={{
             width: { sm: `calc(100% - ${drawerWidth}px)` },
             ml: { sm: `${drawerWidth}px` },
-            backgroundColor: "rgb(38 40 112 / 87%)",
-            backdropFilter: "blur(10px)",
+            // backgroundColor: "rgb(38 40 112 / 87%)",
+            // backdropFilter: "blur(10px)",
           }}
         >
           <Container maxWidth="xl">
@@ -94,7 +76,7 @@ const HeaderBar = ({ children, userDetails, window }) => {
                       sx={{
                         mr: 2,
                         display: { xs: "none", md: "flex" },
-                        fontFamily: "Fira Mono",
+                        fontFamily: "Poppins",
                         fontWeight: 700,
                         letterSpacing: ".1rem",
                         color: "inherit",
@@ -114,7 +96,7 @@ const HeaderBar = ({ children, userDetails, window }) => {
                         mr: 2,
                         display: { xs: "flex", md: "none" },
                         flexGrow: 1,
-                        fontFamily: "Fira Mono",
+                        fontFamily: "Poppins",
                         fontWeight: 700,
                         letterSpacing: ".1rem",
                         color: "inherit",

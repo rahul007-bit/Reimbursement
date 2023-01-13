@@ -16,8 +16,8 @@ const Logout = () => {
       message: "Logout successfully",
       open: true,
     });
-    removeCookie("auth_token");
-    removeCookie("loginType");
+    removeCookie("auth_token", { path: "/" });
+    removeCookie("loginType", { path: "/" });
     router.push("login");
   }, [removeCookie, router, setSnackBar]);
   return <></>;

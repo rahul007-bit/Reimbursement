@@ -1,7 +1,5 @@
 import React from "react";
-import HeaderBar from "../../components/header/header";
 import ViewRequestTable from "../../components/Admin/ViewRequestTable";
-import Error from "next/error";
 import { useUserProfile } from "../../Hooks/apiHooks";
 import { Box, CircularProgress } from "@mui/material";
 import Layout from "../../components/Layout";
@@ -10,7 +8,7 @@ const ViewRequest = () => {
   const { error, loading, userData } = useUserProfile();
   if (loading)
     return (
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", width: 1, justifyContent: "center" }}>
         <CircularProgress />
       </Box>
     );
@@ -22,7 +20,7 @@ const ViewRequest = () => {
 
   return (
     <Layout userData={userData}>
-      <ViewRequestTable />
+      <ViewRequestTable userData={userData} />
     </Layout>
   );
 };

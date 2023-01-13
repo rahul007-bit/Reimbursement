@@ -6,7 +6,7 @@ const Empty = () => {
   return (
     <div className={"flex items-center flex-col"}>
       <Image src={empty} alt="" width={"350px"} height={"350px"} />
-      <Typography variant={"h4"}>Sorry There nothing to show!!</Typography>
+      <Typography variant={"h6"}>Sorry There nothing to show!!</Typography>
     </div>
   );
 };

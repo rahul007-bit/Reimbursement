@@ -1,112 +1,63 @@
-import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
 import EChartsReact from "echarts-for-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useFetch } from "../../../Hooks/apiHooks";
 
-export default function Chats() {
+export default function Chats({ chart }) {
+  const [data, setData] = useState([]);
+  const { loading, data: fetchData } = useFetch(
+    `reimburseCount?get=${chart}`,
+    []
+  );
+  useEffect(() => {
+    if (!loading && fetchData) {
+      if (fetchData.status !== 404 || fetchData.status === 200) {
+        const data = fetchData.data.map((d) => ({
+          name: d._id,
+          value: d.Total,
+        }));
+        setData(data);
+      }
+    }
+  }, [loading, fetchData]);
   const option = {
     tooltip: {
       trigger: "item",
     },
     legend: {
-      top: "5%",
+      orient: "horizontal",
       left: "center",
+      bottom: "0",
       textStyle: {
-        //The style of the legend text
         color: "#858d98",
       },
     },
-    // color: chartDoughnutColors,
+    // color: chartPieColors,
     series: [
       {
-        name: "Access From",
+        name: "Requests",
         type: "pie",
-        radius: ["40%", "70%"],
-        avoidLabelOverlap: false,
-        label: {
-          show: false,
-          position: "center",
-        },
+        radius: ["30%", "60%"],
+        data: data,
         emphasis: {
-          label: {
-            show: true,
-            fontSize: "16",
-            fontWeight: "bold",
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: "rgba(0, 0, 0, 0.5)",
           },
         },
-        labelLine: {
-          show: false,
-        },
-        data: [
-          {
-            value: 1048,
-            name: "Search Engine",
-          },
-          {
-            value: 735,
-            name: "Direct",
-          },
-          {
-            value: 580,
-            name: "Email",
-          },
-          {
-            value: 484,
-            name: "Union Ads",
-          },
-          {
-            value: 300,
-            name: "Video Ads",
-          },
-        ],
       },
     ],
     textStyle: {
       fontFamily: "Poppins, sans-serif",
     },
   };
-
   return (
     <>
-      {/* <Box
-        sx={{
-          display: "flex",
-          width: 1,
-          height: 1,
-          alignContent: "center",
-          justifyContent: "center",
-        }}
-      > */}
-      <Box
-        sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}
-      >
-        {/* chat 1 pie chart*/}
-        <Typography variant={"h4"} margin={6}>
-          Summary
-        </Typography>
-        <Grid
-          container
-          spacing={{ xs: 2, md: 4 }}
-          columns={{ xs: 2, sm: 4, md: 8 }}
-          justifyContent={"center"}
-          alignItems={"center"}
-        >
-          <Grid item xs={2} sm={3} md={3}>
-            <Card>
-              <CardContent>
-                <EChartsReact style={{ height: "350px" }} option={option} />
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={2} sm={3} md={3}>
-            <Card>
-              <CardContent>
-                <EChartsReact style={{ height: "350px" }} option={option} />
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-        {/* chat 2 bar graph */}
-      </Box>
+      <EChartsReact
+        style={{ height: "350px" }}
+        option={option}
+        showLoading={loading}
+      />
     </>
   );
 }

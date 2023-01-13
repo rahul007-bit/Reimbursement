@@ -8,7 +8,7 @@ import { submit } from "../../Hooks/apiHooks";
 import { useAtom } from "jotai";
 import { snackBarAtom } from "../../store";
 
-export default function SignIn({ usedIn: usedFor = "user" }) {
+export default function SignIn({ usedIn: usedFor = "user", setLoginAs }) {
   const [loading, setLoading] = useState(false);
   const [_, setCookies] = useCookies();
   const router = useRouter();
@@ -30,8 +30,8 @@ export default function SignIn({ usedIn: usedFor = "user" }) {
             open: true,
           });
           const token = response.auth_token;
-          setCookies("auth_token", token);
-          setCookies("loginType", response.type);
+          setCookies("auth_token", token, { path: "/" });
+          setCookies("loginType", response.type, { path: "/" });
           setTimeout(async () => {
             await router.push("/");
           }, 800);
@@ -40,7 +40,6 @@ export default function SignIn({ usedIn: usedFor = "user" }) {
         }
       })
       .catch((err) => {
-        console.log(err);
         setSnackBar({ type: "error", message: err.message, open: true });
       })
       .finally(() => setLoading(false));
@@ -66,8 +65,9 @@ export default function SignIn({ usedIn: usedFor = "user" }) {
           maxWidth: "480px",
           p: 4,
           mt: 8,
+          mx: 1,
         }}
-        elevation={3}
+        variant={"outlined"}
       >
         <Typography component="h1" variant="h4">
           {usedFor === "admin" ? "Admin Sign in" : "Sign In"}
@@ -124,19 +124,36 @@ export default function SignIn({ usedIn: usedFor = "user" }) {
                   {"Don't have an account? Sign Up"}
                 </Typography>
               </Link>
-              <Link href={"/login/admin"}>
-                <Typography
-                  sx={{
-                    cursor: "pointer",
-                    ":hover": {
-                      textDecoration: "underline",
-                    },
-                  }}
-                  variant={"caption"}
-                >
-                  {"Login as admin?"}
-                </Typography>
-              </Link>
+              {usedFor === "user" && (
+                <Link href={"/login?user=admin"}>
+                  <Typography
+                    sx={{
+                      cursor: "pointer",
+                      ":hover": {
+                        textDecoration: "underline",
+                      },
+                    }}
+                    variant={"caption"}
+                  >
+                    {"Login as admin?"}
+                  </Typography>
+                </Link>
+              )}
+              {usedFor === "admin" && (
+                <Link href={"/login?user=user"}>
+                  <Typography
+                    sx={{
+                      cursor: "pointer",
+                      ":hover": {
+                        textDecoration: "underline",
+                      },
+                    }}
+                    variant={"caption"}
+                  >
+                    {"Login as User?"}
+                  </Typography>
+                </Link>
+              )}
             </Box>
           </Grid>
         </Box>
