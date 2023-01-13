@@ -188,11 +188,12 @@ export const getFullReimbursementInfo = async (query) => {
   try {
     let params = Object.create(null);
 
-    if (query.createdAt) {
-      let date = new Date(query.createdAt);
-      let result = new Date(date.getTime() + 24 * 60 * 60 * 1000);
-      params["startDate"] = date;
-      params["endDate"] = result;
+    if (query.startDate) {
+      params["created_at"] = { $gte: new Date(query.startDate) };
+    }
+
+    if (query.endDate) {
+      params["created_at"] = { $lte: new Date(query.endDate) };
     }
 
     if (query.userId) {
@@ -213,6 +214,10 @@ export const getFullReimbursementInfo = async (query) => {
 
     if (query.certificate_name) {
       params["reimbursementDetails.certificate_name"] = query.certificate_name;
+    }
+
+    if (query.certificate_id) {
+      params["certificate"] = mongoose.Types.ObjectId(query.certificate_id);
     }
 
     const result = await Reimbursement.aggregate([

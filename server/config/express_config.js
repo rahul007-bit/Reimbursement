@@ -8,6 +8,7 @@ import router from "../routes/main_route.js";
 import logger from "./logger.js";
 // import env from "./env.js";
 import { errors } from "celebrate";
+
 const appConfig = async (app) => {
   // mask the application type
   app.use(helmet());

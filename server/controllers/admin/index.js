@@ -18,8 +18,8 @@ import logger from "../../config/logger.js";
 
 import {
   createCertificate,
-  getCertificates,
   deleteCertificate,
+  getCertificates,
   updateCertificate,
 } from "../../services/certification/index.js";
 import { updateProfileAdmin } from "../../services/admin/index.js";

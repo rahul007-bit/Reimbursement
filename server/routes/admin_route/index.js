@@ -6,7 +6,7 @@ import { adminAuth } from "./auth/auth.js";
 import { receptionistAuth } from "./auth/receptionistAuth.js";
 import { subAdminAuth } from "./auth/subAdminAuth.js";
 
-import { sub_admin, receptionist } from "../../services/admin/validator.js";
+import { receptionist, sub_admin } from "../../services/admin/validator.js";
 
 const limiter = rateLimit(config.rateLimiter);
 

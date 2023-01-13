@@ -21,8 +21,9 @@ import logger from "./config/logger.js";
 const app = express();
 app.use(cors());
 app.options("*", cors());
-// connecting to the database
-// console.log(config.db);
+
+mongoose.set("strictQuery", true);
+
 mongoose.connect(
   config.db,
   {
@@ -68,7 +69,9 @@ const server = new ApolloServer({
   resolvers,
   cache: "bounded",
 });
+
 await server.start();
+
 server.applyMiddleware({ app, path: "/reimbursement_graph_ql" });
 
 app.listen(config.port, () => {
