@@ -20,6 +20,7 @@ import {
   createCertificate,
   getCertificates,
   deleteCertificate,
+  updateCertificate,
 } from "../../services/certification/index.js";
 import { updateProfileAdmin } from "../../services/admin/index.js";
 
@@ -464,6 +465,24 @@ controller.getCertificates = async (req, res) => {
   try {
     const query = req.query;
     const result = await getCertificates(query);
+    return res.status(result.status).json(result);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: error.message, status: 500 });
+  }
+};
+
+controller.updateCertificate = async (req, res) => {
+  try {
+    const { certificate_id, certificate_name, questions } = req.body;
+    const result = await updateCertificate({
+      certificate_id,
+      certificate: {
+        certificate_name,
+        questions,
+      },
+    });
     return res.status(result.status).json(result);
   } catch (error) {
     return res

@@ -63,6 +63,41 @@ export const getCertificates = async (query) => {
   }
 };
 
+export const updateCertificate = async ({ certificate_id, certificate }) => {
+  try {
+    const updatedCertificate = await Certificate.findOne({
+      _id: certificate_id,
+    });
+
+    if (!updatedCertificate) {
+      return {
+        status: 400,
+        message: "Certificate not found",
+        success: false,
+      };
+    }
+
+    updatedCertificate.certificate_name = certificate.certificate_name;
+
+    updatedCertificate.questions = certificate.questions;
+
+    await updatedCertificate.save();
+
+    return {
+      status: 200,
+      message: "Certificate updated successfully",
+      success: true,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      status: 500,
+      message: "Internal server error",
+      success: false,
+    };
+  }
+};
+
 export const deleteCertificate = async (certificate_id) => {
   try {
     const certificate = await Certificate.deleteOne({ _id: certificate_id });

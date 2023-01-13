@@ -18,9 +18,9 @@ const typeDefs = gql`
   }
 
   type Remarks {
-    bySubAdmin: String!
-    byAdmin: String!
-    byReceptionist: String!
+    bySubAdmin: String
+    byAdmin: String
+    byReceptionist: String
   }
 
   type BankDetails {

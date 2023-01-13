@@ -212,10 +212,26 @@ const resolvers = {
 
     getCertificates: async () => {
       const data = await Certificate.find({});
+      if (!data) {
+        return {
+          status: "404",
+          message: "Not Found",
+          success: false,
+          data: null,
+        };
+      }
       return data;
     },
     getCertificate: async (_, { id }) => {
       const data = await Certificate.findById(id);
+      if (!data) {
+        return {
+          status: "404",
+          message: "Not Found",
+          success: false,
+          data: null,
+        };
+      }
       return data;
     },
   },
