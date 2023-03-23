@@ -81,4 +81,4 @@ app.listen(config.port, () => {
   );
 });
 import appConfig from "./config/express_config.js";
-appConfig(app, config);
+appConfig(app);

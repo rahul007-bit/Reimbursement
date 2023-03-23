@@ -17,7 +17,6 @@ export const createUser = async (users, user) => {
       for (const [index, user] of users.entries()) {
         const { first_name, last_name, moodleId, email, password, department } =
           user;
-
         const userExist = await User.findOne({ moodleId: moodleId });
         if (userExist) {
           isValid = false;
@@ -145,11 +144,6 @@ export const updateUser = async (
   { firstName, lastName, email, department, _id }
 ) => {
   try {
-    console.log(
-      admin.role !== "admin",
-      admin.role !== "sub_admin",
-      admin._id.toString()
-    );
     if (
       admin.role !== "admin" &&
       admin.role !== "sub_admin" &&
@@ -186,6 +180,7 @@ export const updateUser = async (
     user.last_name = lastName;
     user.email = email;
     user.department = department;
+
     await user.save();
     return {
       status: 200,
