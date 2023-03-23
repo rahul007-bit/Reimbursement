@@ -77,7 +77,7 @@ export default function SignIn({ usedIn: usedFor = "user", setLoginAs }) {
             margin="normal"
             required
             fullWidth
-            label="Moodle Id"
+            label="Institute Id"
             name="moodle_id"
             autoFocus
           />

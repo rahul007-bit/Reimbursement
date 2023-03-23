@@ -143,6 +143,33 @@ const ReimbursementForm = ({ user: userDetails }) => {
         IFSCode: certificationDetails.bankDetails.IFSCode,
       },
     };
+    if (validateForm() === false) {
+      setLoading(false);
+      return;
+    }
+    // check if account number is valid
+    if (
+      body.bankDetails.accountNumber.length <= 15 &&
+      body.bankDetails.accountNumber.length >= 10
+    ) {
+      setSnackBar({
+        open: true,
+        type: "error",
+        message: "Account number should be 10-15 digits",
+      });
+      setLoading(false);
+      return;
+    }
+    if (body.bankDetails.IFSCode.length !== 11) {
+      setSnackBar({
+        open: true,
+        type: "error",
+        message: "IFSC code should be 11 digits",
+      });
+      setLoading(false);
+      return;
+    }
+
     submit("user/requestReimburse", body).then((response) => {
       if (response.status === 200 || response.success) {
         setSnackBar({
@@ -281,7 +308,7 @@ const ReimbursementForm = ({ user: userDetails }) => {
                       renderInput={(params) => (
                         <TextField
                           {...params}
-                          label="Select Certificate"
+                          label="Select Type of Reimbursement"
                           required
                         />
                       )}

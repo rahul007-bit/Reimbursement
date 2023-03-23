@@ -28,7 +28,7 @@ const columns = [
   { id: uuid(), label: "Certificate Name", align: "center", minWidth: 170 },
   { id: uuid(), label: "Applied At", align: "center", minWidth: 100 },
   { id: uuid(), label: "Applied by", align: "center", minWidth: 200 },
-  { id: uuid(), label: "Moodle Id", align: "center", minWidth: 200 },
+  { id: uuid(), label: "Institute Id", align: "center", minWidth: 200 },
   {
     id: uuid(),
     label: "Amount",

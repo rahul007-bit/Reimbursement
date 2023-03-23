@@ -381,7 +381,7 @@ export const approveReimbursement = async ({
         result.status = "In Progress";
         await result.save();
         mailDetails.subject = "Reimbursement Approved by Admin";
-        mailDetails.text = `Your Reimbursement has been approved by the Admin. Please wait for the final approval from the Receptionist`;
+        mailDetails.text = `Your Reimbursement has been approved by the Admin. Please wait for the final approval from the Accountant`;
 
         return sendMail(mailDetails)
           .then(() => {
@@ -459,8 +459,8 @@ export const approveReimbursement = async ({
       }
       result.approvedByReceptionist = false;
       result.status = "Rejected";
-      mailDetails.subject = "Reimbursement Rejected by Receptionist";
-      mailDetails.text = `Your Reimbursement has been rejected by the Receptionist. Please contact the Admin for more details`;
+      mailDetails.subject = "Reimbursement Rejected by Accountant";
+      mailDetails.text = `Your Reimbursement has been rejected by the Accountant. Please contact the Admin for more details`;
       await result.save();
 
       return sendMail(mailDetails)

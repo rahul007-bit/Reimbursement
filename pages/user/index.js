@@ -1,9 +1,20 @@
 import React, { useState } from "react";
 import { UserHome } from "../../components/UserHome";
 import { useUserProfile } from "../../Hooks/apiHooks";
-import { AppBar, Box, CircularProgress, Tab, Tabs } from "@mui/material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  AppBar,
+  Box,
+  CircularProgress,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import Layout from "../../components/Layout";
 import TabPanel, { a11yProps } from "../../components/Util/TabPanel";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default function Home() {
   const { error, loading, userData } = useUserProfile();
@@ -46,9 +57,38 @@ export default function Home() {
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
-          <UserHome userData={userData} status={"PENDING"} />
+          <Accordion
+            TransitionProps={{ unmountOnExit: true }}
+            defaultExpanded={true}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography sx={{ width: "33%", flexShrink: 0 }} variant={"h6"}>
+                Pending Request
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <UserHome userData={userData} status={"PENDING"} />
+            </AccordionDetails>
+          </Accordion>
           {userData?.type === "user" && (
-            <UserHome userData={userData} status={"In Process"} />
+            <Accordion TransitionProps={{ unmountOnExit: true }}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography sx={{ width: "33%", flexShrink: 0 }} variant={"h6"}>
+                  In Process Request
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <UserHome userData={userData} status={"In Process"} />
+              </AccordionDetails>
+            </Accordion>
           )}
         </TabPanel>
         {userData?.type === "user" && (

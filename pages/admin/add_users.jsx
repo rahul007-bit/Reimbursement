@@ -48,10 +48,10 @@ export default function AddUser() {
         >
           <Tab label="Students" {...a11yProps(0)} />
           {cookies && cookies.loginType === "admin" && (
-            <Tab label="Sub Admins" {...a11yProps(1)} />
+            <Tab label="Head Of Departements" {...a11yProps(1)} />
           )}
           {cookies && cookies.loginType === "admin" && (
-            <Tab label="Receptionist" {...a11yProps(2)} />
+            <Tab label="Accountant" {...a11yProps(2)} />
           )}
         </Tabs>
       </AppBar>
@@ -69,7 +69,7 @@ export default function AddUser() {
           <TabPanel value={value} index={1}>
             <Card variant="outlined">
               <CardContent>
-                <Typography variant={"h5"}>Sub Admins</Typography>
+                <Typography variant={"h5"}>Head Of Departements</Typography>
                 <Divider />
                 <UserTable usedFor={"sub_admin"} userData={userData} />
               </CardContent>
@@ -78,7 +78,7 @@ export default function AddUser() {
           <TabPanel value={value} index={2}>
             <Card variant="outlined">
               <CardContent>
-                <Typography variant={"h5"}>Receptionist</Typography>
+                <Typography variant={"h5"}>Accountant</Typography>
                 <Divider />
                 <UserTable usedFor={"receptionist"} userData={userData} />
               </CardContent>
@@ -90,13 +90,3 @@ export default function AddUser() {
     </Layout>
   );
 }
-/*
-<Card>
-          <CardContent>
-            <Typography variant={"h5"}>Users</Typography>
-            <Divider />
-            <UserTable />
-          </CardContent>
-        </Card>
-
-*/

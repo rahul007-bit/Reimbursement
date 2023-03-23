@@ -18,7 +18,7 @@ import AddUserModal from "./AddUserModal";
 
 const columns = [
   { label: "User Name", align: "center", minWidth: 170 },
-  { label: "Moodle Id", align: "center", minWidth: 100 },
+  { label: "Institute Id", align: "center", minWidth: 100 },
   { label: "Email Id", align: "center", minWidth: 200 },
   { label: "Department", align: "center", minWidth: 200 },
   { label: "Action", align: "center", minWidth: 200 },
@@ -86,7 +86,6 @@ const UserTable = ({ usedFor, userData }) => {
   const getFile = (event) => {
     const file = event.target.files && event.target.files[0];
     if (file) {
-      console.log(file);
       const newConfig = {
         headers: config.headers.filter((item) =>
           usedFor === "receptionist" && item.name === "Department"
@@ -97,7 +96,7 @@ const UserTable = ({ usedFor, userData }) => {
 
       CSVFileValidator(file, newConfig)
         .then((csvData) => {
-          console.log(csvData);
+          // console.log(csvData);
           if (!csvData.inValidData.length > 0) {
             const header = columns.map((column) => column.label);
             setDialogTableHeaders(header.filter((item) => item !== "Action"));
@@ -125,20 +124,30 @@ const UserTable = ({ usedFor, userData }) => {
   };
 
   const submitTable = () => {
-    submit(
-      usedFor === "sub_admin"
-        ? "add/sub_admins"
-        : usedFor === "receptionist"
-        ? "add/receptionists"
-        : "addUsers",
-      {
-        [usedFor === "sub_admin"
-          ? "subAdmins"
-          : usedFor === "receptionist"
-          ? "receptionists"
-          : "users"]: dialogTableData,
-      }
-    )
+    let endpoint = "";
+    let role = "";
+    if (usedFor === "sub_admin") {
+      role = "subAdmins";
+      endpoint = "add/sub_admins";
+      // add role to dialogTableData
+      dialogTableData.forEach((item) => {
+        item.role = "sub_admin";
+      });
+    } else if (usedFor === "receptionist") {
+      role = "receptionists";
+      endpoint = "add/receptionists";
+      // add role to dialogTableData
+      dialogTableData.forEach((item) => {
+        item.role = "receptionist";
+      });
+    } else {
+      role = "users";
+      endpoint = "addUsers";
+    }
+
+    submit(endpoint, {
+      [role]: dialogTableData,
+    })
       .then((response) => {
         if (response.success || response.status === 200) {
           setSnackBar({
@@ -183,10 +192,10 @@ const UserTable = ({ usedFor, userData }) => {
       "First Name",
       "Last Name",
       "Email Id",
-      "Moodle Id",
+      "Institute Id",
       "Department",
       "Password",
-      "Role",
+      // "Role",
     ];
     const csv =
       columns
@@ -197,7 +206,7 @@ const UserTable = ({ usedFor, userData }) => {
         )
         .join(",") + "\n";
 
-    console.log(csv);
+    // console.log(csv);
     const csvData = new Blob([csv], { type: "text/csv" });
     const csvUrl = URL.createObjectURL(csvData);
     const tempLink = document.createElement("a");
@@ -210,6 +219,7 @@ const UserTable = ({ usedFor, userData }) => {
     setOpenModal(true);
     setRemoveUser(id);
   };
+
   const handleClose = () => {
     setOpenModal(false);
     setRemoveUser(null);
@@ -387,8 +397,14 @@ const UserTable = ({ usedFor, userData }) => {
           <CustomTable
             columns={
               usedFor === "receptionist"
-                ? ["User Name", "Moodle Id", "Email Id", "Action"]
-                : ["User Name", "Moodle Id", "Email Id", "Department", "Action"]
+                ? ["User Name", "Institute Id", "Email Id", "Action"]
+                : [
+                    "User Name",
+                    "Institute Id",
+                    "Email Id",
+                    "Department",
+                    "Action",
+                  ]
             }
             row={row}
             count={count}
@@ -453,7 +469,7 @@ const config = {
       required: false,
     },
     {
-      name: "Email",
+      name: "Email Id",
       inputName: "email",
 
       validateError: function (headerName, rowNumber, columnNumber) {
@@ -462,7 +478,7 @@ const config = {
     },
 
     {
-      name: "Moodle Id",
+      name: "Institute Id",
       inputName: "moodleId",
       required: true,
       unique: true,
@@ -479,10 +495,10 @@ const config = {
       inputName: "password",
       required: true,
     },
-    {
-      name: "Role",
-      inputName: "role",
-      required: true,
-    },
+    // {
+    //   name: "Role",
+    //   inputName: "role",
+    //   required: true,
+    // },
   ],
 };

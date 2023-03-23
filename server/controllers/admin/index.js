@@ -35,7 +35,7 @@ controller.signUp = async (req, res) => {
         return res.status(401).json({
           success: false,
           status: 400,
-          message: "At least one sub Admin is required",
+          message: "At least one Head Of Departement is required",
         });
       }
       let isValid = true;
@@ -55,7 +55,7 @@ controller.signUp = async (req, res) => {
         if (admin) {
           res.status(400).json({
             success: false,
-            message: `User Already Exist with provided Moodle Id ${moodleId}. We have added ${index} sub Admins`,
+            message: `User Already Exist with provided Institute Id ${moodleId}. We have added ${index} Head Of Departements`,
             status: 400,
           });
           isValid = false;
@@ -77,7 +77,7 @@ controller.signUp = async (req, res) => {
       if (isValid) {
         return res.status(200).json({
           success: true,
-          message: "All sub Admin are Added successfully",
+          message: "All Head Of Departement are Added successfully",
         });
       }
     } else if (receptionists) {
@@ -107,7 +107,7 @@ controller.signUp = async (req, res) => {
         if (admin) {
           res.status(400).json({
             success: false,
-            message: `User Already Exist with provided Moodle Id ${moodleId}. We have added ${index} receptionist`,
+            message: `User Already Exist with provided Institute Id ${moodleId}. We have added ${index} receptionist`,
             status: 400,
           });
           isValid = false;
@@ -158,7 +158,7 @@ controller.signUp = async (req, res) => {
         if (admin) {
           return res.send({
             success: false,
-            message: `User Already Exist with provided Moodle Id ${moodleId}`,
+            message: `User Already Exist with provided Institute Id ${moodleId}`,
           });
         } else {
           const newAdmin = new Admin();
@@ -313,14 +313,14 @@ controller.getReceptionist = async (req, res) => {
     if (result) {
       return res.status(200).send({
         status: 200,
-        message: "Receptionist fetched successfully",
+        message: "Accountant fetched successfully",
         success: true,
         data: result,
       });
     } else {
       return res.status(200).send({
         status: 200,
-        message: "No Receptionist found",
+        message: "No Accountant found",
         success: false,
         data: [],
       });

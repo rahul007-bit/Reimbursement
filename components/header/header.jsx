@@ -36,8 +36,8 @@ const HeaderBar = ({ children, userDetails, window }) => {
           position="fixed"
           elevation={0}
           sx={{
-            width: { sm: `calc(100% - ${drawerWidth}px)` },
-            ml: { sm: `${drawerWidth}px` },
+            width: { md: `calc(100% - ${drawerWidth}px)` },
+            ml: { md: `${drawerWidth}px` },
             // backgroundColor: "rgb(38 40 112 / 87%)",
             // backdropFilter: "blur(10px)",
           }}
@@ -56,7 +56,7 @@ const HeaderBar = ({ children, userDetails, window }) => {
                 aria-label="open drawer"
                 edge="start"
                 onClick={handleDrawerToggle}
-                sx={{ mr: 2, display: { sm: "none" } }}
+                sx={{ mr: 2, display: { md: "none" } }}
               >
                 <MenuIcon />
               </IconButton>
@@ -75,7 +75,7 @@ const HeaderBar = ({ children, userDetails, window }) => {
                       noWrap
                       sx={{
                         mr: 2,
-                        display: { xs: "none", md: "flex" },
+                        display: { sm: "none", md: "flex" },
                         fontFamily: "Poppins",
                         fontWeight: 700,
                         letterSpacing: ".1rem",
@@ -94,13 +94,14 @@ const HeaderBar = ({ children, userDetails, window }) => {
                       noWrap
                       sx={{
                         mr: 2,
-                        display: { xs: "flex", md: "none" },
+                        display: { sm: "flex", md: "none", xs: "none" },
                         flexGrow: 1,
                         fontFamily: "Poppins",
                         fontWeight: 700,
                         letterSpacing: ".1rem",
                         color: "inherit",
                         textDecoration: "none",
+                        cursor: "pointer",
                       }}
                     >
                       Reimbursement
@@ -120,7 +121,7 @@ const HeaderBar = ({ children, userDetails, window }) => {
             keepMounted: true, // Better open performance on mobile.
           }}
           sx={{
-            display: { xs: "block", sm: "none" },
+            display: { sm: "block", md: "none" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
@@ -132,7 +133,7 @@ const HeaderBar = ({ children, userDetails, window }) => {
         <Drawer
           variant="permanent"
           sx={{
-            display: { xs: "none", sm: "block" },
+            display: { sm: "none", md: "block", xs: "none" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,

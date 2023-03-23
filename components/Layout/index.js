@@ -35,9 +35,9 @@ const Layout = ({ children, title: Header = "Reimbursement" }) => {
       <HeaderBar userDetails={userData} />
       <Box
         sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-          mt: { sm: 8, xs: "56.2px" },
+          width: { md: `calc(100% - ${drawerWidth}px)` },
+          ml: { md: `${drawerWidth}px` },
+          mt: { md: 8, sm: "56.2px" },
         }}
       >
         {children}

@@ -59,7 +59,7 @@ export default function AdminTable() {
     "Applied At",
     "Applied By",
     "Department",
-    "Moodle Id",
+    "Institute Id",
     "Amount",
     "Status",
     "Account Number",
@@ -93,6 +93,7 @@ export default function AdminTable() {
   };
 
   const handleChange = (e, v) => {
+    setAnchorEl(null);
     setState((prev) => ({ ...prev, [e]: v ? v.value : null }));
   };
 

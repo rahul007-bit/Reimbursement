@@ -26,6 +26,7 @@ export default function SplitButton({
 
   const handleMenuItemClick = (_, index) => {
     setSelectedIndex(index);
+    handleClickArray[index]();
     setOpen(false);
   };
 
