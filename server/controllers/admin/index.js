@@ -7,6 +7,7 @@ import {
   getReimbursementsCertificateStatusCount,
   ReimbursementCount,
 } from "../../services/reimbursement/index.js";
+
 import {
   createUser,
   getUser,
@@ -22,7 +23,15 @@ import {
   getCertificates,
   updateCertificate,
 } from "../../services/certification/index.js";
-import { updateProfileAdmin } from "../../services/admin/index.js";
+import {
+  updateProfileAdmin,
+  updatePasswordAdmin,
+} from "../../services/admin/index.js";
+
+import sendMail, { generateLoginCode } from "../../services/mail/sendMail.js";
+import config from "../../config/index.js";
+import { sendForgotCode } from "../../functions/sendForgotCode.js";
+import ResetPassword from "../../model/resetPassword/index.js";
 
 const controller = Object.create(null); // {}
 
@@ -190,19 +199,22 @@ controller.signUp = async (req, res) => {
     return res.status(500).json({ status: 500, message: error.message });
   }
 };
-controller.signIn = async (req, res) => {
+
+controller.signIn = async (req, res, next) => {
   try {
     const { moodleId, password } = req.body;
     const admin = await Admin.findOne({ moodleId: moodleId });
     if (!admin) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid Admin credentials!",
-        status: 400,
-      });
+      return next();
+      // return res.status(400).json({
+      //   success: false,
+      //   message: "Invalid Admin credentials!",
+      //   status: 400,
+      // });
     }
 
     if (!admin.valid_password(password)) {
+      // return next();
       return res.status(400).json({
         success: false,
         message: "Invalid Admin credentials!",
@@ -219,6 +231,78 @@ controller.signIn = async (req, res) => {
       message: "Login Successful",
       auth_token: token,
       type: admin.role,
+    });
+  } catch (error) {
+    return res.status(500).json({ status: 500, message: error.message });
+  }
+};
+
+controller.updatePassword = async (req, res) => {
+  const { newPassword, oldPassword } = req.body;
+
+  const loginUser = req.user;
+  try {
+    const result = await updatePasswordAdmin(loginUser, {
+      password: newPassword,
+      id: loginUser._id,
+      oldPassword,
+    });
+    return res.status(result.status).send(result);
+  } catch (error) {
+    return res.status(500).json({ status: 500, message: error.message });
+  }
+};
+
+controller.forgotPassword = async (req, res, next) => {
+  const { id } = req.body;
+  try {
+    const admin = await Admin.findOne({ moodleId: id });
+    if (!admin) {
+      return next();
+    }
+    const result = await sendForgotCode(admin);
+    return res.status(result.status).send(result);
+  } catch (error) {
+    return res.status(500).json({ status: 500, message: error.message });
+  }
+};
+
+controller.resetPassword = async (req, res, next) => {
+  const { id, code, password } = req.body;
+  try {
+    const admin = await Admin.findOne({ moodleId: id });
+    if (!admin) {
+      return next();
+    }
+    const resetPassword = await ResetPassword.findOne({ moodleId: id });
+    if (!resetPassword) {
+      return res.status(400).json({
+        status: 400,
+        message: "Invalid Code",
+        success: false,
+      });
+    }
+    if (resetPassword.resetCode !== code) {
+      return res.status(400).json({
+        status: 400,
+        message: "Invalid Code",
+        success: false,
+      });
+    }
+
+    const newAdmin = new Admin();
+    const hashPassword = await newAdmin.generate_hash(password);
+    await Admin.updateOne(
+      { _id: admin._id },
+      { $set: { password: hashPassword } }
+    );
+    // delete reset code
+    await ResetPassword.deleteMany({ moodleId: id });
+
+    return res.status(200).json({
+      status: 200,
+      message: "Password Reset Successfully",
+      success: true,
     });
   } catch (error) {
     return res.status(500).json({ status: 500, message: error.message });

@@ -6,7 +6,11 @@ import { adminAuth } from "./auth/auth.js";
 import { receptionistAuth } from "./auth/receptionistAuth.js";
 import { subAdminAuth } from "./auth/subAdminAuth.js";
 
-import { receptionist, sub_admin } from "../../services/admin/validator.js";
+import {
+  receptionist,
+  sub_admin,
+  updatePassword,
+} from "../../services/admin/validator.js";
 
 const limiter = rateLimit(config.rateLimiter);
 
@@ -73,6 +77,14 @@ const adminRoutes = async (router) => {
     limiter,
     subAdminAuth,
     controller.updateProfileUser
+  );
+
+  router.post(
+    "/admin/update/password",
+    limiter,
+    subAdminAuth,
+    celebrate(updatePassword),
+    controller.updatePassword
   );
 
   router.delete("/delete/admin", limiter, adminAuth, controller.deleteAdmin);

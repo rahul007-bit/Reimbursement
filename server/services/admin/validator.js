@@ -29,6 +29,13 @@ export const sub_admin = {
   },
 };
 
+export const updatePassword = {
+  body: Joi.object().keys({
+    newPassword: Joi.string().required(),
+    oldPassword: Joi.string().required(),
+  }),
+};
+
 export const receptionist = {
   addReceptionists: {
     body: Joi.object().keys({

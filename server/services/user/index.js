@@ -17,7 +17,6 @@ export const createUser = async (users, user) => {
       for (const [index, user] of users.entries()) {
         const { first_name, last_name, moodleId, email, password, department } =
           user;
-
         const userExist = await User.findOne({ moodleId: moodleId });
         if (userExist) {
           isValid = false;
@@ -145,11 +144,6 @@ export const updateUser = async (
   { firstName, lastName, email, department, _id }
 ) => {
   try {
-    console.log(
-      admin.role !== "admin",
-      admin.role !== "sub_admin",
-      admin._id.toString()
-    );
     if (
       admin.role !== "admin" &&
       admin.role !== "sub_admin" &&
@@ -186,6 +180,7 @@ export const updateUser = async (
     user.last_name = lastName;
     user.email = email;
     user.department = department;
+
     await user.save();
     return {
       status: 200,
@@ -202,12 +197,15 @@ export const updateUser = async (
   }
 };
 
-export const updateUserPassword = async (loginUser, { id, password }) => {
+export const updateUserPassword = async (
+  loginUser,
+  { id, password, oldPassword }
+) => {
   try {
     if (
-      loginUser.role !== "admin" ||
-      loginUser.role !== "sub_admin" ||
-      loginUser._id !== id
+      loginUser.role !== "admin" &&
+      loginUser.role !== "sub_admin" &&
+      loginUser._id.toString() !== id
     ) {
       return {
         status: 400,
@@ -226,6 +224,14 @@ export const updateUserPassword = async (loginUser, { id, password }) => {
       };
     }
     const newUser = new User();
+    if (loginUser._id.toString() === id && !user.valid_password(oldPassword)) {
+      return {
+        status: 400,
+        message: "Old password is incorrect",
+        success: false,
+      };
+    }
+
     user.password = await newUser.generate_hash(password);
     await user.save();
 

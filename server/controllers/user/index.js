@@ -10,7 +10,9 @@ import fs from "fs";
 import { exec } from "child_process";
 import path from "path";
 import { getCertificates } from "../../services/certification/index.js";
-import { createUser } from "../../services/user/index.js";
+import { createUser, updateUserPassword } from "../../services/user/index.js";
+import { sendForgotCode } from "../../functions/sendForgotCode.js";
+import ResetPassword from "../../model/resetPassword/index.js";
 
 const storage = multerStorage();
 export const upload = multer({ storage: storage });
@@ -60,7 +62,71 @@ controller.signIn = async (req, res) => {
   }
 };
 
-controller.updateProfile = async (req, res) => {};
+controller.updatePassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  try {
+    const loginUser = req.user;
+    const result = await updateUserPassword(loginUser, {
+      password: newPassword,
+      oldPassword,
+      id: loginUser._id.toString(),
+    });
+    return res.status(result.status).json(result);
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+controller.forgotPassword = async (req, res) => {
+  const { id } = req.body;
+  try {
+    const user = await User.findOne({ moodleId: id });
+    if (!user) {
+      return res
+        .status(404)
+        .send({ success: false, message: "Invalid credential provided" });
+    }
+    const result = await sendForgotCode(user);
+    return res.status(result.status).json(result);
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
+
+controller.resetPassword = async (req, res) => {
+  const { id, code, password } = req.body;
+  try {
+    const user = await User.findOne({ moodleId: id });
+    if (!user) {
+      return res
+        .status(404)
+        .send({ success: false, message: "Invalid credential provided" });
+    }
+    const result = await ResetPassword.findOne({
+      user: user._id,
+      resetCode: code,
+    });
+    if (!result) {
+      return res.status(404).send({ success: false, message: "Invalid Token" });
+    }
+    const newUser = new User();
+    const hashPassword = await newUser.generate_hash(password);
+
+    await User.updateOne(
+      { _id: user._id },
+      { $set: { password: hashPassword } }
+    );
+    await ResetPassword.deleteOne({ _id: result._id });
+
+    return res.json({
+      success: true,
+      message: "Password reset successfully",
+      status: 200,
+    });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: error.message });
+  }
+};
 
 controller.applyReimbursement = async (req, res) => {
   try {
