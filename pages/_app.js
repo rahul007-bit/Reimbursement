@@ -5,6 +5,7 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import { Provider as JotaiProvider } from "jotai";
 import Snack from "../components/Util/Snackbar";
 import Head from "next/head";
+import Footer from "../components/header/Footer";
 
 const ProgressBar = dynamic(
   () => import("../components/ProgressBar/ProgressBar"),

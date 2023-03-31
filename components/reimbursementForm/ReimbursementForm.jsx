@@ -102,6 +102,32 @@ const ReimbursementForm = ({ user: userDetails }) => {
     event.preventDefault();
     setLoading(true);
     let imageUrl1 = "";
+    if (validateForm() === false) {
+      setLoading(false);
+      return;
+    }
+    // check if account number is valid
+    if (
+      certificationDetails.bankDetails.accountNumber.length <= 15 &&
+      certificationDetails.bankDetails.accountNumber.length >= 10
+    ) {
+      setSnackBar({
+        open: true,
+        type: "error",
+        message: "Account number should be 10-15 digits",
+      });
+      setLoading(false);
+      return;
+    }
+    if (certificationDetails.bankDetails.IFSCode.length !== 11) {
+      setSnackBar({
+        open: true,
+        type: "error",
+        message: "IFSC code should be 11 digits",
+      });
+      setLoading(false);
+      return;
+    }
 
     if (input1Ref.current.files[0]) {
       // check file size less than 1mb
@@ -110,6 +136,19 @@ const ReimbursementForm = ({ user: userDetails }) => {
           open: true,
           type: "error",
           message: "File size should be less than 1mb",
+        });
+        setLoading(false);
+        return;
+      }
+      // check file type is image or pdf only
+      if (
+        !input1Ref.current.files[0].type.includes("image") &&
+        !input1Ref.current.files[0].type.includes("pdf")
+      ) {
+        setSnackBar({
+          open: true,
+          type: "error",
+          message: "File type should be image or pdf",
         });
         setLoading(false);
         return;
@@ -143,32 +182,6 @@ const ReimbursementForm = ({ user: userDetails }) => {
         IFSCode: certificationDetails.bankDetails.IFSCode,
       },
     };
-    if (validateForm() === false) {
-      setLoading(false);
-      return;
-    }
-    // check if account number is valid
-    if (
-      body.bankDetails.accountNumber.length <= 15 &&
-      body.bankDetails.accountNumber.length >= 10
-    ) {
-      setSnackBar({
-        open: true,
-        type: "error",
-        message: "Account number should be 10-15 digits",
-      });
-      setLoading(false);
-      return;
-    }
-    if (body.bankDetails.IFSCode.length !== 11) {
-      setSnackBar({
-        open: true,
-        type: "error",
-        message: "IFSC code should be 11 digits",
-      });
-      setLoading(false);
-      return;
-    }
 
     submit("user/requestReimburse", body).then((response) => {
       if (response.status === 200 || response.success) {
@@ -344,6 +357,8 @@ const ReimbursementForm = ({ user: userDetails }) => {
                       file:bg-violet-50 file:text-violet-700
                       hover:file:bg-violet-100
                     "
+                        // only accept images and pdfs
+                        accept="image/*,application/pdf"
                         required={true}
                       />
                     </Stack>

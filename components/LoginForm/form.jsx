@@ -17,7 +17,7 @@ export default function SignIn({ usedIn: usedFor = "user", setLoginAs }) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     setLoading(true);
-    submit(`${usedFor}/sign_in`, {
+    submit(`sign_in`, {
       moodleId: data.get("moodle_id"),
       password: data.get("password"),
     })
@@ -124,7 +124,7 @@ export default function SignIn({ usedIn: usedFor = "user", setLoginAs }) {
                   {"Don't have an account? Sign Up"}
                 </Typography>
               </Link>
-              {usedFor === "user" && (
+              {/* {usedFor === "user" && (
                 <Link href={"/login?user=admin"}>
                   <Typography
                     sx={{
@@ -153,7 +153,7 @@ export default function SignIn({ usedIn: usedFor = "user", setLoginAs }) {
                     {"Login as User?"}
                   </Typography>
                 </Link>
-              )}
+              )} */}
             </Box>
           </Grid>
         </Box>

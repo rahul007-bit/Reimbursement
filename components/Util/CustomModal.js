@@ -31,7 +31,8 @@ const CustomModal = ({
 
   useEffect(() => {
     if (selected) {
-      setUser(selected.user[0]);
+      console.log(selected);
+      setUser(Array.isArray(selected.user) ? selected.user[0] : selected.user);
     }
   }, [receptionistList, selected]);
 
@@ -50,7 +51,7 @@ const CustomModal = ({
           <Box>
             {selected.approvedByAdmin && (
               <Chip
-                label={"Approved by Admin"}
+                label={"Approved by Principle"}
                 color={"success"}
                 sx={{
                   m: 1,

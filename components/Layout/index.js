@@ -6,6 +6,7 @@ import { useUserProfile } from "../../Hooks/apiHooks";
 import { useAtom } from "jotai";
 import { snackBarAtom } from "../../store";
 import Loader from "../Util/Loader";
+import Footer from "../header/Footer";
 
 export const drawerWidth = 280;
 
@@ -42,6 +43,7 @@ const Layout = ({ children, title: Header = "Reimbursement" }) => {
       >
         {children}
       </Box>
+      {/* <Footer /> */}
     </>
   );
 };
