@@ -141,10 +141,17 @@ export const getReimbursement = async (query) => {
       );
     }
 
-    const results = await Reimbursement.find({
+    let results = await Reimbursement.find({
       $or: [params],
-    });
+    })
+      .populate("user_id", "-password -__v")
+      .lean();
 
+    results = results.map((result) => {
+      result.user = result.user_id;
+      delete result.user_id;
+      return result;
+    });
     if (results.length > 0)
       return {
         success: true,

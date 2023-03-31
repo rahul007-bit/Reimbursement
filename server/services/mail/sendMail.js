@@ -1,3 +1,4 @@
+import { customAlphabet } from "nanoid";
 import nodemailer from "nodemailer";
 
 const sendMail = async (mailDetailsUser) => {
@@ -21,6 +22,11 @@ const sendMail = async (mailDetailsUser) => {
     console.log(error);
     throw new Error(error.message);
   }
+};
+
+export const generateLoginCode = () => {
+  const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 4);
+  return nanoid() + "-" + nanoid() + "-" + nanoid() + "-" + nanoid();
 };
 
 export default sendMail;

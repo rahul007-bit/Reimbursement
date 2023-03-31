@@ -15,11 +15,20 @@ const router = async (router) => {
     celebrate(requestValidator.signUp),
     controller.signUp
   );
+
   router.post(
     "/user/sign_in",
     limit,
     celebrate(requestValidator.signIn),
     controller.signIn
+  );
+
+  router.post(
+    "/user/update_password",
+    limit,
+    userAuth,
+    celebrate(requestValidator.updatePassword),
+    controller.updatePassword
   );
 
   router.post(

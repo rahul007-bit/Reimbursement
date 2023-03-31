@@ -197,12 +197,15 @@ export const updateUser = async (
   }
 };
 
-export const updateUserPassword = async (loginUser, { id, password }) => {
+export const updateUserPassword = async (
+  loginUser,
+  { id, password, oldPassword }
+) => {
   try {
     if (
-      loginUser.role !== "admin" ||
-      loginUser.role !== "sub_admin" ||
-      loginUser._id !== id
+      loginUser.role !== "admin" &&
+      loginUser.role !== "sub_admin" &&
+      loginUser._id.toString() !== id
     ) {
       return {
         status: 400,
@@ -221,6 +224,14 @@ export const updateUserPassword = async (loginUser, { id, password }) => {
       };
     }
     const newUser = new User();
+    if (loginUser._id.toString() === id && !user.valid_password(oldPassword)) {
+      return {
+        status: 400,
+        message: "Old password is incorrect",
+        success: false,
+      };
+    }
+
     user.password = await newUser.generate_hash(password);
     await user.save();
 
