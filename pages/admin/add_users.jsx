@@ -10,7 +10,9 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import UserTable from "../../components/Admin/UserTable";
+import dynamic from "next/dynamic";
+const UserTable = dynamic(() => import("../../components/Admin/UserTable"));
+
 import { useUserProfile } from "../../Hooks/apiHooks";
 import Layout from "../../components/Layout";
 import TabPanel, { a11yProps } from "../../components/Util/TabPanel";

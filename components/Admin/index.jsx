@@ -1,8 +1,9 @@
 import React from "react";
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import Dashboard from "./Dashboard";
 import { AppBar, Tab, Tabs } from "@mui/material";
-import AdminTable from "./Dashboard/AdminTable";
+const AdminTable = dynamic(() => import("./Dashboard/AdminTable"));
 import { _ } from "gridjs-react";
 import TabPanel, { a11yProps } from "../Util/TabPanel";
 

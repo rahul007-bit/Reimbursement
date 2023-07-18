@@ -39,11 +39,14 @@ const Layout = ({ children, title: Header = "Reimbursement" }) => {
           width: { md: `calc(100% - ${drawerWidth}px)` },
           ml: { md: `${drawerWidth}px` },
           mt: { md: 8, sm: "56.2px" },
+          height: "-webkit-fill-available",
+          height: "-moz-available",
+          height: "fill-available",
         }}
       >
         {children}
+        <Footer />
       </Box>
-      {/* <Footer /> */}
     </>
   );
 };

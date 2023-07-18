@@ -22,6 +22,16 @@ const CompressPdf = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    // check if file is pdf
+    const file = event.target.file.files[0];
+    if (file.type !== "application/pdf") {
+      setSnackBar({
+        open: true,
+        message: "Please select a PDF file",
+        type: "error",
+      });
+      return;
+    }
     try {
       setLoading(true);
       const formData = new FormData(event.target);
@@ -35,7 +45,7 @@ const CompressPdf = () => {
           "Content-Type": "form-data",
         },
       });
-      console.log(response.data);
+
       const href = URL.createObjectURL(response.data);
       window.open(href);
       setLoading(false);
@@ -59,7 +69,7 @@ const CompressPdf = () => {
 
   return (
     <Layout userData={userData} title="Compress PDF">
-      <div className="flex h-full w-full mt-10 items-center justify-center">
+      <div className="flex h-full w-full mt-10 items-center justify-center max-h-[830px]">
         <div className="shadow-xl h-fit m-auto sm:w-3/4 lg:w-2/5 md:3/5 w-full flex justify-evenly items-center rounded-md py-8 mt-10 mx-3">
           <Box
             sx={{
@@ -83,7 +93,7 @@ const CompressPdf = () => {
                       file:rounded-full file:border-0
                       file:text-sm file:font-semibold
                       file:bg-violet-50 file:text-violet-700
-                      hover:file:bg-violet-100
+                      hover:file:bg-violet-100 cursor-pointer
                     "
                   accept=".pdf"
                   required={true}

@@ -93,7 +93,8 @@ const ViewForms = () => {
         sx={{
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
+          // alignItems: "center",
+          minHeight: "830px",
         }}
       >
         <Paper
