@@ -88,7 +88,7 @@ const ViewForms = () => {
   };
 
   return (
-    <Layout title="Forms">
+    <Layout title="Forms" path={"/admin/view-forms"}>
       <Container
         sx={{
           display: "flex",

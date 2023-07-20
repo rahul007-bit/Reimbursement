@@ -318,7 +318,7 @@ function AddForm() {
   };
 
   return (
-    <Layout title="Add Form">
+    <Layout title="Add Form" path={"/admin/view-forms"}>
       <Container
         sx={{
           display: "flex",

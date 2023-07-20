@@ -38,7 +38,7 @@ export default function AddUser() {
   // if (error) return <Error statusCode={error} />;
 
   return (
-    <Layout userData={userData}>
+    <Layout userData={userData} path={"/admin/add_users"}>
       {/* <Container sx={{ mt: 10 }}> */}
       <AppBar position={"relative"} elevation={0}>
         <Tabs

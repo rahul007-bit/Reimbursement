@@ -5,12 +5,10 @@ import {
   Box,
   Container,
   Drawer,
-  IconButton,
   Toolbar,
   Typography,
 } from "@mui/material";
 import Link from "next/link";
-import { Menu as MenuIcon } from "@mui/icons-material";
 import { drawerWidth } from "../Layout";
 import { default as DrawerItem } from "./Drawer";
 
@@ -78,7 +76,7 @@ const HeaderBar = ({ children, userDetails, window }) => {
                       sx={{
                         mr: 2,
                         display: { sm: "none", md: "flex" },
-                        fontFamily: "Poppins",
+                        fontFamily: "Times New Roman",
                         fontWeight: 700,
                         letterSpacing: ".1rem",
                         color: "inherit",
@@ -98,7 +96,7 @@ const HeaderBar = ({ children, userDetails, window }) => {
                         mr: 2,
                         display: { sm: "flex", md: "none", xs: "none" },
                         flexGrow: 1,
-                        fontFamily: "Poppins",
+                        fontFamily: "Times New Roman",
                         fontWeight: 700,
                         letterSpacing: ".1rem",
                         color: "inherit",

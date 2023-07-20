@@ -15,7 +15,7 @@ const Reimbursement = () => {
     );
   return (
     <>
-      <Layout userData={userData} title={"Apply"}>
+      <Layout userData={userData} title={"Apply"} path={"/user/reimbursement"}>
         <ReimbursementForm user={userData} />
       </Layout>
     </>

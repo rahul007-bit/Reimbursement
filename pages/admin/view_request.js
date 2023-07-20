@@ -19,7 +19,7 @@ const ViewRequest = () => {
   // }
 
   return (
-    <Layout userData={userData}>
+    <Layout title="Request" path={"/admin/view_request"}>
       <ViewRequestTable userData={userData} />
     </Layout>
   );

@@ -33,7 +33,7 @@ export const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: '"Martel Sans", "Helvetica", "Arial", sans-serif',
+    fontFamily: 'system-ui,"Martel Sans", "Helvetica", "Arial", sans-serif',
   },
 });
 
