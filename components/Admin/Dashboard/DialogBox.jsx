@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import CustomTable from "../../Util/CustomTable";
+import SliderTransition from "../../Util/SlideTransition";
 
 const DialogBoxShowTable = ({
   openModal = false,
@@ -29,8 +30,10 @@ const DialogBoxShowTable = ({
 
   return (
     <Dialog
+      keepMounted
       fullWidth={true}
       maxWidth={"auto"}
+      TransitionComponent={SliderTransition}
       onClose={() => setOpenModal(false)}
       open={openModal}
       scroll={"paper"}

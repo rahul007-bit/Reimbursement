@@ -269,7 +269,7 @@ const ReimbursementForm = ({ user: userDetails }) => {
 
   return (
     <>
-      <div className="flex h-full w-full mt-10 items-center justify-center">
+      <div className="flex min-h-[790px] w-full my-10 items-center justify-center">
         <div className="shadow-xl h-fit m-auto sm:w-3/4 md:w-3/4 lg:w-3/5 w-full flex justify-evenly items-center rounded-md py-8 mt-10 mx-3 max-w-xl">
           <Box
             sx={{

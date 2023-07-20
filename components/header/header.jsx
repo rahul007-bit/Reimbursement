@@ -22,8 +22,6 @@ const settings = [
 
 const HeaderBar = ({ children, userDetails, window }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -48,10 +46,14 @@ const HeaderBar = ({ children, userDetails, window }) => {
               sx={{
                 display: "flex",
                 width: 1,
-                justifyContent: "space-between",
+                justifyContent: {
+                  xs: "center",
+                  sm: "center",
+                  md: "space-between",
+                },
               }}
             >
-              <IconButton
+              {/* <IconButton
                 color="inherit"
                 aria-label="open drawer"
                 edge="start"
@@ -59,7 +61,7 @@ const HeaderBar = ({ children, userDetails, window }) => {
                 sx={{ mr: 2, display: { md: "none" } }}
               >
                 <MenuIcon />
-              </IconButton>
+              </IconButton> */}
 
               <>
                 <Box
@@ -112,7 +114,7 @@ const HeaderBar = ({ children, userDetails, window }) => {
             </Toolbar>
           </Container>
         </AppBar>
-        <Drawer
+        {/* <Drawer
           container={container}
           variant="temporary"
           open={mobileOpen}
@@ -129,7 +131,7 @@ const HeaderBar = ({ children, userDetails, window }) => {
           }}
         >
           <DrawerItem userDetails={userDetails} />
-        </Drawer>
+        </Drawer> */}
         <Drawer
           variant="permanent"
           sx={{

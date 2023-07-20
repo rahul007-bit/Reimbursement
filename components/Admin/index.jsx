@@ -21,7 +21,7 @@ const AdminDashboard = ({
   ];
 
   const [value, setValue] = useState(0);
-  const [charts, setCharts] = useState([
+  const [charts] = useState([
     // { key: "status", name: "Requests" },
     // { key: "department", name: "Department" },
     { key: "certificate_name", name: "Certificate" },

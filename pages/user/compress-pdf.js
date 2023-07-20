@@ -69,7 +69,7 @@ const CompressPdf = () => {
 
   return (
     <Layout userData={userData} title="Compress PDF">
-      <div className="flex h-full w-full mt-10 items-center justify-center max-h-[830px]">
+      <div className="flex h-full w-full mt-10 items-center justify-center">
         <div className="shadow-xl h-fit m-auto sm:w-3/4 lg:w-2/5 md:3/5 w-full flex justify-evenly items-center rounded-md py-8 mt-10 mx-3">
           <Box
             sx={{

@@ -94,7 +94,7 @@ const ViewForms = () => {
           display: "flex",
           justifyContent: "center",
           // alignItems: "center",
-          minHeight: "830px",
+          // minHeight: "830px",
         }}
       >
         <Paper

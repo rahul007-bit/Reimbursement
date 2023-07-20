@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import InputField from "../Forms/InputFields";
 import SplitButton from "./SplitButton";
+import SliderTransition from "./SlideTransition";
 
 const CustomModal = ({
   openModal,
@@ -31,13 +32,14 @@ const CustomModal = ({
 
   useEffect(() => {
     if (selected) {
-      console.log(selected);
       setUser(Array.isArray(selected.user) ? selected.user[0] : selected.user);
     }
   }, [receptionistList, selected]);
 
   return (
     <Dialog
+      keepMounted
+      TransitionComponent={SliderTransition}
       fullWidth={true}
       maxWidth={"sm"}
       onClose={() => setOpenModal(false)}
@@ -206,8 +208,8 @@ const CustomModal = ({
           (selected.certificateUrl ? (
             <Link href={selected.certificateUrl.url} target={"_blank"}>
               <Button
-                color={"warning"}
-                variant={"contained"}
+                color={"success"}
+                variant={"outlined"}
                 size={"small"}
                 sx={{ width: 200, m: 2 }}
               >

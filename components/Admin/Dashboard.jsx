@@ -23,8 +23,6 @@ const Dashboard = ({ statusCount, status, departmentCount, department }) => {
     plotOptions: {
       bar: {
         horizontal: false,
-        columnWidth: "45%",
-        endingShape: "rounded",
       },
     },
     dataLabels: {
@@ -71,8 +69,7 @@ const Dashboard = ({ statusCount, status, departmentCount, department }) => {
     },
     plotOptions: {
       bar: {
-        horizontal: !1,
-        // borderRadius: 10,
+        horizontal: false,
       },
     },
     stroke: {
@@ -126,7 +123,7 @@ const Dashboard = ({ statusCount, status, departmentCount, department }) => {
           alignItems={"center"}
         >
           <Grid item xs={4}>
-            <Card variant="outlined">
+            <Card variant="elevation">
               <CardHeader title={"Requests"} />
               <CardContent>
                 <Chats chart={"status"} />
@@ -134,7 +131,7 @@ const Dashboard = ({ statusCount, status, departmentCount, department }) => {
             </Card>
           </Grid>
           <Grid item xs={8}>
-            <Card variant="outlined">
+            <Card variant="elevation">
               <CardHeader title="Requests" />
               <CardContent>
                 <Chart
@@ -147,7 +144,7 @@ const Dashboard = ({ statusCount, status, departmentCount, department }) => {
             </Card>
           </Grid>
           <Grid item xs={8}>
-            <Card variant="outlined">
+            <Card variant="elevation">
               <CardHeader title="Department" />
               <CardContent>
                 <Chart
@@ -161,7 +158,7 @@ const Dashboard = ({ statusCount, status, departmentCount, department }) => {
           </Grid>
 
           <Grid item xs={4}>
-            <Card variant="outlined">
+            <Card variant="elevation">
               <CardHeader title={"Department"} />
               <CardContent>
                 <Chats chart={"department"} />
@@ -171,7 +168,7 @@ const Dashboard = ({ statusCount, status, departmentCount, department }) => {
 
           {/* {charts.map((chart, idx) => (
             <Grid key={idx} item xs={4}>
-              <Card variant="outlined">
+              <Card variant="elevation">
                 <CardHeader title={chart.name} />
                 <CardContent>
                   <Chats chart={chart.key} />

@@ -13,10 +13,10 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
-html {
+/* html {
   position: relative;
   min-height: 100%;
-}
+} */
 
 a {
   color: inherit;
@@ -36,4 +36,13 @@ a {
 #__next {
   height: 100vh;
   /* background: #E7EBEF; */
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
 }

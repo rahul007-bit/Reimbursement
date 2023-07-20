@@ -38,10 +38,13 @@ const Layout = ({ children, title: Header = "Reimbursement" }) => {
         sx={{
           width: { md: `calc(100% - ${drawerWidth}px)` },
           ml: { md: `${drawerWidth}px` },
-          mt: { md: 8, sm: "56.2px" },
-          height: "-webkit-fill-available",
-          height: "-moz-available",
-          height: "fill-available",
+          mt: { md: 8, sm: "56.2px", xs: "56.2px" },
+          minHeight: "-webkit-fill-available",
+          minHeight: "-moz-available",
+          minHeight: "fill-available",
+          background: "#f5f5f5",
+          position: "relative",
+          pb: "60px",
         }}
       >
         {children}

@@ -11,7 +11,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <Box component="footer" square variant="outlined">
+    <Box component="footer" square variant="outlined" className="footer">
       <Divider />
       <Container
         maxWidth="lg"

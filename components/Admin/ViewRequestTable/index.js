@@ -227,7 +227,7 @@ const ViewRequestTable = ({ userData: currentUserData }) => {
           display: "flex",
           justifyContent: "center",
           // alignItems: "center",
-          minHeight: 830,
+          // minHeight: 830,
         }}
       >
         <Box sx={{ maxWidth: "1200px", width: 1 }}>
