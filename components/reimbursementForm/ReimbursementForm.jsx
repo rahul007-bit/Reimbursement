@@ -345,7 +345,7 @@ const ReimbursementForm = ({ user: userDetails }) => {
                   {selectedCertificate.certificate_name && (
                     <Stack direction={"column"} gap={2}>
                       <Typography variant="h8" gutterBottom>
-                        Upload your Certificate
+                        Upload your Certificate / Receipt
                       </Typography>
                       <input
                         ref={input1Ref}
