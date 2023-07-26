@@ -3,6 +3,8 @@ import React, { useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { useAtom } from "jotai";
 import { snackBarAtom } from "../store";
+import { Box, Stack, Typography } from "@mui/material";
+import Loader from "../components/Util/Loader";
 
 const Logout = () => {
   const router = useRouter();
@@ -20,7 +22,23 @@ const Logout = () => {
     removeCookie("loginType", { path: "/" });
     router.push("login");
   }, [removeCookie, router, setSnackBar]);
-  return <></>;
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <Stack spacing={2} direction="column" alignItems="center">
+        <Loader />
+        <Typography variant="h5">
+          Please wait while we are redirecting you to your destination...
+        </Typography>
+      </Stack>
+    </Box>
+  );
 };
 
 export default Logout;
