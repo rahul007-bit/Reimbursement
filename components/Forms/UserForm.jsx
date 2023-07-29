@@ -50,7 +50,7 @@ const UserForm = ({
           <TextField
             required
             fullWidth
-            label="Moodle ID"
+            label="Institute ID"
             name="moodleId"
             value={formData.moodleId}
             disabled={operationMode === "edit"}
@@ -101,10 +101,10 @@ const UserForm = ({
                 <MenuItem value={"teacher"}>Teacher</MenuItem>
               )}
               {(usedFor === "sub_admin" || usedFor === "receptionist") && (
-                <MenuItem value={"sub_admin"}>Sub Admin</MenuItem>
+                <MenuItem value={"sub_admin"}>Head Of Departement</MenuItem>
               )}
               {(usedFor === "sub_admin" || usedFor === "receptionist") && (
-                <MenuItem value={"receptionist"}>Receptionist</MenuItem>
+                <MenuItem value={"receptionist"}>Accountant</MenuItem>
               )}
             </Select>
           </FormControl>
@@ -138,7 +138,7 @@ const UserForm = ({
         variant="contained"
         sx={{ mt: 3, mb: 2 }}
       >
-        {usedFor === "signUp" ? "Sign Up" : "Add"}
+        {usedFor === "signUp" ? "Sign Up" : "Submit"}
       </LoadingButton>
       {usedFor === "signUp" && (
         <Grid container justifyContent="flex-end">

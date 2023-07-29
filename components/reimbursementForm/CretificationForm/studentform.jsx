@@ -10,6 +10,7 @@ const Studentform = ({ handleChange, user }) => {
           fullWidth
           label="Name"
           required
+          disabled
           name={"name"}
           onChange={(e) =>
             handleChange("additionalDetails", {
@@ -24,6 +25,7 @@ const Studentform = ({ handleChange, user }) => {
           fullWidth
           label="Email"
           name={"email"}
+          disabled
           required
           value={user.user?.email}
           InputLabelProps={{ shrink: true }}

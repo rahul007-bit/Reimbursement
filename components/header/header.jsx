@@ -5,12 +5,10 @@ import {
   Box,
   Container,
   Drawer,
-  IconButton,
   Toolbar,
   Typography,
 } from "@mui/material";
 import Link from "next/link";
-import { Menu as MenuIcon } from "@mui/icons-material";
 import { drawerWidth } from "../Layout";
 import { default as DrawerItem } from "./Drawer";
 
@@ -22,8 +20,6 @@ const settings = [
 
 const HeaderBar = ({ children, userDetails, window }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -36,8 +32,8 @@ const HeaderBar = ({ children, userDetails, window }) => {
           position="fixed"
           elevation={0}
           sx={{
-            width: { sm: `calc(100% - ${drawerWidth}px)` },
-            ml: { sm: `${drawerWidth}px` },
+            width: { md: `calc(100% - ${drawerWidth}px)` },
+            ml: { md: `${drawerWidth}px` },
             // backgroundColor: "rgb(38 40 112 / 87%)",
             // backdropFilter: "blur(10px)",
           }}
@@ -48,18 +44,22 @@ const HeaderBar = ({ children, userDetails, window }) => {
               sx={{
                 display: "flex",
                 width: 1,
-                justifyContent: "space-between",
+                justifyContent: {
+                  xs: "center",
+                  sm: "center",
+                  md: "space-between",
+                },
               }}
             >
-              <IconButton
+              {/* <IconButton
                 color="inherit"
                 aria-label="open drawer"
                 edge="start"
                 onClick={handleDrawerToggle}
-                sx={{ mr: 2, display: { sm: "none" } }}
+                sx={{ mr: 2, display: { md: "none" } }}
               >
                 <MenuIcon />
-              </IconButton>
+              </IconButton> */}
 
               <>
                 <Box
@@ -75,8 +75,8 @@ const HeaderBar = ({ children, userDetails, window }) => {
                       noWrap
                       sx={{
                         mr: 2,
-                        display: { xs: "none", md: "flex" },
-                        fontFamily: "Poppins",
+                        display: { sm: "none", md: "flex" },
+                        fontFamily: "Times New Roman",
                         fontWeight: 700,
                         letterSpacing: ".1rem",
                         color: "inherit",
@@ -94,13 +94,14 @@ const HeaderBar = ({ children, userDetails, window }) => {
                       noWrap
                       sx={{
                         mr: 2,
-                        display: { xs: "flex", md: "none" },
+                        display: { sm: "flex", md: "none", xs: "none" },
                         flexGrow: 1,
-                        fontFamily: "Poppins",
+                        fontFamily: "Times New Roman",
                         fontWeight: 700,
                         letterSpacing: ".1rem",
                         color: "inherit",
                         textDecoration: "none",
+                        cursor: "pointer",
                       }}
                     >
                       Reimbursement
@@ -111,7 +112,7 @@ const HeaderBar = ({ children, userDetails, window }) => {
             </Toolbar>
           </Container>
         </AppBar>
-        <Drawer
+        {/* <Drawer
           container={container}
           variant="temporary"
           open={mobileOpen}
@@ -120,7 +121,7 @@ const HeaderBar = ({ children, userDetails, window }) => {
             keepMounted: true, // Better open performance on mobile.
           }}
           sx={{
-            display: { xs: "block", sm: "none" },
+            display: { sm: "block", md: "none" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
@@ -128,11 +129,11 @@ const HeaderBar = ({ children, userDetails, window }) => {
           }}
         >
           <DrawerItem userDetails={userDetails} />
-        </Drawer>
+        </Drawer> */}
         <Drawer
           variant="permanent"
           sx={{
-            display: { xs: "none", sm: "block" },
+            display: { sm: "none", md: "block", xs: "none" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,

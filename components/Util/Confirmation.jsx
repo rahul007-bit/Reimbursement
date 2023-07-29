@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import SliderTransition from "./SlideTransition";
 
 function Confirmation({
   openModal = false,
@@ -17,6 +18,8 @@ function Confirmation({
 }) {
   return (
     <Dialog
+      keepMounted
+      TransitionComponent={SliderTransition}
       open={openModal}
       onClose={handleClose}
       // fullWidth={true}

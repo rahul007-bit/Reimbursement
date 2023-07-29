@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import InputField from "../Forms/InputFields";
 import SplitButton from "./SplitButton";
+import SliderTransition from "./SlideTransition";
 
 const CustomModal = ({
   openModal,
@@ -31,12 +32,14 @@ const CustomModal = ({
 
   useEffect(() => {
     if (selected) {
-      setUser(selected.user[0]);
+      setUser(Array.isArray(selected.user) ? selected.user[0] : selected.user);
     }
   }, [receptionistList, selected]);
 
   return (
     <Dialog
+      keepMounted
+      TransitionComponent={SliderTransition}
       fullWidth={true}
       maxWidth={"sm"}
       onClose={() => setOpenModal(false)}
@@ -50,7 +53,7 @@ const CustomModal = ({
           <Box>
             {selected.approvedByAdmin && (
               <Chip
-                label={"Approved by Admin"}
+                label={"Approved by Principle"}
                 color={"success"}
                 sx={{
                   m: 1,
@@ -59,7 +62,7 @@ const CustomModal = ({
             )}
             {selected.approvedBySubAdmin && (
               <Chip
-                label={"Approved by Sub Admin"}
+                label={"Approved by Head Of Departement"}
                 color={"success"}
                 sx={{
                   m: 1,
@@ -68,7 +71,7 @@ const CustomModal = ({
             )}
             {selected.approvedByReceptionist && (
               <Chip
-                label={"Approved by Receptionist"}
+                label={"Approved by Accountant"}
                 color={"success"}
                 sx={{
                   m: 1,
@@ -129,7 +132,7 @@ const CustomModal = ({
             {selected.remarks && <Typography>Remarks</Typography>}
             {selected.remarks?.bySubAdmin && (
               <TextField
-                label={"Remarks from sub admin"}
+                label={"Remarks from Head Of Departement"}
                 InputLabelProps={{ shrink: true }}
                 value={selected.remarks.bySubAdmin}
               />
@@ -152,7 +155,7 @@ const CustomModal = ({
 
             {usedIn === "admin" && (
               <>
-                <Typography>Receptionist</Typography>
+                <Typography>Accountant</Typography>
                 <TextField
                   label={"Assigned To"}
                   select
@@ -205,8 +208,8 @@ const CustomModal = ({
           (selected.certificateUrl ? (
             <Link href={selected.certificateUrl.url} target={"_blank"}>
               <Button
-                color={"warning"}
-                variant={"contained"}
+                color={"success"}
+                variant={"outlined"}
                 size={"small"}
                 sx={{ width: 200, m: 2 }}
               >

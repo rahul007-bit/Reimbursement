@@ -1,6 +1,7 @@
 import React from "react";
 import { Dialog, DialogContent } from "@mui/material";
 import UserForm from "../Forms/UserForm";
+import SliderTransition from "../Util/SlideTransition";
 
 const AddUserModal = ({
   openAddUserModal,
@@ -13,7 +14,12 @@ const AddUserModal = ({
   operationMode,
 }) => {
   return openAddUserModal ? (
-    <Dialog open={openAddUserModal} onClose={handleCloseAddUserModal}>
+    <Dialog
+      open={openAddUserModal}
+      TransitionComponent={SliderTransition}
+      onClose={handleCloseAddUserModal}
+      keepMounted
+    >
       <DialogContent>
         <UserForm
           usedFor={usedFor}

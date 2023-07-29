@@ -5,9 +5,16 @@ import rateLimit from "express-rate-limit";
 const limit = rateLimit(config.rateLimiter);
 import Admin from "../model/admin/model.js";
 import User from "../model/user/model.js";
+import { default as AdminController } from "../controllers/admin/index.js";
+import { default as UserController } from "../controllers/user/index.js";
 const router = Router();
 import loggers from "../config/logger.js";
 import jwt from "jsonwebtoken";
+import { celebrate } from "celebrate";
+import {
+  forgot_password,
+  reset_password,
+} from "../model/resetPassword/validation.js";
 
 let controllers = glob.sync(`routes/**/index.js`);
 controllers.forEach(async (controller) => {
@@ -88,5 +95,23 @@ router.get("/details", limit, async (req, res) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 });
+
+router.post("/sign_in", limit, AdminController.signIn, UserController.signIn);
+
+router.post(
+  "/reset_password",
+  limit,
+  celebrate(reset_password),
+  AdminController.resetPassword,
+  UserController.resetPassword
+);
+
+router.post(
+  "/forgot_password",
+  limit,
+  celebrate(forgot_password),
+  AdminController.forgotPassword,
+  UserController.forgotPassword
+);
 
 export default router;

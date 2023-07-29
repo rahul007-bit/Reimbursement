@@ -5,13 +5,7 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import { Provider as JotaiProvider } from "jotai";
 import Snack from "../components/Util/Snackbar";
 import Head from "next/head";
-
-const ProgressBar = dynamic(
-  () => import("../components/ProgressBar/ProgressBar"),
-  {
-    ssr: false,
-  }
-);
+// import Footer from "../components/header/Footer";
 
 export const theme = createTheme({
   palette: {
@@ -31,14 +25,15 @@ export const theme = createTheme({
       primary: "#434242",
     },
     background: {
-      default: "#F3F3F8",
+      default: "#f5f5f5",
     },
+
     warning: {
       main: "#fb8c00",
     },
   },
   typography: {
-    fontFamily: '"Martel Sans", "Helvetica", "Arial", sans-serif',
+    fontFamily: 'system-ui,"Martel Sans", "Helvetica", "Arial", sans-serif',
   },
 });
 
@@ -50,7 +45,7 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <ThemeProvider theme={theme}>
         <JotaiProvider>
-          <ProgressBar />
+          {/* <ProgressBar /> */}
           <Snack />
           <Component {...pageProps} />
         </JotaiProvider>

@@ -5,7 +5,7 @@ import Layout from "../components/Layout";
 const Signup = () => {
   return (
     <Layout title={"Sign Up"}>
-      <div className="w-full h-full flex justify-center flex-col mt-10">
+      <div className="w-full h-full max-h-[800px] flex justify-center flex-col mt-10">
         <Form />
       </div>
     </Layout>

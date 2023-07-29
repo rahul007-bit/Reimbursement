@@ -4,17 +4,19 @@ import {
   Box,
   Button,
   CircularProgress,
+  Paper,
   Popover,
   Stack,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import React from "react";
 import UserTable from "../../UserHome/UserTable";
 import { useFetch } from "../../../Hooks/apiHooks";
 import { CSVLink } from "react-csv";
 import { useRouter } from "next/router";
-import { FilterAlt } from "@mui/icons-material";
+import { Download, FilterAlt } from "@mui/icons-material";
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -28,7 +30,7 @@ export default function AdminTable() {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [date, setDate] = useState({});
-
+  const isMobile = useMediaQuery("(max-width: 600px)");
   const [data, setData] = useState({});
   const [reimburseData, setReimbursementData] = useState([]);
   const router = useRouter();
@@ -59,7 +61,7 @@ export default function AdminTable() {
     "Applied At",
     "Applied By",
     "Department",
-    "Moodle Id",
+    "Institute Id",
     "Amount",
     "Status",
     "Account Number",
@@ -93,51 +95,181 @@ export default function AdminTable() {
   };
 
   const handleChange = (e, v) => {
+    setAnchorEl(null);
     setState((prev) => ({ ...prev, [e]: v ? v.value : null }));
   };
 
   return (
-    <Box
+    <Paper
       sx={{
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        mx: {
-          xs: 2,
-          md: 4,
-          lg: 8,
-        },
-        my: 4,
+        p: 2,
         flexDirection: "column",
       }}
+      variant="outlined"
     >
       <>
-        <Typography variant="h5" margin={1}>
-          Reimbursement Requests
-        </Typography>
-        <Stack gap={1} direction={"row"} marginBottom={2}>
-          <Button onClick={handleClick} variant="outlined">
-            Open Request Page
-          </Button>
-
+        <Box sx={{ p: 2, mb: 1, width: 1 }}>
+          <Stack gap={2} direction={"row"} flexWrap={"wrap"} marginBottom={2}>
+            {isMobile ? (
+              <Button
+                variant="contained"
+                onClick={(e) => setAnchorEl(e.currentTarget)}
+                startIcon={<FilterAlt />}
+                aria-describedby={!!anchorEl ? "popover" : undefined}
+              >
+                Filter
+              </Button>
+            ) : (
+              <>
+                <Autocomplete
+                  sx={{
+                    width: 1 / 3,
+                  }}
+                  name="certificate"
+                  // value={modalState.certificate}
+                  loading={loadingCertificate}
+                  options={
+                    !loadingCertificate && certificateData
+                      ? certificateData.data.map((d) => ({
+                          value: d._id,
+                          label: d.certificate_name,
+                        }))
+                      : []
+                  }
+                  onChange={(_, v) => handleChange("certificate", v)}
+                  value={
+                    !loadingCertificate &&
+                    certificateData &&
+                    initState.certificate
+                      ? certificateData.data
+                          .map((d) => ({
+                            value: d._id,
+                            label: d.certificate_name,
+                          }))
+                          .find((d) => d.value === initState.certificate)
+                      : {
+                          value: null,
+                          label: "All",
+                        }
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select Certificate" />
+                  )}
+                />
+                <Autocomplete
+                  sx={{
+                    width: 1 / 3,
+                  }}
+                  name="department"
+                  // value={modalState.department}
+                  options={[
+                    { label: "All", value: null },
+                    { value: "IT", label: "IT" },
+                    { value: "CS", label: "CS" },
+                    { value: "MACH", label: "MACH" },
+                    { value: "CIVIL", label: "CIVIL" },
+                  ]}
+                  onChange={(_, v) => handleChange("department", v)}
+                  value={
+                    [
+                      { label: "All", value: null },
+                      { value: "IT", label: "IT" },
+                      { value: "CS", label: "CS" },
+                      { value: "MACH", label: "MACH" },
+                      { value: "CIVIL", label: "CIVIL" },
+                    ].filter((d) => d.value === initState.department)[0]
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select Department" />
+                  )}
+                />
+                <Autocomplete
+                  sx={{
+                    width: 1 / 3,
+                  }}
+                  name="status"
+                  // value={{ label: modalState.status }}
+                  options={[
+                    { label: "All", value: null },
+                    { label: "PENDING", value: "PENDING" },
+                    { label: "Approved", value: "Approved" },
+                    { label: "Rejected", value: "Rejected" },
+                    { label: "In Progress", value: "In Progress" },
+                  ]}
+                  value={
+                    [
+                      { label: "All", value: null },
+                      { label: "PENDING", value: "PENDING" },
+                      { label: "Approved", value: "Approved" },
+                      { label: "Rejected", value: "Rejected" },
+                      { label: "In Progress", value: "In Progress" },
+                    ].filter((d) => d.value === initState.status)[0]
+                  }
+                  onChange={(_, v) => handleChange("status", v)}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Status" />
+                  )}
+                />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Stack direction={"row"} gap={2}>
+                    <DatePicker
+                      label="Select start Date"
+                      inputFormat="MM/DD/YYYY"
+                      value={date.startDate || Date.now()}
+                      onChange={(newValue) => {
+                        console.log(newValue.$d);
+                        setDate((prev) => ({
+                          ...prev,
+                          startDate: newValue.$d,
+                        }));
+                      }}
+                      renderInput={(params) => (
+                        <TextField fullWidth {...params} />
+                      )}
+                    />
+                    <DatePicker
+                      label="Select end Date"
+                      inputFormat="MM/DD/YYYY"
+                      value={date.endDate || Date.now()}
+                      onChange={(newValue) => {
+                        setDate((prev) => ({ ...prev, endDate: newValue.$d }));
+                      }}
+                      renderInput={(params) => (
+                        <TextField fullWidth {...params} />
+                      )}
+                    />
+                  </Stack>
+                </LocalizationProvider>
+              </>
+            )}
+          </Stack>
           <CSVLink
             data={reimburseData}
             headers={Header}
             filename={`${new Date().toLocaleDateString()}-reimbursement.csv`}
           >
-            <Button variant={"outlined"} disabled={!data}>
+            <Button
+              variant="contained"
+              disabled={!data}
+              color="error"
+              endIcon={<Download />}
+            >
               <Typography variant={"button"}>Export</Typography>
             </Button>
           </CSVLink>
           <Button
-            variant="contained"
-            onClick={(e) => setAnchorEl(e.currentTarget)}
-            startIcon={<FilterAlt />}
-            aria-describedby={!!anchorEl ? "popover" : undefined}
+            onClick={handleClick}
+            sx={{
+              ml: 2,
+            }}
+            variant="outlined"
           >
-            Filter
+            Open Request Page
           </Button>
-        </Stack>
+        </Box>
         <Popover
           id="popover"
           open={!!anchorEl}
@@ -276,6 +408,6 @@ export default function AdminTable() {
           </Box>
         )}
       </>
-    </Box>
+    </Paper>
   );
 }

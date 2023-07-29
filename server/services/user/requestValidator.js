@@ -30,6 +30,13 @@ const requestValidator = {
       }),
     }),
   },
+  // update password
+  updatePassword: {
+    body: Joi.object().keys({
+      newPassword: Joi.string().required(),
+      oldPassword: Joi.string().required(),
+    }),
+  },
 };
 
 export default requestValidator;

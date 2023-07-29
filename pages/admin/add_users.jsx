@@ -10,7 +10,9 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import UserTable from "../../components/Admin/UserTable";
+import dynamic from "next/dynamic";
+const UserTable = dynamic(() => import("../../components/Admin/UserTable"));
+
 import { useUserProfile } from "../../Hooks/apiHooks";
 import Layout from "../../components/Layout";
 import TabPanel, { a11yProps } from "../../components/Util/TabPanel";
@@ -36,7 +38,7 @@ export default function AddUser() {
   // if (error) return <Error statusCode={error} />;
 
   return (
-    <Layout userData={userData}>
+    <Layout userData={userData} path={"/admin/add_users"}>
       {/* <Container sx={{ mt: 10 }}> */}
       <AppBar position={"relative"} elevation={0}>
         <Tabs
@@ -48,10 +50,10 @@ export default function AddUser() {
         >
           <Tab label="Students" {...a11yProps(0)} />
           {cookies && cookies.loginType === "admin" && (
-            <Tab label="Sub Admins" {...a11yProps(1)} />
+            <Tab label="Head Of Departements" {...a11yProps(1)} />
           )}
           {cookies && cookies.loginType === "admin" && (
-            <Tab label="Receptionist" {...a11yProps(2)} />
+            <Tab label="Accountant" {...a11yProps(2)} />
           )}
         </Tabs>
       </AppBar>
@@ -69,7 +71,7 @@ export default function AddUser() {
           <TabPanel value={value} index={1}>
             <Card variant="outlined">
               <CardContent>
-                <Typography variant={"h5"}>Sub Admins</Typography>
+                <Typography variant={"h5"}>Head Of Departements</Typography>
                 <Divider />
                 <UserTable usedFor={"sub_admin"} userData={userData} />
               </CardContent>
@@ -78,7 +80,7 @@ export default function AddUser() {
           <TabPanel value={value} index={2}>
             <Card variant="outlined">
               <CardContent>
-                <Typography variant={"h5"}>Receptionist</Typography>
+                <Typography variant={"h5"}>Accountant</Typography>
                 <Divider />
                 <UserTable usedFor={"receptionist"} userData={userData} />
               </CardContent>
@@ -90,13 +92,3 @@ export default function AddUser() {
     </Layout>
   );
 }
-/*
-<Card>
-          <CardContent>
-            <Typography variant={"h5"}>Users</Typography>
-            <Divider />
-            <UserTable />
-          </CardContent>
-        </Card>
-
-*/

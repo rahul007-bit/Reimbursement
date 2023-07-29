@@ -48,7 +48,10 @@ export const updateProfileAdmin = async ({
   }
 };
 
-export const updatePasswordAdmin = async (loginUser, { id, password }) => {
+export const updatePasswordAdmin = async (
+  loginUser,
+  { id, password, oldPassword }
+) => {
   try {
     if (loginUser.role !== "admin" && loginUser._id.toString() !== id) {
       return {
@@ -69,7 +72,16 @@ export const updatePasswordAdmin = async (loginUser, { id, password }) => {
     }
 
     const newAdmin = new Admin();
-    user.password = await newAdmin.generateHash(password);
+    // compare old password
+    if (!(await user.valid_password(oldPassword))) {
+      return {
+        status: 400,
+        message: "Old password is incorrect",
+        success: false,
+      };
+    }
+
+    user.password = await newAdmin.generate_hash(password);
     await user.save();
     return {
       status: 200,
@@ -77,7 +89,7 @@ export const updatePasswordAdmin = async (loginUser, { id, password }) => {
       success: true,
     };
   } catch (error) {
-    logger.error(error);
+    console.error(error);
     return {
       status: 500,
       message: error.message,

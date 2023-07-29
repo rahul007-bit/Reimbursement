@@ -44,7 +44,7 @@ const ViewForm = ({ reimbursement }) => {
   }, [loading, data, error]);
 
   return (
-    <Layout title="View Form">
+    <Layout title="View Form" path={"/admin/view-forms"}>
       <Container
         sx={{
           display: "flex",
@@ -95,7 +95,7 @@ const ViewForm = ({ reimbursement }) => {
                                   reimbursementDetails.questions[index];
                                 return (
                                   <ListItem
-                                    key={question._id}
+                                    key={question?._id}
                                     sx={{
                                       width: "fit-content",
                                     }}

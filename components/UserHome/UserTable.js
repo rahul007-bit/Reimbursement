@@ -134,7 +134,7 @@ export default function UserTable({ data, user: usedIn = "User", userData }) {
 
   return (
     <Paper sx={{ width: 1, overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
+      <TableContainer sx={{ maxHeight: 540 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>

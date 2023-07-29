@@ -28,11 +28,6 @@ export const UserHome = ({ userData, status }) => {
 
   return (
     <>
-      {/* table part */}
-      <Typography variant={"h5"} marginY={3} marginLeft={8}>
-        {" "}
-        {status ? `${status.toUpperCase()} Requests` : "All Requests"}
-      </Typography>
       <Box
         sx={{
           display: "flex",

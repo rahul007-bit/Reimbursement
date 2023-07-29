@@ -102,6 +102,32 @@ const ReimbursementForm = ({ user: userDetails }) => {
     event.preventDefault();
     setLoading(true);
     let imageUrl1 = "";
+    if (validateForm() === false) {
+      setLoading(false);
+      return;
+    }
+    // check if account number is valid
+    if (
+      certificationDetails.bankDetails.accountNumber.length <= 15 &&
+      certificationDetails.bankDetails.accountNumber.length >= 10
+    ) {
+      setSnackBar({
+        open: true,
+        type: "error",
+        message: "Account number should be 10-15 digits",
+      });
+      setLoading(false);
+      return;
+    }
+    if (certificationDetails.bankDetails.IFSCode.length !== 11) {
+      setSnackBar({
+        open: true,
+        type: "error",
+        message: "IFSC code should be 11 digits",
+      });
+      setLoading(false);
+      return;
+    }
 
     if (input1Ref.current.files[0]) {
       // check file size less than 1mb
@@ -110,6 +136,19 @@ const ReimbursementForm = ({ user: userDetails }) => {
           open: true,
           type: "error",
           message: "File size should be less than 1mb",
+        });
+        setLoading(false);
+        return;
+      }
+      // check file type is image or pdf only
+      if (
+        !input1Ref.current.files[0].type.includes("image") &&
+        !input1Ref.current.files[0].type.includes("pdf")
+      ) {
+        setSnackBar({
+          open: true,
+          type: "error",
+          message: "File type should be image or pdf",
         });
         setLoading(false);
         return;
@@ -143,6 +182,7 @@ const ReimbursementForm = ({ user: userDetails }) => {
         IFSCode: certificationDetails.bankDetails.IFSCode,
       },
     };
+
     submit("user/requestReimburse", body).then((response) => {
       if (response.status === 200 || response.success) {
         setSnackBar({
@@ -229,7 +269,7 @@ const ReimbursementForm = ({ user: userDetails }) => {
 
   return (
     <>
-      <div className="flex h-full w-full mt-10 items-center justify-center">
+      <div className="flex min-h-[790px] w-full my-10 items-center justify-center">
         <div className="shadow-xl h-fit m-auto sm:w-3/4 md:w-3/4 lg:w-3/5 w-full flex justify-evenly items-center rounded-md py-8 mt-10 mx-3 max-w-xl">
           <Box
             sx={{
@@ -281,7 +321,7 @@ const ReimbursementForm = ({ user: userDetails }) => {
                       renderInput={(params) => (
                         <TextField
                           {...params}
-                          label="Select Certificate"
+                          label="Select Type of Reimbursement"
                           required
                         />
                       )}
@@ -305,7 +345,7 @@ const ReimbursementForm = ({ user: userDetails }) => {
                   {selectedCertificate.certificate_name && (
                     <Stack direction={"column"} gap={2}>
                       <Typography variant="h8" gutterBottom>
-                        Upload your Certificate
+                        Upload your Certificate / Receipt
                       </Typography>
                       <input
                         ref={input1Ref}
@@ -317,6 +357,8 @@ const ReimbursementForm = ({ user: userDetails }) => {
                       file:bg-violet-50 file:text-violet-700
                       hover:file:bg-violet-100
                     "
+                        // only accept images and pdfs
+                        accept="image/*,application/pdf"
                         required={true}
                       />
                     </Stack>

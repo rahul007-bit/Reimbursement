@@ -69,6 +69,11 @@ function AddForm() {
 
   const addQuestion = (isDuplicate) => {
     if (isDuplicate.question) {
+      setSnackBar({
+        open: true,
+        message: "Question added at the end",
+        severity: "info",
+      });
       setQuestions((prev) => {
         return [
           ...prev,
@@ -202,11 +207,6 @@ function AddForm() {
   const saveForm = () => {
     setLoading(true);
     if (validateForm()) {
-      setSnackBar({
-        open: true,
-        message: "Form Saved",
-        type: "success",
-      });
       //   sanitize form data
       let sanitizedQuestions = questions.map((question) => {
         if (question.type === "40") {
@@ -259,6 +259,11 @@ function AddForm() {
             });
           })
           .finally(() => setLoading(false));
+        setSnackBar({
+          open: true,
+          message: "Form Updated Successfully",
+          type: "success",
+        });
         return;
       }
 
@@ -285,6 +290,11 @@ function AddForm() {
               message: "Form Save Failed",
               type: "error",
             });
+          setSnackBar({
+            open: true,
+            message: "Form Created Successfully",
+            type: "success",
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -308,7 +318,7 @@ function AddForm() {
   };
 
   return (
-    <Layout title="Add Form">
+    <Layout title="Add Form" path={"/admin/view-forms"}>
       <Container
         sx={{
           display: "flex",
