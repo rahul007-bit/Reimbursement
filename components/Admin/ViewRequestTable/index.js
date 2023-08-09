@@ -93,7 +93,7 @@ const ViewRequestTable = ({ userData: currentUserData }) => {
       if (error) {
         setRow([]);
         setUserData([]);
-      } else {
+      } else if (data?.data) {
         const reimburseData = data.data;
         setRow(reimburseData);
         setUserData(

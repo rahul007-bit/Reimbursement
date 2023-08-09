@@ -8,6 +8,7 @@ export default function Chats({ chart }) {
     `reimburseCount?get=${chart}`,
     []
   );
+
   useEffect(() => {
     if (!loading && fetchData) {
       if (fetchData.status !== 404 || fetchData.status === 200) {
@@ -19,6 +20,7 @@ export default function Chats({ chart }) {
       }
     }
   }, [loading, fetchData]);
+
   const option = {
     tooltip: {
       trigger: "item",

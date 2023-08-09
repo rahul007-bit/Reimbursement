@@ -5,6 +5,7 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import { Provider as JotaiProvider } from "jotai";
 import Snack from "../components/Util/Snackbar";
 import Head from "next/head";
+import { SWRConfig } from "swr";
 // import Footer from "../components/header/Footer";
 
 export const theme = createTheme({
@@ -44,11 +45,13 @@ function MyApp({ Component, pageProps }) {
         <title>Reimbursement</title>
       </Head>
       <ThemeProvider theme={theme}>
-        <JotaiProvider>
-          {/* <ProgressBar /> */}
-          <Snack />
-          <Component {...pageProps} />
-        </JotaiProvider>
+        <SWRConfig value={{ provider: () => new Map() }}>
+          <JotaiProvider>
+            {/* <ProgressBar /> */}
+            <Snack />
+            <Component {...pageProps} />
+          </JotaiProvider>
+        </SWRConfig>
       </ThemeProvider>
     </>
   );

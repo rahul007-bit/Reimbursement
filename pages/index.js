@@ -33,9 +33,6 @@ const Index = () => {
     >
       <Stack spacing={2} direction="column" alignItems="center">
         <Loader />
-        <Typography variant="h5">
-          Please wait while we are redirecting you to your destination...
-        </Typography>
       </Stack>
     </Box>
   );
