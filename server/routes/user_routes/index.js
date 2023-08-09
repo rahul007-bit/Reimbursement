@@ -5,6 +5,7 @@ import config from "../../config/index.js";
 import controller, { compress, upload } from "../../controllers/user/index.js";
 import requestValidator from "../../services/user/requestValidator.js";
 import { reimbursementValidator } from "../../services/reimbursement/requestValidation.js";
+import multer from "multer";
 
 const limit = rateLimit(config.rateLimiter);
 
@@ -49,9 +50,25 @@ const router = async (router) => {
     "/user/upload/file",
     limit,
     userAuth,
-    controller.checkFile,
-    // upload.single("file"),
-    controller.uploadFile,
+    (req, res, next) => {
+      controller.uploadFile(req, res, (err) => {
+        if (err instanceof multer.MulterError) {
+          // A Multer error occurred when uploading.
+          return res.status(400).json({
+            message: "File size too large",
+          });
+        } else if (err) {
+          // An unknown error occurred when uploading.
+          return res.status(400).json({
+            message: "Oops! Something went wrong",
+          });
+        }
+
+        // Everything went fine.
+        next();
+      });
+    },
+    // controller.checkFile,
     controller.uploadFileResponse
   );
 
