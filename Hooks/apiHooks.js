@@ -49,60 +49,6 @@ export function useFetch(endpoint, initialData = [], fullUrl = false) {
     revalidateOnReconnect: true,
   });
 
-  // const [data, dispatch] = useReducer(apiReducer, initialState);
-
-  // const [_, setSnackBar] = useAtom(snackBarAtom);
-  // const router = useRouter();
-
-  // useEffect(() => {
-  //   const controller = new AbortController();
-  //   dispatch({ type: "DATA_FETCH_START" });
-  //   url &&
-  //     fetch(u, {
-  //       signal: controller.signal,
-  //       method: "GET",
-  //       headers: new Headers({
-  //         "x-auth-token": token,
-  //         "Content-Type": "application/json",
-  //       }),
-  //       // mode: "no-cors",
-  //     })
-  //       .then(async (response) => {
-  //         if (!response.ok) {
-  //           const error = await response.json();
-  //           if (
-  //             error.status === 401 &&
-  //             router.pathname !== "/login" &&
-  //             router.pathname !== "/signup"
-  //           ) {
-  //             router.push("/logout");
-  //             setSnackBar({
-  //               open: true,
-  //               type: "error",
-  //               message: error.message
-  //                 ? error.message
-  //                 : "Oops! It's seems you are not Authorized to access.",
-  //             });
-  //           }
-
-  //           throw {
-  //             status: response.status,
-  //             error: parseError(error),
-  //           };
-  //         }
-  //         return response.json();
-  //       })
-  //       .then((json) => {
-  //         dispatch({ type: "DATA_FETCH_SUCCESS", payload: json });
-  //       })
-  //       .catch((error) => {
-  //         dispatch({ type: "DATA_FETCH_FAILURE", payload: error });
-  //       });
-  //   return () => {
-  //     controller.abort();
-  //   };
-  // }, [...initialData]);
-  // return data;
   return {
     data,
     error: error,

@@ -84,7 +84,7 @@ const ReimbursementForm = ({ user: userDetails }) => {
     try {
       const response = await axios({
         method: "POST",
-        url: url + "user/upload/file",
+        url: url + "user/upload/file?certificateId=" + selectedCertificate._id,
         data: form,
         headers: {
           "x-auth-token": cookie.auth_token,
@@ -106,10 +106,18 @@ const ReimbursementForm = ({ user: userDetails }) => {
       setLoading(false);
       return;
     }
+    console.log(
+      !(
+        certificationDetails.bankDetails.accountNumber.length <= 15 &&
+        certificationDetails.bankDetails.accountNumber.length >= 10
+      )
+    );
     // check if account number is valid
     if (
-      certificationDetails.bankDetails.accountNumber.length <= 15 &&
-      certificationDetails.bankDetails.accountNumber.length >= 10
+      !(
+        certificationDetails.bankDetails.accountNumber.length <= 15 &&
+        certificationDetails.bankDetails.accountNumber.length >= 10
+      )
     ) {
       setSnackBar({
         open: true,
@@ -130,16 +138,16 @@ const ReimbursementForm = ({ user: userDetails }) => {
     }
 
     if (input1Ref.current.files[0]) {
-      // check file size less than 1mb
-      if (input1Ref.current.files[0].size > 1000000) {
-        setSnackBar({
-          open: true,
-          type: "error",
-          message: "File size should be less than 1mb",
-        });
-        setLoading(false);
-        return;
-      }
+      // check file size less than 2mb
+      // if (input1Ref.current.files[0].size > 2000000) {
+      //   setSnackBar({
+      //     open: true,
+      //     type: "error",
+      //     message: "File size should be less than 2mb",
+      //   });
+      //   setLoading(false);
+      //   return;
+      // }
       // check file type is image or pdf only
       if (
         !input1Ref.current.files[0].type.includes("image") &&
@@ -344,7 +352,7 @@ const ReimbursementForm = ({ user: userDetails }) => {
                   )}
                   {selectedCertificate.certificate_name && (
                     <Stack direction={"column"} gap={2}>
-                      <Typography variant="h8" gutterBottom>
+                      <Typography variant="subtitle1" gutterBottom>
                         Upload your Certificate / Receipt
                       </Typography>
                       <input

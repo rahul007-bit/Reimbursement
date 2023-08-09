@@ -11,8 +11,11 @@ export default function Chats({ chart }) {
 
   useEffect(() => {
     if (!loading && fetchData) {
-      if (fetchData.status !== 404 || fetchData.status === 200) {
-        const data = fetchData.data.map((d) => ({
+      if (
+        (fetchData.status !== 404 || fetchData.status === 200) &&
+        fetchData.data
+      ) {
+        const data = fetchData?.data.map((d) => ({
           name: d._id,
           value: d.Total,
         }));
