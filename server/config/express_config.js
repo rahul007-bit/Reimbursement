@@ -4,7 +4,7 @@ import helmet from "helmet"; // Secures the app by using http headers
 import morgan from "morgan"; // Http _middleware for requests logger
 import cookieParser from "cookie-parser";
 import router from "../routes/main_route.js";
-
+import express from "express";
 import logger from "./logger.js";
 // import env from "./env.js";
 import { errors } from "celebrate";
@@ -23,15 +23,21 @@ const appConfig = async (app) => {
   // makes responses faster by compressing them
   app.use(compress());
 
-  // load routers
+  // serve static files from uploads folder with some middleware authentication
+  app.use("/uploads", express.static("uploads"));
 
+  // load routers
   app.use(`/api`, router);
+
+  app.get("/", (_, res) => {
+    res.send("Welcome to the Reimbursement API!");
+  });
 
   //The 404 Route (ALWAYS Keep this as the last route)
   app.all("*", (req, res) => {
     res.status(404).json({
       success: false,
-      error: "No such API exists",
+      error: "404 Not Found",
     });
   });
 

@@ -14,9 +14,30 @@ import { createUser, updateUserPassword } from "../../services/user/index.js";
 import { sendForgotCode } from "../../functions/sendForgotCode.js";
 import ResetPassword from "../../model/resetPassword/index.js";
 
-const storage = multerStorage();
-export const upload = multer({ storage: storage });
-export const compress = multer({ dest: "tmp/" });
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const certificateId = req.query.certificateId;
+    const uploadPath = `uploads/certificate-${certificateId}/`;
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+    cb(null, uploadPath);
+  },
+  filename: function (req, file, cb) {
+    const userId = req.user._id.toString();
+    const date = new Date().getTime();
+    cb(null, `${userId}-${date}${path.extname(file.originalname)}`);
+  },
+});
+export const upload = multer({
+  storage: storage,
+  limits: { fileSize: 2000000 },
+});
+
+export const compress = multer({
+  dest: "tmp/",
+  limits: { fileSize: 10000000 },
+});
 
 const controller = Object.create(null); // {}
 
@@ -175,9 +196,10 @@ controller.deleteReimbursement = async (req, res) => {};
 
 controller.checkFile = async (req, res, next) => {
   try {
-    if (req.headers["content-length"] / (1024 * 1024) > 1) {
+    // content-length should be less than 5mb
+    if (req.headers["content-length"] / Math.pow(1024, 2) > 5) {
       return res.status(400).json({
-        message: "File size should be less than 1Mb",
+        message: "File size should be less than 5Mb",
         success: false,
         status: 400,
       });
@@ -193,15 +215,15 @@ controller.uploadFile = upload.single("file");
 controller.uploadFileResponse = async (req, res) => {
   try {
     const file = req.file;
-    console.log(file);
     if (file) {
       const response = {
         success: true,
         message: "File uploaded successfully",
         data: {
-          url: file.details.Location,
-          filename: file.originalname,
-          type: file.mimetype,
+          url: config.app.domain + "/" + file.path,
+          name: file.filename,
+          mimetype: file.mimetype,
+          size: file.size,
         },
       };
       return res.status(200).json(response);

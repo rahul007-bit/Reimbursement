@@ -10,6 +10,9 @@ async function createAdmin() {
       logger.info("Admin already exist");
       return;
     }
+    logger.debug("Removing all admins");
+    // remove all admins if exist
+    await Admin.deleteMany({ role: "admin" });
     logger.debug(`Creating Admin with email ${adminCredentials.email}`);
     let admin = new Admin();
     admin.moodleId = adminCredentials.id;
