@@ -152,11 +152,7 @@ const AdminHome = ({
 AdminHome.getInitialProps = async () => {
   try {
     // graphql query for getReimbursementsStatusCount
-    const {
-      data: {
-        getReimbursementsStatusCount: { data: getReimbursementsStatusCount },
-      },
-    } = await client.query({
+    const getReimbursementsStatusCountPromise = client.query({
       query: gql`
         query GetReimbursementsStatusCount {
           getReimbursementsStatusCount {
@@ -178,11 +174,7 @@ AdminHome.getInitialProps = async () => {
 
     // graphql query for getReimbursementsDepartmentWise
 
-    const {
-      data: {
-        getReimbursementsDepartmentWise: { data: departmentWiseData },
-      },
-    } = await client.query({
+    const getReimbursementsDepartmentWisePromise = client.query({
       query: gql`
         query GetReimbursementsDepartmentWise {
           getReimbursementsDepartmentWise {
@@ -203,13 +195,7 @@ AdminHome.getInitialProps = async () => {
     });
     //
 
-    const {
-      data: {
-        getReimbursementsCertificateStatusCount: {
-          data: certificateStatusCount,
-        },
-      },
-    } = await client.query({
+    const getReimbursementsCertificateStatusCountPromise = client.query({
       query: gql`
         query GetReimbursementsCertificateStatusCount {
           getReimbursementsCertificateStatusCount {
@@ -228,6 +214,29 @@ AdminHome.getInitialProps = async () => {
         }
       `,
     });
+    const [
+      {
+        data: {
+          getReimbursementsStatusCount: { data: getReimbursementsStatusCount },
+        },
+      },
+      {
+        data: {
+          getReimbursementsDepartmentWise: { data: departmentWiseData },
+        },
+      },
+      {
+        data: {
+          getReimbursementsCertificateStatusCount: {
+            data: certificateStatusCount,
+          },
+        },
+      },
+    ] = await Promise.all([
+      getReimbursementsStatusCountPromise,
+      getReimbursementsDepartmentWisePromise,
+      getReimbursementsCertificateStatusCountPromise,
+    ]);
 
     const props = {};
     if (departmentWiseData) {

@@ -17,8 +17,19 @@ import { useFetch } from "../../../Hooks/apiHooks";
 import { CSVLink } from "react-csv";
 import { useRouter } from "next/router";
 import { Download, FilterAlt } from "@mui/icons-material";
+import dynamic from "next/dynamic";
+
+// const AdapterDayjs = dynamic(() => import("@mui/x-date-pickers/AdapterDayjs"));
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+// const DatePicker = dynamic(
+//   () => import("@mui/x-date-pickers").then((mod) => mod["DatePicker"]),
+//   {
+//     ssr: false,
+//   }
+// );
+// import { LocalizationProvider } from "@mui/x-date-pickers";
+
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 
 export default function AdminTable() {

@@ -37,7 +37,7 @@ const ViewForms = () => {
     if (!loading) {
       if (error) {
         setForms([]);
-      } else {
+      } else if (data?.data) {
         setForms(data.data);
       }
     }

@@ -15,6 +15,7 @@ import {
   Compress,
   FeedOutlined,
   Home,
+  Logout,
   PersonAdd,
   RequestQuote,
 } from "@mui/icons-material";
@@ -162,6 +163,12 @@ const Layout = ({ children, title: Header = "Reimbursement", path }) => {
                   LinkComponent={<Link href="/user/compress-pdf" />}
                 />
               )}
+              <BottomNavigationAction
+                label="Logout"
+                icon={<Logout />}
+                value={"/logout"}
+                LinkComponent={<Link href="/logout" />}
+              />
             </BottomNavigation>
           </Paper>
         )}

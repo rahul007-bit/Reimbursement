@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { Cookies, useCookies } from "react-cookie";
 import { snackBarAtom } from "../store";
 import { useAtom } from "jotai";
-
+import useSWR from "swr";
 export const url = process.env.NEXT_PUBLIC_API_URL;
 
 const initialState = {
@@ -30,66 +30,30 @@ function apiReducer(state, action) {
   }
 }
 
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
+const fetcherWithToken = ([url, token]) => {
+  return fetch(url, {
+    headers: new Headers({
+      "x-auth-token": token,
+      "Content-Type": "application/json",
+    }),
+  }).then((res) => res.json());
+};
 ///use Effect, fetch GET
 export function useFetch(endpoint, initialData = [], fullUrl = false) {
   // const history = useHistory();
   let u = fullUrl ? endpoint : url + endpoint;
-
-  const [data, dispatch] = useReducer(apiReducer, initialState);
   const [cookies] = useCookies();
+  const token = cookies.auth_token;
+  const { data, error, isLoading } = useSWR([u, token], fetcherWithToken, {
+    revalidateOnReconnect: true,
+  });
 
-  const [_, setSnackBar] = useAtom(snackBarAtom);
-  const router = useRouter();
-
-  useEffect(() => {
-    const token = cookies.auth_token;
-    const controller = new AbortController();
-    dispatch({ type: "DATA_FETCH_START" });
-    url &&
-      fetch(u, {
-        signal: controller.signal,
-        method: "GET",
-        headers: new Headers({
-          "x-auth-token": token,
-          "Content-Type": "application/json",
-        }),
-        // mode: "no-cors",
-      })
-        .then(async (response) => {
-          if (!response.ok) {
-            const error = await response.json();
-            if (
-              error.status === 401 &&
-              router.pathname !== "/login" &&
-              router.pathname !== "/signup"
-            ) {
-              router.push("/logout");
-              setSnackBar({
-                open: true,
-                type: "error",
-                message: error.message ? error.message : "Unauthorized",
-              });
-            }
-
-            throw {
-              status: response.status,
-              error: parseError(error),
-            };
-          }
-          return response.json();
-        })
-        .then((json) => {
-          dispatch({ type: "DATA_FETCH_SUCCESS", payload: json });
-        })
-        .catch((error) => {
-          dispatch({ type: "DATA_FETCH_FAILURE", payload: error });
-        });
-    return () => {
-      controller.abort();
-    };
-  }, initialData);
-
-  return data;
+  return {
+    data,
+    error: error,
+    loading: isLoading,
+  };
 }
 
 //POST,PUT,

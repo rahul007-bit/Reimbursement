@@ -86,7 +86,7 @@ const CompressPdf = () => {
             <Divider variant="fullWidth" className="mb-4" />
             <form onSubmit={handleSubmit}>
               <Stack direction={"column"} spacing={2}>
-                <Typography variant="h8" gutterBottom>
+                <Typography variant="subtitle1" gutterBottom>
                   Select your Certificate
                 </Typography>
                 <input
