@@ -2,9 +2,8 @@ version: "1"
 services:
   webapp:
     # container_name: reimbursement
-    env_file: .env
     environment:
-      - db=mongodb://mongodb:27017/reimbursement
+      - db=${db}
     build: .
     restart: on-failure
     depends_on:
