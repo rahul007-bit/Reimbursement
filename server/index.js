@@ -53,12 +53,10 @@ db.once("open", () => {
 });
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
-  res.header(
-    "Access-Control-Allow-Origin",
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "PUT, GET, POST, DELETE, OPTIONS"
   );
   next();
 });
@@ -80,5 +78,6 @@ app.listen(config.port, () => {
     `🚀  Apollo Server ready at http://localhost:${config.port}${server.graphqlPath}`
   );
 });
+
 import appConfig from "./config/express_config.js";
 appConfig(app);

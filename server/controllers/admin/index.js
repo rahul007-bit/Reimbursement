@@ -326,6 +326,9 @@ controller.getReimburseCount = async (req, res) => {
 controller.getFullReimbursementInfo = async (req, res) => {
   try {
     const get = req.query;
+    if (req.user.role !== "admin") {
+      get["department"] = req.user.department;
+    }
     const result = await getFullReimbursementInfo(get);
     return res.status(result.status).send(result);
   } catch (error) {
@@ -377,6 +380,9 @@ controller.approveReimburse = async (req, res) => {
 controller.getUsers = async (req, res) => {
   try {
     const query = req.query;
+    if (req.user.role !== "admin") {
+      query["department"] = req.user.department;
+    }
     const result = await getUser(query);
     return res.status(result.status).send(result);
   } catch (error) {
