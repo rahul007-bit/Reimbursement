@@ -12,7 +12,7 @@ const LoginPage = () => {
     }
   }, [router]);
   return (
-    <Layout title={"Login"}>
+    <Layout title={"Disha's Login - Deployed via Argo CD"}>
       <div className="w-full h-full max-h-[800px] mt-10">
         <Form usedIn={loginAs} setLoginAs />
       </div>

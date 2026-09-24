@@ -1,0 +1,59 @@
+name: CI - Build and Push Frontend Image
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        if: github.event_name == 'push'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set image tag
+        id: vars
+        run: echo "tag=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      - name: Build image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64
+          push: ${{ github.event_name == 'push' }}
+          tags: |
+            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/reimbursement-frontend:${{ steps.vars.outputs.tag }}
+            docker.io/${{ secrets.DOCKERHUB_USERNAME }}/reimbursement-frontend:latest
+
+      - name: Update Kubernetes manifest with new image tag
+        if: github.event_name == 'push'
+        run: |
+          sed -i "s|image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/reimbursement-frontend:.*|image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/reimbursement-frontend:${{ steps.vars.outputs.tag }}|" k8s/deployment.yaml
+          cat k8s/deployment.yaml | grep image:
+
+      - name: Commit and push updated manifest
+        if: github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add k8s/deployment.yaml
+          git diff --cached --quiet && echo "No changes to commit" || git commit -m "ci: deploy image ${{ steps.vars.outputs.tag }} [skip ci]"
+          git push
