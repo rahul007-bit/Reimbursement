@@ -1,0 +1,11 @@
+node_modules
+.next
+.git
+.github
+.husky
+.vscode
+server
+dump
+k8s
+Dockerfile
+*.md

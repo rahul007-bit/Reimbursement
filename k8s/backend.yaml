@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reimbursement-backend
+  namespace: reimbursement
+  labels:
+    app: reimbursement-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reimbursement-backend
+  template:
+    metadata:
+      labels:
+        app: reimbursement-backend
+    spec:
+      containers:
+        - name: backend
+          image: docker.io/dishalalwani/reimbursement-backend:v1
+          ports:
+            - containerPort: 8000
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "8000"
+            - name: db
+              value: "mongodb://mongodb:27017/Reimbursement"
+            - name: jwt_secret
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secrets
+                  key: jwt_secret
+            - name: admin_id
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secrets
+                  key: admin_id
+            - name: admin_password
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secrets
+                  key: admin_password
+            - name: admin_email
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secrets
+                  key: admin_email
+          readinessProbe:
+            tcpSocket:
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reimbursement-backend
+  namespace: reimbursement
+spec:
+  type: NodePort
+  selector:
+    app: reimbursement-backend
+  ports:
+    - port: 8000
+      targetPort: 8000
+      nodePort: 30800

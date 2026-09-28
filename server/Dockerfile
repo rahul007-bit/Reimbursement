@@ -1,10 +1,8 @@
-FROM node:16
-WORKDIR /reimbursement
-COPY package.json ./
-COPY yarn.lock ./
-RUN yarn
-RUN apt-get update && apt-get install -y ghostscript
+FROM node:18-alpine
+WORKDIR /app
+RUN apk add --no-cache ghostscript
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 COPY . .
-
 EXPOSE 8000
-CMD [ "yarn", "dev" ]
+CMD ["yarn", "start"]
